@@ -4,20 +4,19 @@ Skills are organized into bucket folders under `skills/`:
 - `productivity/`: daily non-code workflow tools
 - `misc/`: kept around but rarely used, not promoted
 - `in-progress/`: beta: public on purpose, feedback wanted, not shipped in the plugin
-- `personal/`: locally maintained Skills being consolidated, not yet shipped in the plugin
 - `deprecated/`: no longer used
 
-Third-party catalog snapshots live under `vendor/<source>/`. They are not repository-owned buckets, do not appear in bucket READMEs or `ask-matt`, and are excluded from the inherited plugin and maintainer linking script. They are discoverable through the documented `skills.sh --full-depth` install. Preserve imported files exactly until a deliberate local adaptation is recorded in [`SOURCES.md`](./SOURCES.md).
+ECC Skills are absorbed directly into the matching `engineering/`, `productivity/`, or `misc/` bucket. Source ownership lives in [`SOURCES.md`](./SOURCES.md), not in a directory namespace. Preserve imported files exactly except for path repairs and adaptations recorded there.
 
-Every skill in `engineering/` or `productivity/` (the **promoted** buckets) must have a reference in the top-level `README.md` and an entry in `.claude-plugin/plugin.json`'s `skills` array (the Claude Code plugin ships exactly the promoted set). Skills in `misc/`, `in-progress/`, `personal/`, and `deprecated/` must not appear in either.
+Every direct child Skill in `engineering/`, `productivity/`, `misc/`, and `in-progress/` must appear in its bucket README. The top-level README, `ask-matt`, aihero docs, and inherited Matt plugin remain curated Matt-based surfaces; importing an ECC Skill into a bucket does not automatically promote it to those surfaces. `SOURCES.md` records which entries are Matt canonical, absorbed ECC, or local.
 
 Install commands are copied verbatim from [.agents/install-block.md](./.agents/install-block.md). `.claude-plugin/marketplace.json` makes the repo its own single-plugin marketplace (a fallback the install block explains, not the documented route). Run `claude plugin validate . --strict` after touching either manifest. Why a Claude plugin but not (yet) a Codex one lives in [.agents/adr/0002-ship-as-a-claude-code-plugin.md](./.agents/adr/0002-ship-as-a-claude-code-plugin.md).
 
 Each skill entry in the top-level `README.md` must link the skill name to its `SKILL.md`.
 
-Each bucket folder has a `README.md` that lists every skill in the bucket with a one-line description, with the skill name linked to its `SKILL.md`. The promoted buckets' `README.md`s and the top-level `README.md` group entries into **User-invoked** and **Model-invoked**; non-promoted bucket `README.md`s (`misc/`, `in-progress/`, `personal/`) use a flat list.
+Each bucket folder lists every direct child Skill with a linked name and one-line description. `engineering/` and `productivity/` keep the existing User-invoked and Model-invoked sections for the Matt-based curated surface, followed by an **Imported library** section for absorbed ECC Skills. Non-promoted bucket READMEs use a flat list.
 
-Skills in `engineering/` and `productivity/` also have a human-facing docs page at `docs/<bucket>/<skill-name>.md` (the docs tree mirrors those two bucket folders under `skills/`). The published URL is `https://aihero.dev/skills-<skill-name>` regardless of bucket: the docs path is repo organisation only. When you add, rename, or change the behaviour of a skill in `engineering/` or `productivity/`, create or re-sync its docs page following [.agents/writing-docs.md](./.agents/writing-docs.md). A finished page carries four sections: **What it does**, **When to reach for it**, **Common questions**, and **It's working if**. `writing-docs.md` holds the template, the section order, and where to hunt for the questions. Skills in the non-promoted buckets (`misc/`, `in-progress/`, `personal/`, `deprecated/`) get **no** docs page.
+Matt-based curated Skills in `engineering/` and `productivity/` have a human-facing docs page at `docs/<bucket>/<skill-name>.md`. When you add, rename, or change one, create or re-sync its docs page following [.agents/writing-docs.md](./.agents/writing-docs.md). Absorbed ECC and Skills in `misc/`, `in-progress/`, and `deprecated/` get no aihero docs page unless explicitly promoted later.
 
 Every `SKILL.md` is either user-invoked (`disable-model-invocation: true` plus `policy.allow_implicit_invocation: false` in `agents/openai.yaml`, reachable only by the human) or model-invoked (model- or user-reachable). See [.agents/invocation.md](./.agents/invocation.md).
 

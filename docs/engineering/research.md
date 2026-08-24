@@ -24,7 +24,7 @@ The line between `research` and `grill-with-docs` is the **shelf life of what co
 
 The defining move is that the reading runs as a **background agent**. You keep working; it goes off, follows each claim to its primary source, writes one Markdown file, and reports back. Research is legwork you delegate, not thinking you outsource: you get a document to grill, plan, or design against, and you still make the call.
 
-The delegation is unguarded, and the background agent can spawn a further background agent of its own. This is the skill's best-documented rough edge.
+The background brief now tells the agent to perform the research directly instead of redispatching the same task. This is an instruction-level guard, so the task list remains the observable check.
 
 Where the file lands is decided by the repo, not by the skill: it matches whatever convention already exists for notes, and if there is none it picks somewhere sensible and tells you where. It writes one file per run.
 
@@ -32,7 +32,7 @@ Where the file lands is decided by the repo, not by the skill: it matches whatev
 
 **It spawned a second research agent. Is that meant to happen?**
 
-No. This is an open bug, [issue #530](https://github.com/mattpocock/skills/issues/530). The skill tells its caller to spin up a background agent but does not restrict the agent type, so the agent it spawns is a `general-purpose` one that holds the `Agent` tool and the same instructions, and fires them again. One reporter measured a single research task costing roughly 450k [tokens](https://www.aihero.dev/ai-coding-dictionary/token) across three overlapping runs, with the duplicate finishing half an hour later entirely out of view. It reproduces outside Claude Code too; the same nesting was confirmed in Codex with GPT-5.6-sol. There is no shipped fix. Users have patched their own installed copy with a line telling an agent that is already a [subagent](https://www.aihero.dev/ai-coding-dictionary/subagent) to do the work itself, which helps but is instruction-level, not structural. Watch your background task list after invoking, and stop the duplicate.
+No. The Skill now tells the background agent that it owns the research directly and must not spawn another copy. The guard is instructional rather than structural, so stop a duplicate if the harness still creates one.
 
 The opposite failure exists as well: if your own global instructions forbid an agent from re-delegating work, the background agent will politely decline the task and the skill quietly does nothing.
 
@@ -54,7 +54,7 @@ You can, and a two-line prompt saying exactly that was the practice this skill r
 
 **When does it stop reading?**
 
-There is no stopping criterion in the skill, and this shows up as two complaints that look opposite but are the same gap: agents that go far too deep, and agents that cover a topic broadly while missing the one specific detail that mattered. One practitioner put it as "deep-research skills are a bit too deep sometimes. And telling an agent to research usually results in missing crucial details." Scoping is on you. A narrow, answerable question (one API, one behaviour, one version claim) comes back far better than "research X".
+It stops when the scoped question is answerable. A narrow fact takes the lightest primary-source path; a comparison or broad synthesis is split into answerable subquestions only when needed.
 
 **`/wayfinder` created research tickets. Do I resolve those myself?**
 

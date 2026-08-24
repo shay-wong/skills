@@ -15,14 +15,15 @@ set -euo pipefail
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 DESTS=("$HOME/.claude/skills" "$HOME/.agents/skills")
 
-# Collect the repo's skills once, link into every destination.
+# Link the curated Matt-based plugin set. The complete absorbed catalog is
+# distributed through skills.sh rather than this maintainer helper.
 names=()
 srcs=()
-while IFS= read -r -d '' skill_md; do
-  src="$(dirname "$skill_md")"
+while IFS= read -r skill_path; do
+  src="$REPO/${skill_path#./}"
   names+=("$(basename "$src")")
   srcs+=("$src")
-done < <(find "$REPO/skills" -name SKILL.md -not -path '*/node_modules/*' -not -path '*/deprecated/*' -print0)
+done < <(node -e 'for (const skill of require(process.argv[1]).skills) console.log(skill)' "$REPO/.claude-plugin/plugin.json")
 
 for DEST in "${DESTS[@]}"; do
   # If $DEST is a symlink that resolves into this repo, we'd end up writing the

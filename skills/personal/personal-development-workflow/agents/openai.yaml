@@ -1,4 +1,0 @@
-interface:
-  display_name: "Personal Development Workflow"
-  short_description: "Help with Personal Development Workflow tasks"
-  default_prompt: "Use $personal-development-workflow to help with this task."

@@ -27,10 +27,10 @@ If you want to keep up with changes to these skills, and any new ones I create, 
 Install this personal collection through [skills.sh](https://skills.sh/shay-wong/skills):
 
 ```bash
-npx skills@latest add shay-wong/skills -g --full-depth
+npx skills@latest add shay-wong/skills -g
 ```
 
-`--full-depth` is required to discover the nested Matt, personal, and ECC catalogs. Pick the Skills and agents you want. Do not install the separate Matt or ECC plugins alongside this collection, because that loads overlapping Skills twice. When migrating from manual copies, remove or archive old same-name entries first; the installer does not clean unmanaged `~/.codex/skills` directories.
+Pick the Skills and agents you want. Do not install the separate Matt or ECC plugins alongside this collection, because that loads overlapping Skills twice. When migrating from manual copies, remove or archive old same-name entries first; the installer does not clean unmanaged `~/.codex/skills` directories.
 
 ### Configure Matt's engineering workflow
 
@@ -146,9 +146,7 @@ Software engineering fundamentals matter more than ever. These skills are my bes
 
 This repository maintains a Chinese [source and local changes ledger](./SOURCES.md). It records the exact upstream baseline for adopted skills and any changes made for this personal collection.
 
-The complete ECC Skill catalog is preserved under [`vendor/ecc/skills`](./vendor/ecc/skills). It is discoverable through the required `--full-depth` install, but is not included in the inherited Claude plugin or maintainer linking script.
-
-Seven independent locally maintained core Skills live under [`skills/personal`](./skills/personal). Three overlapping standards were folded into the canonical ECC `coding-standards` and `tdd-workflow` Skills.
+ECC Skills are absorbed directly into [`skills/engineering`](./skills/engineering), [`skills/productivity`](./skills/productivity), and [`skills/misc`](./skills/misc). Overlapping ECC and local workflows are folded into the Matt canonical Skills instead of remaining parallel entry points; provenance remains in [SOURCES.md](./SOURCES.md).
 
 ## Reference
 
@@ -175,12 +173,14 @@ Skills I use daily for code work.
 - **[prototype](./skills/engineering/prototype/SKILL.md)**: Build a throwaway prototype to answer a design question, either a single shareable HTML file for state/logic questions, or several radically different UI variations toggleable from one route.
 - **[diagnosing-bugs](./skills/engineering/diagnosing-bugs/SKILL.md)**: Disciplined diagnosis loop for hard bugs and performance regressions: build a feedback loop that goes red on this bug → minimise → hypothesise → instrument → fix → regression-test.
 - **[research](./skills/engineering/research/SKILL.md)**: Investigate a question against high-trust primary sources and capture the findings as a cited Markdown file in the repo, run as a background agent.
-- **[tdd](./skills/engineering/tdd/SKILL.md)**: Test-driven development with a red-green-refactor loop. Builds features or fixes bugs one vertical slice at a time.
+- **[tdd](./skills/engineering/tdd/SKILL.md)**: Risk-based test-driven development at pre-agreed public seams, one red-green vertical slice at a time.
 - **[domain-modeling](./skills/engineering/domain-modeling/SKILL.md)**: Actively build and sharpen a project's domain model: challenge terms against the glossary, stress-test with edge-case scenarios, and update `CONTEXT.md` and ADRs inline.
 - **[codebase-design](./skills/engineering/codebase-design/SKILL.md)**: Shared discipline and vocabulary for designing deep modules: a lot of behaviour behind a small interface, placed at a clean seam, testable through that interface.
 - **[code-review](./skills/engineering/code-review/SKILL.md)**: Two-axis review of the diff since a fixed point: **Standards** (does it follow the repo's coding standards, plus a Fowler smell baseline?) and **Spec** (does it faithfully implement the originating issue/spec?), run as parallel sub-agents so neither pollutes the other.
 - **[resolving-merge-conflicts](./skills/engineering/resolving-merge-conflicts/SKILL.md)**: Work through an in-progress git merge or rebase conflict hunk by hunk, resolving by intent traced to each side's primary source, then finish the operation (never `--abort`).
 - **[wizard](./skills/engineering/wizard/SKILL.md)**: Generate an interactive bash wizard that walks a human through steps only they can perform: provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover.
+- **[commit](./skills/engineering/commit/SKILL.md)**: Create safe, scoped local commits while excluding unrelated, ignored, disposable, generated, and sensitive files.
+- **[worktree-clean](./skills/engineering/worktree-clean/SKILL.md)**: Audit and safely remove unused agent worktrees for the current repository.
 
 ### Productivity
 

@@ -1,6 +1,0 @@
-interface:
-  display_name: "Worktree Clean"
-  short_description: "Safely clean worktrees; Handoff only when required"
-  default_prompt: "Use $worktree-clean to remove only worktrees proven unused, handing this task to Local first only when its active checkout is targeted."
-policy:
-  allow_implicit_invocation: true

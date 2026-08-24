@@ -1,4 +1,0 @@
-interface:
-  display_name: "Add Dir"
-  short_description: "Help with Add Dir tasks and workflows"
-  default_prompt: "Use $add-dir to help with this task."

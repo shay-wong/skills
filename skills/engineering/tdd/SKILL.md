@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
+description: Risk-based test-driven development at pre-agreed public seams. Use for bug fixes and behavior changes with an independent test oracle; skip artificial tests for mechanical edits, docs, metadata, and unobservable wiring.
 ---
 
 # Test-Driven Development
@@ -8,6 +8,12 @@ description: Test-driven development. Use when the user wants to build features 
 TDD is the red → green loop. This skill is the reference that makes that loop produce tests worth keeping: what a good test is, where tests go, the anti-patterns, and the rules of the loop. Every section applies on every cycle: consult them before and during the loop, not after.
 
 When exploring the codebase, read `CONTEXT.md` (if it exists) so test names and interface vocabulary match the project's domain language, and respect ADRs in the area you're touching.
+
+## Risk gate
+
+Use the loop for a bug fix or risky behavior change when expected behavior comes from an independent source such as a spec, regression report, standard, fixture, or worked example. For mechanical edits, documentation, metadata, type-only changes, or wiring with no independent oracle, state that TDD would be tautological and use the smallest relevant verification instead.
+
+Coverage follows risk. Prefer one focused regression test for a narrow fix; use unit, integration, or end-to-end coverage only where each protects a distinct failure boundary. Treat 80% relevant coverage as a target only when the project can measure it meaningfully, never as a universal repository gate.
 
 ## What a good test is
 
@@ -23,6 +29,8 @@ A **seam** is the public boundary you test at: the interface where you observe b
 
 Ask: "What's the public interface, and which seams should we test?"
 
+Before the first RED run, detect the repository's real test runner from its instructions, manifest, scripts, and lockfile. Record the exact target. RED counts only when that target executes and fails for the intended missing or broken behavior, not for unrelated syntax, setup, or dependency failures.
+
 When the shape of that interface is itself in question (how deep the module is, where the seam belongs, what the interface should expose), call the Skill tool with "codebase-design" for the vocabulary. It is the shared source of the module, interface, depth, seam, adapter, leverage and locality terms, and it is a reference to consult, not a session to run.
 
 ## Anti-patterns
@@ -36,3 +44,5 @@ When the shape of that interface is itself in question (how deep the module is, 
 - **Red before green.** Write the failing test first, then only enough code to pass it. Don't anticipate future tests or add speculative features.
 - **One slice at a time.** One seam, one test, one minimal implementation per cycle.
 - **Refactoring is not part of the loop.** It belongs to the review stage (see the `code-review` skill), not the red → green implementation cycle.
+- **Capture evidence.** Record the test target and the RED and GREEN outcomes. Do not create checkpoint commits unless the user or an authorized parent workflow requested commits.
+- **Keep tests readable.** Prefer Arrange-Act-Assert and behavior names. In nontrivial tests, brief Chinese comments may explain business intent, special fixtures, boundaries, or counterintuitive assertions without narrating each line.

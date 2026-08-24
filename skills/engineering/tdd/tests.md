@@ -22,6 +22,26 @@ Characteristics:
 - Describes WHAT, not HOW
 - One logical assertion per test
 
+## Risk and coverage
+
+- A narrow fix needs a focused regression test more than broad coverage churn.
+- Choose unit, integration, or end-to-end coverage by the failure boundary; do not require all three for every change.
+- Coverage targets apply to relevant changed behavior when the project can measure them meaningfully.
+- Tests should lock business intent, constraints, and boundaries, not merely make the suite green.
+
+For Laravel/PHPUnit repositories that use this convention, prefer descriptive `snake_case` methods without a `test_` prefix and place `@test` below a brief Chinese business-intent comment:
+
+```php
+/**
+ * 中文说明测试场景、业务意图或约束。
+ *
+ * @test
+ */
+public function descriptive_behavior_name(): void
+{
+}
+```
+
 ## Bad Tests
 
 **Implementation-detail tests**: Coupled to internal structure.

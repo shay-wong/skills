@@ -37,6 +37,8 @@
     "./skills/engineering/code-review",
     "./skills/engineering/resolving-merge-conflicts",
     "./skills/engineering/wizard",
+    "./skills/engineering/commit",
+    "./skills/engineering/worktree-clean",
     "./skills/productivity/grill-me",
     "./skills/productivity/grilling",
     "./skills/productivity/handoff",

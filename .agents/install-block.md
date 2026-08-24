@@ -4,12 +4,12 @@ One install story, one wording. `README.md`, `.changeset/*`, and every page unde
 
 ## Codex, Claude Code, and other agents: skills.sh
 
-This personal collection is distributed through [skills.sh](https://skills.sh/shay-wong/skills). `--full-depth` is required because the repository contains nested Matt, personal, and vendored ECC catalogs. Use the whole-set form on `README.md`:
+This personal collection is distributed through [skills.sh](https://skills.sh/shay-wong/skills). Use the whole-set form on `README.md`:
 
 <canonical-block name="skills-sh-whole-set">
 
 ```bash
-npx skills@latest add shay-wong/skills -g --full-depth
+npx skills@latest add shay-wong/skills -g
 ```
 
 Pick the skills and coding agents you want. When migrating from manually maintained copies, remove or archive the old same-name installs first; `skills.sh` does not clean unmanaged `~/.codex/skills` directories.
@@ -21,7 +21,7 @@ Pick the skills and coding agents you want. When migrating from manually maintai
 <canonical-block name="skills-sh-one-skill">
 
 ```bash
-npx skills@latest add shay-wong/skills -g --full-depth --skill=<name>
+npx skills@latest add shay-wong/skills -g --skill=<name>
 ```
 
 ```bash
