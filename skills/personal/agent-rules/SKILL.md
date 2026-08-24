@@ -7,11 +7,10 @@ description: Apply Shay's migrated Claude natural-language rules for coding, dev
 
 This is the discoverable entry point for Shay's migrated Claude natural-language rules. Use it as the umbrella skill, then load the focused sibling skill that matches the task:
 
-- Coding and refactoring: [`personal-coding-standards`](../personal-coding-standards/SKILL.md)
+- Coding and TypeScript/JavaScript: use `coding-standards` from the ECC catalog
 - Feature workflow and implementation planning: [`personal-development-workflow`](../personal-development-workflow/SKILL.md)
 - Code review: [`review-standards`](../review-standards/SKILL.md)
-- Testing and TDD: [`testing-standards`](../testing-standards/SKILL.md)
-- TypeScript/JavaScript: [`typescript-standards`](../typescript-standards/SKILL.md)
+- Testing and TDD: use `tdd-workflow` from the ECC catalog
 - Git, deletion safety, PRs, and worktrees: [`git-workflow-standards`](../git-workflow-standards/SKILL.md)
 
 ## Always-On Summary

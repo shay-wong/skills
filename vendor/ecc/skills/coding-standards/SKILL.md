@@ -37,6 +37,25 @@ Do not use this skill as the primary source for:
 - backend architecture, API design, or database layering
 - domain-specific framework guidance when a narrower ECC skill already exists
 
+## Shay's Local Policy
+
+When installed from `shay-wong/skills`, these rules override conflicting generic examples in this Skill:
+
+- Reuse existing utilities and repository patterns before adding abstractions.
+- Keep changes within the user's requested scope. Do not add single-use abstractions, configuration, or future-proofing hooks.
+- Extract duplication only after repetition is real and the shared boundary is clear.
+- Use brief Chinese comments for business intent, constraints, non-obvious branches, special test data, and counterintuitive assertions. Do not narrate obvious code.
+- Preserve useful business comments during refactors and update them with the behavior.
+- Explain the purpose or boundary of new and changed constants when it is not obvious.
+- Preserve original error context where the language and runtime support it.
+- Prefer the validation library already used by the project instead of introducing Zod or another schema package by default.
+- When existing non-Git patterns conflict, choose the newer, more stable, or better-tested pattern and state the evidence. Do not splice incompatible behavior together.
+- Implement deterministic routing, retries, status handling, and data conversion in code or tools rather than delegating them to model judgment.
+- Add caching only for a measured or obvious repeated cost with a clear invalidation rule.
+- For TypeScript public APIs, use explicit parameter and return types, prefer `unknown` over `any`, and prefer string literal unions over `enum` unless interoperability requires an enum.
+- Do not use `React.FC` without a specific local reason. Keep hook side effects explicit and clean up subscriptions and timers.
+- Use the project's logger instead of production `console.log`, run the available type check after TypeScript changes, and keep an existing E2E framework instead of replacing it with Playwright automatically.
+
 ## Code Quality Principles
 
 ### 1. Readability First

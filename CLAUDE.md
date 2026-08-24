@@ -7,7 +7,7 @@ Skills are organized into bucket folders under `skills/`:
 - `personal/`: locally maintained Skills being consolidated, not yet shipped in the plugin
 - `deprecated/`: no longer used
 
-Third-party catalog snapshots live under `vendor/<source>/`. They are not repository-owned buckets, do not appear in bucket READMEs or `ask-matt`, and are not shipped or linked by default. Preserve imported files exactly until a deliberate local adaptation is recorded in [`SOURCES.md`](./SOURCES.md).
+Third-party catalog snapshots live under `vendor/<source>/`. They are not repository-owned buckets, do not appear in bucket READMEs or `ask-matt`, and are excluded from the inherited plugin and maintainer linking script. They are discoverable through the documented `skills.sh --full-depth` install. Preserve imported files exactly until a deliberate local adaptation is recorded in [`SOURCES.md`](./SOURCES.md).
 
 Every skill in `engineering/` or `productivity/` (the **promoted** buckets) must have a reference in the top-level `README.md` and an entry in `.claude-plugin/plugin.json`'s `skills` array (the Claude Code plugin ships exactly the promoted set). Skills in `misc/`, `in-progress/`, `personal/`, and `deprecated/` must not appear in either.
 

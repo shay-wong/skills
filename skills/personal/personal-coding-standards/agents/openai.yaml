@@ -1,4 +1,0 @@
-interface:
-  display_name: "Personal Coding Standards"
-  short_description: "Help with Personal Coding Standards tasks"
-  default_prompt: "Use $personal-coding-standards to help with this task."

@@ -10,7 +10,7 @@
 
 # Skills For Real Engineers
 
-[![skills.sh](https://skills.sh/b/mattpocock/skills)](https://skills.sh/mattpocock/skills)
+[![skills.sh](https://skills.sh/b/shay-wong/skills)](https://skills.sh/shay-wong/skills)
 
 My agent skills that I use every day to do real engineering - not vibe coding.
 
@@ -22,56 +22,17 @@ If you want to keep up with changes to these skills, and any new ones I create, 
 
 [Sign Up To The Newsletter](https://www.aihero.dev/s/skills-newsletter)
 
-## Installation (30-second setup)
+## Installation
 
-Two ways in, two philosophies. **The [Claude Code plugin](https://code.claude.com/docs/en/plugins)** installs the whole set as a managed, read-only bundle that updates when I ship, so you subscribe rather than fork. **[skills.sh](https://skills.sh/mattpocock/skills)** copies editable skill files into your project, so you can hack on them and make them your own. Pick one: installing both leaves you with every skill twice.
-
-### 1. Get the skills
-
-<details>
-<summary><strong>Claude Code</strong></summary>
+Install this personal collection through [skills.sh](https://skills.sh/shay-wong/skills):
 
 ```bash
-claude plugins install mattpocock-skills
+npx skills@latest add shay-wong/skills -g --full-depth
 ```
 
-Or, from inside a session:
+`--full-depth` is required to discover the nested Matt, personal, and ECC catalogs. Pick the Skills and agents you want. Do not install the separate Matt or ECC plugins alongside this collection, because that loads overlapping Skills twice. When migrating from manual copies, remove or archive old same-name entries first; the installer does not clean unmanaged `~/.codex/skills` directories.
 
-```
-/plugin install mattpocock-skills
-```
-
-It's in Claude Code's official marketplace, so there's nothing to add first, and updates arrive automatically.
-
-</details>
-
-<details>
-<summary><strong>Codex, and other agents</strong></summary>
-
-```bash
-npx skills@latest add mattpocock/skills
-```
-
-Pick the skills you want, and which coding agents to install them on. **The installer lets you choose which skills to take, so make sure `setup-matt-pocock-skills` is one of them.**
-
-A native Codex plugin is on the roadmap (see [`.agents/adr/0002-ship-as-a-claude-code-plugin.md`](./.agents/adr/0002-ship-as-a-claude-code-plugin.md)).
-
-</details>
-
-<details>
-<summary><strong>For tinkerers</strong></summary>
-
-Use the same installer, on any agent, including Claude Code:
-
-```bash
-npx skills@latest add mattpocock/skills
-```
-
-It writes the skills into your repo as ordinary files you own and can edit. Nothing updates behind your back; pull my latest changes when you want them with `npx skills update`.
-
-</details>
-
-### 2. Run `/setup-matt-pocock-skills`
+### Configure Matt's engineering workflow
 
 In your agent, run it once per repo. It will:
 
@@ -79,7 +40,7 @@ In your agent, run it once per repo. It will:
 - Ask you what labels you apply to tickets when you triage them (`/triage` uses labels)
 - Ask you where you want to save any docs we create
 
-### 3. Bam - you're ready to go.
+### Done
 
 ## Why These Skills Exist
 
@@ -185,9 +146,9 @@ Software engineering fundamentals matter more than ever. These skills are my bes
 
 This repository maintains a Chinese [source and local changes ledger](./SOURCES.md). It records the exact upstream baseline for adopted skills and any changes made for this personal collection.
 
-The complete ECC Skill catalog is preserved under [`vendor/ecc/skills`](./vendor/ecc/skills). It is an upstream snapshot for compatibility work and is not included in the current plugin or local linking script yet.
+The complete ECC Skill catalog is preserved under [`vendor/ecc/skills`](./vendor/ecc/skills). It is discoverable through the required `--full-depth` install, but is not included in the inherited Claude plugin or maintainer linking script.
 
-Ten locally maintained core Skills are staged under [`skills/personal`](./skills/personal). They remain outside the current plugin while their dependencies and overlap with upstream catalogs are consolidated.
+Seven independent locally maintained core Skills live under [`skills/personal`](./skills/personal). Three overlapping standards were folded into the canonical ECC `coding-standards` and `tdd-workflow` Skills.
 
 ## Reference
 

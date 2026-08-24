@@ -32,7 +32,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | 已导入上游快照，尚未接入本地安装和插件分发 |
+| 状态 | 已导入完整目录，并通过 `skills.sh --full-depth` 分发 |
 | 来源仓库 | <https://github.com/affaan-m/ECC> |
 | 来源基线 | `d8409a4b0813771235555e32e3d8046a73988bfa` |
 | 来源版本 | `2.2.0` |
@@ -40,16 +40,21 @@
 | 本地路径 | [`vendor/ecc/skills`](./vendor/ecc/skills)、[`vendor/ecc/rules/react`](./vendor/ecc/rules/react)、[`vendor/ecc/docs/capability-surface-selection.md`](./vendor/ecc/docs/capability-surface-selection.md) |
 | 导入范围 | 286 个 Skill，包含 Skill 目录内的脚本、引用、模板、示例和资源 |
 | 许可证 | MIT，见 [`vendor/ecc/LICENSE`](./vendor/ecc/LICENSE) |
-| 本地改动 | 无。导入文件与固定来源基线一致，仅改变了仓库中的存放前缀 |
-| 验证结果 | 254 个 Skill 通过 Codex `quick_validate.py`；32 个保留上游 frontmatter 兼容性问题，见下方清单 |
-| 激活状态 | 未加入 `.claude-plugin/plugin.json`、`ask-matt` 或 `scripts/link-skills.sh`，也未启用 ECC Codex 插件 |
+| 本地改动 | 284 个 Skill 与固定来源基线一致；`coding-standards` 和 `tdd-workflow` 吸收 Shay 的本机规则，见下方说明 |
+| 验证结果 | 255 个 Skill 通过 Codex `quick_validate.py`；31 个保留上游 frontmatter 兼容性问题，见下方清单 |
+| 激活状态 | 由 `npx skills@latest add shay-wong/skills -g --full-depth` 发现和安装；未加入继承的 `.claude-plugin/plugin.json`、`ask-matt` 或 `scripts/link-skills.sh` |
 | 激活前置 | 当前 `~/.agents/skills` 有 32 个 ECC 同名安装项；接入本仓库前必须逐项替换并验证，避免同时加载两份 |
-| 比较方式 | 将来源基线的上述路径导出后，与 `vendor/ecc/` 执行目录级差异比较 |
-| 同步策略 | 从 ECC 的固定新提交重新导出相同路径，先审查上游删除、重命名、依赖和兼容性变化，再替换快照并更新本条目 |
+| 比较方式 | 将来源基线的上述路径导出后，与 `vendor/ecc/` 比较，并单独审查两个本地适配 Skill |
+| 同步策略 | 从 ECC 的固定新提交重新导出相同路径，先审查上游删除、重命名、依赖和兼容性变化，再重放并验证两个本地适配 |
 
-当前 32 个上游兼容性问题均为 `SKILL.md` frontmatter 使用了 Codex 校验器不接受的顶层字段：
+本地 ECC 适配：
 
-`agent-architecture-audit`、`agent-eval`、`agent-self-evaluation`、`benchmark-optimization-loop`、`blender-motion-state-inspection`、`carrier-relationship-management`、`ck`、`customs-trade-compliance`、`data-throughput-accelerator`、`ecc-recipes`、`energy-procurement`、`eval-harness`、`gan-style-harness`、`inventory-demand-planning`、`latency-critical-systems`、`logistics-exception-management`、`mailtrap-email-integration`、`ml-adoption-playbook`、`motion-advanced`、`motion-foundations`、`motion-patterns`、`parallel-execution-optimizer`、`production-scheduling`、`quality-nonconformance`、`react-native-patterns`、`recursive-decision-ledger`、`returns-reverse-logistics`、`skill-comply`、`taste`、`tdd-workflow`、`videodb`、`vue-patterns`。
+- `coding-standards`：吸收任务范围、中文业务注释、确定性逻辑、缓存条件和 TypeScript 约束。
+- `tdd-workflow`：将强制全量 TDD、全测试类型、80% 全局覆盖率和自动 checkpoint commit 改为按风险选择，并加入 PHPUnit 约定；同时移除 Codex 不支持的顶层 `argument-hint`。
+
+当前 31 个上游兼容性问题均为 `SKILL.md` frontmatter 使用了 Codex 校验器不接受的顶层字段：
+
+`agent-architecture-audit`、`agent-eval`、`agent-self-evaluation`、`benchmark-optimization-loop`、`blender-motion-state-inspection`、`carrier-relationship-management`、`ck`、`customs-trade-compliance`、`data-throughput-accelerator`、`ecc-recipes`、`energy-procurement`、`eval-harness`、`gan-style-harness`、`inventory-demand-planning`、`latency-critical-systems`、`logistics-exception-management`、`mailtrap-email-integration`、`ml-adoption-playbook`、`motion-advanced`、`motion-foundations`、`motion-patterns`、`parallel-execution-optimizer`、`production-scheduling`、`quality-nonconformance`、`react-native-patterns`、`recursive-decision-ledger`、`returns-reverse-logistics`、`skill-comply`、`taste`、`videodb`、`vue-patterns`。
 
 此外，`ecc-tools-cost-audit` 有意引用独立的 `ECC-Tools` 仓库；`configure-ecc`、`plan-canvas` 和部分 Claude 专用工作流仍依赖 ECC 插件、npm 包、hooks 或 Claude 配置目录。这些属于运行依赖，不是本次快照缺失文件。
 
@@ -57,17 +62,17 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | 已吸收 10 个稳定核心 Skill，尚未加入当前插件 |
+| 状态 | 保留 7 个独立核心 Skill，3 个重复标准已合并进 ECC canonical Skill |
 | 来源仓库 | 本机 Git 仓库 `/Users/Shay/.codex` |
 | 来源基线 | `c57e09d69347e7c284187e9bf6920a4704b81378` |
 | 来源路径 | `skills/add-dir`、`skills/agent-rules`、`skills/commit`、`skills/git-workflow-standards`、`skills/personal-coding-standards`、`skills/personal-development-workflow`、`skills/review-standards`、`skills/testing-standards`、`skills/typescript-standards`、`skills/worktree-clean` |
-| 本地路径 | [`skills/personal`](./skills/personal) |
+| 本地路径 | [`skills/personal`](./skills/personal)、[`vendor/ecc/skills/coding-standards`](./vendor/ecc/skills/coding-standards)、[`vendor/ecc/skills/tdd-workflow`](./vendor/ecc/skills/tdd-workflow) |
 | 采用原因 | 保留 Shay 的工作流路由、提交边界、Git 与删除安全、开发规范、评审规范和 worktree 清理规则 |
 | 来源归属 | `agent-rules` 及五个 standards Skill 由 ECC Claude Rules 迁移后持续本地化；其余条目由 Shay 的本地历史维护 |
 | 许可证 | ECC 派生内容遵循 [`vendor/ecc/LICENSE`](./vendor/ecc/LICENSE)；本地新增内容遵循本仓库 [`LICENSE`](./LICENSE) |
-| 本地改动 | 将 `agent-rules` 的六个本机绝对路径改为仓库内相对链接，其余 Skill 内容与固定本地基线一致 |
-| 验证结果 | 10 个 Skill 均通过 Codex `quick_validate.py` |
-| 激活状态 | `scripts/link-skills.sh` 可发现这些仓库内 Skill，但本次未运行脚本，也未移除 `~/.codex/skills` 中的现有副本 |
+| 本地改动 | 将 `agent-rules` 改为路由至 canonical `coding-standards` 和 `tdd-workflow`；删除三个重复独立 Skill；其独有规则已并入 ECC |
+| 验证结果 | 7 个独立个人 Skill 与 2 个本地适配 ECC Skill 均通过 Codex `quick_validate.py` |
+| 激活状态 | 通过 `skills.sh --full-depth` 统一安装；本次仍未删除 `~/.codex/skills` 和 `~/.agents/skills` 的现有副本 |
 | 同步策略 | 当前仓库完成依赖整理并成为唯一来源后，停止从 `~/.codex/skills` 反向同步；后续修改直接在本仓库维护 |
 
 当前仓库已形成第一批个人核心 Skill。后续吸收、改造或移除来源 Skill 时，应继续在这里按实际范围逐项登记。
