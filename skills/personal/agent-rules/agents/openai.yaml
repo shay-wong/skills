@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Rules"
+  short_description: "Help with Agent Rules tasks"
+  default_prompt: "Use $agent-rules to help with this task."

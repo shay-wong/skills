@@ -187,6 +187,8 @@ This repository maintains a Chinese [source and local changes ledger](./SOURCES.
 
 The complete ECC Skill catalog is preserved under [`vendor/ecc/skills`](./vendor/ecc/skills). It is an upstream snapshot for compatibility work and is not included in the current plugin or local linking script yet.
 
+Ten locally maintained core Skills are staged under [`skills/personal`](./skills/personal). They remain outside the current plugin while their dependencies and overlap with upstream catalogs are consolidated.
+
 ## Reference
 
 These split on one axis: who can invoke them. **User-invoked** skills are reachable only when you type them (e.g. `/grill-me`); their job is to orchestrate. **Model-invoked** skills can be invoked by you _or_ reached for automatically by the agent when the task fits; they hold the reusable discipline. A user-invoked skill may invoke model-invoked skills, but never another user-invoked one.

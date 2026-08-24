@@ -53,7 +53,24 @@
 
 此外，`ecc-tools-cost-audit` 有意引用独立的 `ECC-Tools` 仓库；`configure-ecc`、`plan-canvas` 和部分 Claude 专用工作流仍依赖 ECC 插件、npm 包、hooks 或 Claude 配置目录。这些属于运行依赖，不是本次快照缺失文件。
 
-当前仓库尚未形成独立 Skill 能力。后续对来源 Skill 的个人化改造，应在这里按实际采用范围逐项登记。
+### Shay 本地核心 Skills
+
+| 字段 | 当前值 |
+| --- | --- |
+| 状态 | 已吸收 10 个稳定核心 Skill，尚未加入当前插件 |
+| 来源仓库 | 本机 Git 仓库 `/Users/Shay/.codex` |
+| 来源基线 | `c57e09d69347e7c284187e9bf6920a4704b81378` |
+| 来源路径 | `skills/add-dir`、`skills/agent-rules`、`skills/commit`、`skills/git-workflow-standards`、`skills/personal-coding-standards`、`skills/personal-development-workflow`、`skills/review-standards`、`skills/testing-standards`、`skills/typescript-standards`、`skills/worktree-clean` |
+| 本地路径 | [`skills/personal`](./skills/personal) |
+| 采用原因 | 保留 Shay 的工作流路由、提交边界、Git 与删除安全、开发规范、评审规范和 worktree 清理规则 |
+| 来源归属 | `agent-rules` 及五个 standards Skill 由 ECC Claude Rules 迁移后持续本地化；其余条目由 Shay 的本地历史维护 |
+| 许可证 | ECC 派生内容遵循 [`vendor/ecc/LICENSE`](./vendor/ecc/LICENSE)；本地新增内容遵循本仓库 [`LICENSE`](./LICENSE) |
+| 本地改动 | 将 `agent-rules` 的六个本机绝对路径改为仓库内相对链接，其余 Skill 内容与固定本地基线一致 |
+| 验证结果 | 10 个 Skill 均通过 Codex `quick_validate.py` |
+| 激活状态 | `scripts/link-skills.sh` 可发现这些仓库内 Skill，但本次未运行脚本，也未移除 `~/.codex/skills` 中的现有副本 |
+| 同步策略 | 当前仓库完成依赖整理并成为唯一来源后，停止从 `~/.codex/skills` 反向同步；后续修改直接在本仓库维护 |
+
+当前仓库已形成第一批个人核心 Skill。后续吸收、改造或移除来源 Skill 时，应继续在这里按实际范围逐项登记。
 
 ## 新来源条目模板
 
