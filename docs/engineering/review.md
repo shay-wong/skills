@@ -2,7 +2,7 @@
 
 `review` is one entrypoint over the review Skills available on the current machine. It freezes one candidate, selects one primary workflow, adds only complementary scopes, and synthesizes one evidence-backed verdict.
 
-The installed set is discovered again on every invocation. If Ponytail is enabled and `ponytail-review` is available, general reviews add it as the final advisory pass. The review never installs or changes plugins.
+Availability is resolved again on every invocation. The current agent's Skill catalog is used directly when it is authoritative; filesystem scanning is only a fallback for harnesses that omit local or plugin Skills. If Ponytail is enabled and `ponytail-review` is available, general reviews add it as the final advisory pass. The review never installs or changes plugins.
 
 ## When to reach for it
 
@@ -25,7 +25,7 @@ Ponytail is the deliberate exception for general reviews: when available, it run
 
 **Does installation wire Ponytail into `review`?**
 
-No. The supported `npx skills` installer has no repository post-install hook. `review` discovers the current local set when it runs, which also notices plugins installed or removed later.
+No. The supported `npx skills` installer has no repository post-install hook. `review` first reuses the current agent's available-Skills catalog, then scans the local set only when that catalog cannot establish availability. This still notices plugins installed or removed later without paying for duplicate discovery in the normal case.
 
 **What happens when Ponytail is missing or disabled?**
 

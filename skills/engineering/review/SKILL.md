@@ -9,7 +9,7 @@ Act as the personal review entrypoint. Select one primary review workflow, add o
 
 ## Discover available reviewers
 
-Run `scripts/discover-review-skills.sh` from this Skill directory at the start of every review. Treat its output as filesystem evidence, then reconcile it with the Skills visible in the current harness. A plugin cache entry counts only when its plugin is enabled; a model-visible Skill always counts.
+Use the current harness's authoritative available-Skills catalog. A model-visible Skill is available; do not rescan it. Only when the catalog is absent or known to omit local or plugin Skills, run `scripts/discover-review-skills.sh` from this Skill directory as fallback. Count a plugin-cache Skill only when its plugin is enabled.
 
 Do not rely on install-time discovery. The supported `npx skills` installer has no repository post-install hook, and local plugins can change after installation.
 
