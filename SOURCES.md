@@ -38,26 +38,44 @@
 | 来源版本 | `2.2.0` |
 | 来源路径 | `skills/`、`rules/react/`、`docs/capability-surface-selection.md`、`LICENSE` |
 | 本地路径 | [`skills/engineering`](./skills/engineering)、[`skills/productivity`](./skills/productivity)、[`skills/misc`](./skills/misc)、[`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
-| 导入范围 | 原始 286 个 Skill 中，277 个非重叠入口按领域保留；9 个重叠入口吸收进 Matt canonical Skill |
+| 导入范围 | 原始 286 个 Skill 中，276 个非重叠入口按领域保留；10 个重叠入口吸收进当前 canonical Skill |
 | 许可证 | MIT，见 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
-| 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 9 个重叠入口并把其决策规则吸收进 Matt `tdd`、`research` 和 `implement` |
+| 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口，将其规则吸收进 Matt `tdd`、`research`、`implement` 和 `write-notes-like-deepseek` |
 | 验证结果 | `skills.sh` 发现 315 个 Skill；Codex `quick_validate.py` 为 263 通过、52 失败，其中 21 个是 Matt/beta 既有 Claude 字段，31 个是 ECC 上游 frontmatter 问题 |
 | 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装；ECC 子目录不加入继承的 Matt plugin、`ask-matt` 或 maintainer linking script |
 | 激活前置 | 当前 `~/.agents/skills` 有 32 个 ECC 同名安装项；接入本仓库前必须逐项替换并验证，避免同时加载两份 |
-| 比较方式 | 从固定来源基线重建原始目录清单，再审查分类移动、9 个吸收入口、路径修复和 Matt canonical 差异 |
-| 同步策略 | 从 ECC 的固定新提交先比较上游删除、重命名、依赖和兼容性变化，再按当前领域映射更新 277 个入口，并重新审查 9 个已吸收能力 |
+| 比较方式 | 从固定来源基线重建原始目录清单，再审查分类移动、10 个吸收入口、路径修复和 canonical 差异 |
+| 同步策略 | 从 ECC 的固定新提交先比较上游删除、重命名、依赖和兼容性变化，再按当前领域映射更新 276 个入口，并重新审查 10 个已吸收能力 |
 
-吸收到 Matt 的 ECC 入口：
+吸收到 canonical Skill 的 ECC 入口：
 
 - `tdd-workflow` -> `skills/engineering/tdd`
 - `research-ops`、`deep-research` -> `skills/engineering/research`
 - `orch-add-feature`、`orch-change-feature`、`orch-fix-defect`、`orch-refine-code`、`orch-build-mvp`、`orch-pipeline` -> `skills/engineering/implement`
+- `architecture-decision-records` -> `skills/engineering/write-notes-like-deepseek`
 
 当前 31 个上游兼容性问题均为 `SKILL.md` frontmatter 使用了 Codex 校验器不接受的顶层字段：
 
 `agent-architecture-audit`、`agent-eval`、`agent-self-evaluation`、`benchmark-optimization-loop`、`blender-motion-state-inspection`、`carrier-relationship-management`、`ck`、`customs-trade-compliance`、`data-throughput-accelerator`、`ecc-recipes`、`energy-procurement`、`eval-harness`、`gan-style-harness`、`inventory-demand-planning`、`latency-critical-systems`、`logistics-exception-management`、`mailtrap-email-integration`、`ml-adoption-playbook`、`motion-advanced`、`motion-foundations`、`motion-patterns`、`parallel-execution-optimizer`、`production-scheduling`、`quality-nonconformance`、`react-native-patterns`、`recursive-decision-ledger`、`returns-reverse-logistics`、`skill-comply`、`taste`、`videodb`、`vue-patterns`。
 
 此外，`ecc-tools-cost-audit` 有意引用独立的 `ECC-Tools` 仓库；`configure-ecc`、`plan-canvas` 和部分 Claude 专用工作流仍依赖 ECC 插件、npm 包、hooks 或 Claude 配置目录。这些属于运行依赖，不是本次快照缺失文件。
+
+### czm15053/write-notes-like-deepseek
+
+| 字段 | 当前值 |
+| --- | --- |
+| 状态 | 已吸收进 engineering，并替代 ECC `architecture-decision-records` 入口 |
+| 来源仓库 | <https://github.com/czm15053/write-notes-like-deepseek> |
+| 来源基线 | `9420c100bcf708502f6bbb5792abf1f43b9506d1` |
+| 来源版本 | `0.1.0` |
+| 来源路径 | `SKILL.md`、`references/`、`scripts/`、`templates/` |
+| 本地路径 | [`skills/engineering/write-notes-like-deepseek`](./skills/engineering/write-notes-like-deepseek) |
+| 采用原因 | 为功能、缺陷、架构、流程、测试和简化决定提供统一的 Agent Note 生命周期、模板与机械校验 |
+| 许可证 | 上游 README 声明 MIT；固定来源提交没有独立 `LICENSE` 文件，GitHub API 也未识别许可证 |
+| 本地改动 | 省略来源仓库的 README、package.json 和安装包装；增加来源 metadata；收紧触发描述；按本仓库标点规则改写 em dash；将 rejected 状态分隔符改为冒号；替代 ECC `architecture-decision-records` 并修复其消费者引用 |
+| 验证方式 | 对 Skill 运行 Codex `quick_validate.py`；在临时 Note 树上分别验证合法样例通过、非法样例被 tree 与 format 门禁拒绝 |
+| 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装，不加入继承的 Matt plugin |
+| 同步策略 | 对比新的固定上游提交，只同步 Agent Note 生命周期、格式和校验行为；保留本地入口去重、标点与安装边界 |
 
 ### Shay 本地 Skills
 

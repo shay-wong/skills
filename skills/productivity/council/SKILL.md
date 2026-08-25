@@ -102,10 +102,10 @@ Context:
 [only the relevant snippets or constraints]
 
 Respond with:
-1. Position — 1-2 sentences
-2. Reasoning — 3 concise bullets
-3. Risk — biggest risk in your recommendation
-4. Surprise — one thing the other voices may miss
+1. Position: 1-2 sentences
+2. Reasoning: 3 concise bullets
+3. Risk: biggest risk in your recommendation
+4. Surprise: one thing the other voices may miss
 
 Be direct. No hedging. Keep it under 300 words.
 ```
@@ -159,6 +159,7 @@ Do **not** write ad-hoc notes to `~/.claude/notes` or other shadow paths from th
 If the council materially changes the recommendation:
 - use `knowledge-ops` to store the lesson in the right durable location
 - or use `/save-session` if the outcome belongs in session memory
+- or call the Skill tool with "write-notes-like-deepseek" when the decision needs a repository-local rationale and alternatives record
 - or update the relevant GitHub / Linear issue directly if the decision changes active execution truth
 
 Only persist a decision when it changes something real.
@@ -182,10 +183,10 @@ If the user wants another round:
 
 ## Related Skills
 
-- `santa-method` — adversarial verification
-- `knowledge-ops` — persist durable decision deltas correctly
-- `search-first` — gather external reference material before the council if needed
-- `architecture-decision-records` — formalize the outcome when the decision becomes long-lived system policy
+- `santa-method`: adversarial verification
+- `knowledge-ops`: persist durable decision deltas correctly
+- `search-first`: gather external reference material before the council if needed
+- `write-notes-like-deepseek`: formalize the outcome when the decision becomes long-lived system policy
 
 ## Example
 

@@ -146,7 +146,7 @@ Software engineering fundamentals matter more than ever. These skills are my bes
 
 This repository maintains a Chinese [source and local changes ledger](./SOURCES.md). It records the exact upstream baseline for adopted skills and any changes made for this personal collection.
 
-ECC Skills are absorbed directly into [`skills/engineering`](./skills/engineering), [`skills/productivity`](./skills/productivity), and [`skills/misc`](./skills/misc). Overlapping ECC and local workflows are folded into the Matt canonical Skills instead of remaining parallel entry points; provenance remains in [SOURCES.md](./SOURCES.md).
+Third-party Skills are absorbed directly into [`skills/engineering`](./skills/engineering), [`skills/productivity`](./skills/productivity), and [`skills/misc`](./skills/misc). Overlapping external and local workflows are folded into one canonical entry point instead of remaining parallel; provenance remains in [SOURCES.md](./SOURCES.md).
 
 ## Reference
 

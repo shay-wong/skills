@@ -12,7 +12,7 @@ The remaining direct-child entries below include absorbed low-frequency and vert
 
 ## Imported library
 
-Absorbed low-frequency and vertical ECC Skills. Install them through the repository `skills.sh` route; they are not part of the inherited Matt plugin.
+Absorbed low-frequency and vertical third-party Skills, including ECC. Install them through the repository `skills.sh` route; they are not part of the inherited Matt plugin.
 
 - **[agent-payment-x402](./agent-payment-x402/SKILL.md)**: Add x402 payment execution to AI agents with per-task budgets, spending controls, and non-custodial wallets.
 - **[autonomous-loops](./autonomous-loops/SKILL.md)**: Patterns and architectures for autonomous Claude Code loops : from simple sequential pipelines to RFC-driven multi-agent DAG systems.

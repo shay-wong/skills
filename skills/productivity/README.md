@@ -21,7 +21,7 @@ Model- or user-reachable (rich trigger phrasing so the model can reach for them)
 
 ## Imported library
 
-Absorbed ECC research, content, business, and personal workflow Skills. Install them through the repository `skills.sh` route; they are not part of the inherited Matt plugin.
+Absorbed third-party research, content, business, and personal workflow Skills, including ECC. Install them through the repository `skills.sh` route; they are not part of the inherited Matt plugin.
 
 - **[agent-self-evaluation](./agent-self-evaluation/SKILL.md)**: Use after completing any non-trivial task.
 - **[article-writing](./article-writing/SKILL.md)**: Write articles, guides, blog posts, tutorials, newsletter issues, and other long-form content in a distinctive voice derived from supplied examples or brand guidance.

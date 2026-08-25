@@ -164,4 +164,4 @@ truth. Do not create a running review log.
 
 - `council` - required base workflow.
 - `santa-method` - verification rather than decision critique.
-- `architecture-decision-records` - preserve a durable decision when warranted.
+- `write-notes-like-deepseek` - preserve a durable decision when warranted.

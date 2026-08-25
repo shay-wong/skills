@@ -35,7 +35,7 @@ Model- or user-reachable (rich trigger phrasing so the model can reach for them)
 
 ## Imported library
 
-Absorbed ECC engineering and technical Skills. Install them through the repository `skills.sh` route; they are not part of the inherited Matt plugin.
+Absorbed third-party engineering and technical Skills, including ECC. Install them through the repository `skills.sh` route; they are not part of the inherited Matt plugin.
 
 - **[accessibility](./accessibility/SKILL.md)**: Design, implement, and audit inclusive digital products using WCAG 2.2 Level AA.
 - **[agent-architecture-audit](./agent-architecture-audit/SKILL.md)**: Full-stack diagnostic for agent and LLM applications.
@@ -51,7 +51,6 @@ Absorbed ECC engineering and technical Skills. Install them through the reposito
 - **[angular-developer](./angular-developer/SKILL.md)**: Generates Angular code and provides architectural guidance.
 - **[api-connector-builder](./api-connector-builder/SKILL.md)**: Build a new API connector or provider by matching the target repo's existing integration pattern exactly.
 - **[api-design](./api-design/SKILL.md)**: REST API design patterns including resource naming, status codes, pagination, filtering, error responses, versioning, and rate limiting for production APIs.
-- **[architecture-decision-records](./architecture-decision-records/SKILL.md)**: Capture architectural decisions made during Claude Code sessions as structured ADRs.
 - **[autonomous-agent-harness](./autonomous-agent-harness/SKILL.md)**: Transform Claude Code into a fully autonomous agent system with persistent memory, scheduled operations, computer use, and task queuing.
 - **[backend-patterns](./backend-patterns/SKILL.md)**: Backend architecture patterns, API design, database optimization, and server-side best practices for Node.js, Express, and Next.js API routes.
 - **[benchmark](./benchmark/SKILL.md)**: Use this skill to measure performance baselines, detect regressions before/after PRs, and compare stack alternatives.
@@ -218,3 +217,4 @@ Absorbed ECC engineering and technical Skills. Install them through the reposito
 - **[vue-patterns](./vue-patterns/SKILL.md)**: Vue.js 3 Composition API patterns, component architecture, reactivity best practices, Pinia state management, Vue Router navigation, and Nuxt SSR patterns.
 - **[windows-desktop-e2e](./windows-desktop-e2e/SKILL.md)**: E2E testing for Windows native desktop apps (WPF, WinForms, Win32/MFC, Qt) using pywinauto and Windows UI Automation.
 - **[workspace-surface-audit](./workspace-surface-audit/SKILL.md)**: Audit the active repo, MCP servers, plugins, connectors, env surfaces, and harness setup, then recommend the highest-value ECC-native skills, hooks, agents, and operator workflows.
+- **[write-notes-like-deepseek](./write-notes-like-deepseek/SKILL.md)**: Write and validate repository-local Agent Notes for non-trivial decisions, including rationale, alternatives, consequences, and lifecycle.
