@@ -26,7 +26,9 @@ scan_skill_files() {
     while IFS= read -r -d '' skill_file; do
       name="$(skill_name "$skill_file")"
       case "$name" in
-        review|review-*|*-review|*-review-*) printf '%s%s\n' "$invocation_prefix" "$name" ;;
+        review|review-*|*-review|*-review-*|audit|audit-*|*-audit|*-audit-*|gh-address-comments|golang-patterns|cpp-coding-standards|rust-patterns|kotlin-patterns|kotlin-ktor-patterns|kotlin-exposed-patterns|python-patterns|fastapi-patterns|dart-flutter-patterns)
+          printf '%s%s\n' "$invocation_prefix" "$name"
+          ;;
       esac
     done
 }

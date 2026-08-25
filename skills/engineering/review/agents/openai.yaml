@@ -1,3 +1,3 @@
 interface:
   display_name: "Review"
-  short_description: "Orchestrate installed review workflows"
+  short_description: "Route and arbitrate installed review workflows"
