@@ -40,7 +40,7 @@
 | 本地路径 | [`skills/engineering`](./skills/engineering)、[`skills/productivity`](./skills/productivity)、[`skills/misc`](./skills/misc)、[`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
 | 导入范围 | 原始 286 个 Skill 中，276 个非重叠入口按领域保留；10 个重叠入口吸收进当前 canonical Skill |
 | 许可证 | MIT，见 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
-| 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口，将其规则吸收进 Matt `tdd`、`research`、`implement` 和 `write-notes-like-deepseek` |
+| 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口，将其规则吸收进 Matt `tdd`、`research`、`implement` 和本地 `decision-notes` |
 | 验证结果 | `skills.sh` 发现 315 个 Skill；Codex `quick_validate.py` 为 263 通过、52 失败，其中 21 个是 Matt/beta 既有 Claude 字段，31 个是 ECC 上游 frontmatter 问题 |
 | 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装；ECC 子目录不加入继承的 Matt plugin、`ask-matt` 或 maintainer linking script |
 | 激活前置 | 当前 `~/.agents/skills` 有 32 个 ECC 同名安装项；接入本仓库前必须逐项替换并验证，避免同时加载两份 |
@@ -52,7 +52,7 @@
 - `tdd-workflow` -> `skills/engineering/tdd`
 - `research-ops`、`deep-research` -> `skills/engineering/research`
 - `orch-add-feature`、`orch-change-feature`、`orch-fix-defect`、`orch-refine-code`、`orch-build-mvp`、`orch-pipeline` -> `skills/engineering/implement`
-- `architecture-decision-records` -> `skills/engineering/write-notes-like-deepseek`
+- `architecture-decision-records` -> `skills/engineering/decision-notes`
 
 当前 31 个上游兼容性问题均为 `SKILL.md` frontmatter 使用了 Codex 校验器不接受的顶层字段：
 
@@ -64,18 +64,18 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | 已吸收进 engineering，并替代 ECC `architecture-decision-records` 入口 |
+| 状态 | 已与 ECC `architecture-decision-records` 合并为本地 `decision-notes` canonical Skill |
 | 来源仓库 | <https://github.com/czm15053/write-notes-like-deepseek> |
 | 来源基线 | `9420c100bcf708502f6bbb5792abf1f43b9506d1` |
 | 来源版本 | `0.1.0` |
 | 来源路径 | `SKILL.md`、`references/`、`scripts/`、`templates/` |
-| 本地路径 | [`skills/engineering/write-notes-like-deepseek`](./skills/engineering/write-notes-like-deepseek) |
-| 采用原因 | 为功能、缺陷、架构、流程、测试和简化决定提供统一的 Agent Note 生命周期、模板与机械校验 |
+| 本地路径 | [`skills/engineering/decision-notes`](./skills/engineering/decision-notes) |
+| 采用原因 | 统一 ADR 与 Agent Note 的入口，同时保留既有目录兼容、决策分类、生命周期、模板与机械校验 |
 | 许可证 | 上游 README 声明 MIT；固定来源提交没有独立 `LICENSE` 文件，GitHub API 也未识别许可证 |
-| 本地改动 | 省略来源仓库的 README、package.json 和安装包装；增加来源 metadata；收紧触发描述；按本仓库标点规则改写 em dash；将 rejected 状态分隔符改为冒号；替代 ECC `architecture-decision-records` 并修复其消费者引用 |
-| 验证方式 | 对 Skill 运行 Codex `quick_validate.py`；在临时 Note 树上分别验证合法样例通过、非法样例被 tree 与 format 门禁拒绝 |
+| 本地改动 | 省略来源仓库的 README、package.json 和安装包装；与 ECC ADR 工作流重写为中性的 `decision-notes`；同一决定只保留一份记录；既有 `docs/adr/` 保留编号、索引、查询与 ADR 生命周期，其他重要决定使用分类 Agent Notes；按本仓库标点规则改写 em dash；将 rejected 状态分隔符改为冒号 |
+| 验证方式 | 对合并 Skill 运行 Codex `quick_validate.py`；用 ADR 样例检查编号、索引、状态、备选与后果；在临时 Note 树上分别验证合法样例通过、非法样例被 tree 与 format 门禁拒绝 |
 | 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装，不加入继承的 Matt plugin |
-| 同步策略 | 对比新的固定上游提交，只同步 Agent Note 生命周期、格式和校验行为；保留本地入口去重、标点与安装边界 |
+| 同步策略 | 对比新的固定上游提交，只同步 Agent Note 生命周期、格式和校验行为；同时对照 ECC ADR 契约，保留本地单入口、既有目录兼容、标点与安装边界 |
 
 ### Shay 本地 Skills
 

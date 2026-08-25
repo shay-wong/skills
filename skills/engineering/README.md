@@ -85,6 +85,7 @@ Absorbed third-party engineering and technical Skills, including ECC. Install th
 - **[data-scraper-agent](./data-scraper-agent/SKILL.md)**: Build a fully automated AI-powered data collection agent for any public source : job boards, prices, news, GitHub, sports, anything.
 - **[data-throughput-accelerator](./data-throughput-accelerator/SKILL.md)**: Use when large data ingestion, backfill, export, ETL, warehouse loading, manifest catch-up, or table synchronization needs to become much faster while preserving data correctness.
 - **[database-migrations](./database-migrations/SKILL.md)**: Database migration best practices for schema changes, data migrations, rollbacks, and zero-downtime deployments across PostgreSQL, MySQL, and common ORMs (Prisma, Drizzle, Kysely, Django, TypeORM, golang-migrate).
+- **[decision-notes](./decision-notes/SKILL.md)**: Keep one durable decision record using the repository's existing ADR convention or classified Agent Notes, with alternatives, consequences, lifecycle, and verification.
 - **[delivery-gate](./delivery-gate/SKILL.md)**: Stop hook that blocks Claude from finishing until quality checks pass.
 - **[deployment-patterns](./deployment-patterns/SKILL.md)**: Deployment workflows, CI/CD pipeline patterns, Docker containerization, health checks, rollback strategies, and production readiness checklists for web applications.
 - **[design-system](./design-system/SKILL.md)**: Use this skill to generate or audit design systems, check visual consistency, and review PRs that touch styling.
@@ -217,4 +218,3 @@ Absorbed third-party engineering and technical Skills, including ECC. Install th
 - **[vue-patterns](./vue-patterns/SKILL.md)**: Vue.js 3 Composition API patterns, component architecture, reactivity best practices, Pinia state management, Vue Router navigation, and Nuxt SSR patterns.
 - **[windows-desktop-e2e](./windows-desktop-e2e/SKILL.md)**: E2E testing for Windows native desktop apps (WPF, WinForms, Win32/MFC, Qt) using pywinauto and Windows UI Automation.
 - **[workspace-surface-audit](./workspace-surface-audit/SKILL.md)**: Audit the active repo, MCP servers, plugins, connectors, env surfaces, and harness setup, then recommend the highest-value ECC-native skills, hooks, agents, and operator workflows.
-- **[write-notes-like-deepseek](./write-notes-like-deepseek/SKILL.md)**: Write and validate repository-local Agent Notes for non-trivial decisions, including rationale, alternatives, consequences, and lifecycle.

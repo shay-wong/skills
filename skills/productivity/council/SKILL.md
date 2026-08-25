@@ -159,7 +159,7 @@ Do **not** write ad-hoc notes to `~/.claude/notes` or other shadow paths from th
 If the council materially changes the recommendation:
 - use `knowledge-ops` to store the lesson in the right durable location
 - or use `/save-session` if the outcome belongs in session memory
-- or call the Skill tool with "write-notes-like-deepseek" when the decision needs a repository-local rationale and alternatives record
+- or call the Skill tool with "decision-notes" when the decision needs a repository-local rationale and alternatives record
 - or update the relevant GitHub / Linear issue directly if the decision changes active execution truth
 
 Only persist a decision when it changes something real.
@@ -186,7 +186,7 @@ If the user wants another round:
 - `santa-method`: adversarial verification
 - `knowledge-ops`: persist durable decision deltas correctly
 - `search-first`: gather external reference material before the council if needed
-- `write-notes-like-deepseek`: formalize the outcome when the decision becomes long-lived system policy
+- `decision-notes`: formalize the outcome when the decision becomes long-lived system policy
 
 ## Example
 
