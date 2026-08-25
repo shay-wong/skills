@@ -40,7 +40,7 @@
 | 本地路径 | [`skills/engineering`](./skills/engineering)、[`skills/productivity`](./skills/productivity)、[`skills/misc`](./skills/misc)、[`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
 | 导入范围 | 原始 286 个 Skill 中，276 个非重叠入口按领域保留；10 个重叠入口吸收进当前 canonical Skill |
 | 许可证 | MIT，见 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
-| 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口，将其规则吸收进 Matt `tdd`、`research`、`implement` 和本地 `decision-notes` |
+| 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口并融合进 canonical Skill；`tdd` 保留风险门禁、计划输入安全、真实 RED/GREEN、测试层级和证据交接；`research` 保留聚焦、比较、深度与监控候选模式、多来源交叉验证和分题并行；其余入口吸收进 Matt `implement` 和本地 `decision-notes` |
 | 验证结果 | `skills.sh` 发现 315 个 Skill；Codex `quick_validate.py` 为 263 通过、52 失败，其中 21 个是 Matt/beta 既有 Claude 字段，31 个是 ECC 上游 frontmatter 问题 |
 | 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装；ECC 子目录不加入继承的 Matt plugin、`ask-matt` 或 maintainer linking script |
 | 激活前置 | 当前 `~/.agents/skills` 有 32 个 ECC 同名安装项；接入本仓库前必须逐项替换并验证，避免同时加载两份 |
@@ -53,6 +53,8 @@
 - `research-ops`、`deep-research` -> `skills/engineering/research`
 - `orch-add-feature`、`orch-change-feature`、`orch-fix-defect`、`orch-refine-code`、`orch-build-mvp`、`orch-pipeline` -> `skills/engineering/implement`
 - `architecture-decision-records` -> `skills/engineering/decision-notes`
+
+合并后的 `tdd` 不保留 ECC 的自动 checkpoint commit、固定 80% 全仓覆盖或强制独立证据文件；`research` 不绑定 Firecrawl、Exa 或固定来源数量。这些行为与当前授权边界、按风险验证和可替换工具原则冲突，不属于需要保留的优势。
 
 当前 31 个上游兼容性问题均为 `SKILL.md` frontmatter 使用了 Codex 校验器不接受的顶层字段：
 

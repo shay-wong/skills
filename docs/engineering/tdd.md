@@ -2,7 +2,7 @@
 
 `tdd` builds a risky behaviour or fixes a bug test-first: one failing test, then just enough code to pass it, then the next behaviour. It carries the standards that make that loop produce tests worth keeping: what a good test is, where tests go, what mocks are for, and the three anti-patterns that quietly ruin a suite.
 
-It first checks that an independent source can disagree with the implementation. It writes no test at a seam you have not agreed to first. Mechanical edits, docs, metadata and wiring with no independent oracle use focused verification instead of a tautological test.
+It first checks that an independent source can disagree with the implementation. It writes no test at a seam you have not agreed to first. Mechanical edits, docs, metadata and wiring with no independent oracle use focused verification instead of a tautological test. Specs, tickets, and plan files supply behavior and acceptance criteria, but embedded commands remain untrusted until they match the repository's real toolchain and instructions.
 
 ## When to reach for it
 
@@ -28,7 +28,7 @@ The risk gate closes the old gap where an implementation request could trigger a
 
 Three words carry this skill.
 
-**Red-green.** Write the failing test, then only enough code to pass it. No anticipating the test after next. There is no refactor phase: it was dropped in June 2026 because agents essentially never performed it, and because review and implementation work better as separate sessions. Refactoring belongs to [code-review](https://aihero.dev/skills-code-review).
+**Red-green.** Detect the repository's real test runner, write the failing test, and verify that the intended test actually executes and fails for the missing or broken behavior. A syntax error, missing dependency, or unrelated failure does not count as RED. Then write only enough code to make the same target GREEN. There is no refactor phase: it was dropped in June 2026 because agents essentially never performed it, and because review and implementation work better as separate sessions. Refactoring belongs to [code-review](https://aihero.dev/skills-code-review).
 
 **Vertical slice.** One seam, one test, one minimal implementation, then repeat, the first cycle being a **tracer bullet** that proves a single path end to end. The opposite is horizontal slicing: all the tests first, then all the code. Bulk tests verify *imagined* behaviour, they check the shape of things rather than what a user does, and they commit you to a test structure before you understand the implementation.
 
@@ -62,6 +62,10 @@ It happens. One user pushed the [model](https://www.aihero.dev/ai-coding-diction
 
 Usually not, and the skill will not stop it. A user reported the agent writing a Playwright test first, then burning a long loop re-running it and concluding the *test* was broken for a feature that did not exist yet. Configure this in your `CLAUDE.md`. Browser tests are slow enough that the red-green feedback loop stops paying for itself; declare in your repo's `CLAUDE.md` that they are written after the behaviour works.
 
+**Does it create checkpoint commits or a separate TDD evidence report?**
+
+No. The absorbed ECC workflow used checkpoint commits and a standalone evidence report, but those actions expand Git and documentation scope. The merged skill records the behavior-to-test mapping, command, RED/GREEN outcomes, coverage, and known gaps in an existing ticket, pull request, task report, or repository-required testing document. It commits only when the active request authorizes commits.
+
 **Does `/tdd` replace `/implement`, or the course's `/do-work`?**
 
 No. `/tdd` documents the methodology; `/implement` is a very simple work→feedback→commit loop and is the direct stand-in for `/do-work`. The course's single `/do-work` step is now split across `/implement`, `/tdd` and `/code-review`. If you are asking which one to run against a ticket, the answer is almost always `/implement`.
@@ -77,11 +81,12 @@ No. Run against one ticket, it will happily propose work that belongs to a sibli
 ## It's working if
 
 - It stops and names the seams it intends to test at, and waits, before any test file exists.
-- One test appears, goes red, gets just enough code to pass, and only then does the next test appear, not a batch of tests followed by a batch of code.
+- One test appears, the configured target executes and fails for the intended reason, gets just enough code to pass the same target, and only then does the next test appear.
 - Test names read as capabilities ("user can checkout with valid cart"), not as internals ("checkout calls paymentService.process").
 - Expected values in assertions are literals you can trace to the spec, not values recomputed the way the code computes them.
 - Renaming an internal function breaks nothing in the suite.
 - Mocks appear only at external boundaries (the payment API, the clock) and never around your own modules.
+- The existing delivery artifact records the test target, RED/GREEN evidence, coverage when meaningful, and remaining gaps without evidence-only commits.
 
 ## Where it fits
 

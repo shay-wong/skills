@@ -1,8 +1,8 @@
 ## What it does
 
-`research` answers a question by reading the sources that own the answer, then leaves a cited Markdown file in the repo. It works only from **[primary sources](https://www.aihero.dev/ai-coding-dictionary/primary-source)**: official docs, source code, specs, first-party APIs. It follows every claim back to the source that owns it, so it will not repeat a blog post's account of an API when the API's own docs are reachable.
+`research` answers focused facts, comparisons, and broad questions by reading the sources that own the answer, then leaves one cited result. It starts with material you already supplied and local evidence, chooses the lightest useful mode, and follows material claims back to **[primary sources](https://www.aihero.dev/ai-coding-dictionary/primary-source)** such as official docs, source code, specs, filings, papers, and first-party APIs.
 
-It does not answer you in the conversation. The output is a file, written where the repo already keeps such notes, with a link on each claim. That is the point: a document you can react to, hand to another agent, or throw away, rather than an answer that vanishes when the [session](https://www.aihero.dev/ai-coding-dictionary/session) ends.
+It distinguishes sourced fact, material you provided, inference, recommendation, and unresolved gaps. Material claims are cross-checked when possible, and single-source claims are labelled instead of presented as consensus. The default output is a file where the repo keeps research notes, unless you request chat-only output or there is no repository workspace.
 
 ## When to reach for it
 
@@ -20,21 +20,26 @@ Reach for it when the next step is *finding something out* from outside the work
 
 The line between `research` and `grill-with-docs` is the **shelf life of what comes back**. Research produces short-lived assets: what this library's auth mechanism does as of this week. An ADR records a decision you keep. If what you are producing is a decision rather than a fact, you are [grilling](https://www.aihero.dev/ai-coding-dictionary/grilling), not researching.
 
-## Delegated legwork
+## Research modes
 
-The defining move is that the reading runs as a **background agent**. You keep working; it goes off, follows each claim to its primary source, writes one Markdown file, and reports back. Research is legwork you delegate, not thinking you outsource: you get a document to grill, plan, or design against, and you still make the call.
+The question determines the shape of the work:
 
-The background brief now tells the agent to perform the research directly instead of redispatching the same task. This is an instruction-level guard, so the task list remains the observable check.
+| Mode | Shape |
+| --- | --- |
+| Focused | One research lane follows the shortest primary-source path to one current fact. |
+| Comparison | Every option is checked against the same decision criteria before the recommendation is written. |
+| Deep | The topic is split into a few non-overlapping subquestions, researched concurrently when delegation is available and authorized, then reconciled by the main session. |
+| Monitoring candidate | The current lookup is completed normally, then the repeated freshness need is reported without creating automation. |
 
-Where the file lands is decided by the repo, not by the skill: it matches whatever convention already exists for notes, and if there is none it picks somewhere sensible and tells you where. It writes one file per run.
+Each delegated researcher owns its assigned question directly and does not redispatch the same work. The main session owns source conflicts, cross-checking, and the final synthesis. Research is legwork you delegate, not judgment you outsource.
+
+Where the file lands is decided by the repo, not by the skill. It matches the existing note convention and produces one final artifact per run, even when several independent lanes contributed evidence.
 
 ## Common questions
 
 **It spawned a second research agent. Is that meant to happen?**
 
-No. The Skill now tells the background agent that it owns the research directly and must not spawn another copy. The guard is instructional rather than structural, so stop a duplicate if the harness still creates one.
-
-The opposite failure exists as well: if your own global instructions forbid an agent from re-delegating work, the background agent will politely decline the task and the skill quietly does nothing.
+Sometimes. A focused fact should have one lane. A broad synthesis may use several lanes only when each owns a different named subquestion and the environment permits delegation. A second task repeating the same question is still a nesting bug and should be stopped.
 
 **Where should the file live, and should I commit it?**
 
@@ -42,7 +47,7 @@ The skill puts the file where the repo already keeps notes and does not have an 
 
 **What counts as a "high-trust" primary source, and who decides?**
 
-The [model](https://www.aihero.dev/ai-coding-dictionary/model) does. The skill names the *kinds* of source that qualify (official docs, source code, specs, first-party APIs), and there is no allowlist, no domain gate, and no verification pass. This was the loudest objection when the skill was first proposed and it has never been answered publicly: "Five research subagents pointed at junk just gives you five confident wrong answers faster. How are you gating what counts as high-trust sources?" The mitigation you actually have is the citation on each claim. Follow two or three of them. If they land on a summary of the thing rather than the thing, the run failed at its one job.
+The [model](https://www.aihero.dev/ai-coding-dictionary/model) still selects sources, but citations are no longer the only check. Decisive claims should be read in full and cross-checked against another credible source when possible. If only one primary source exists, the result labels that limitation. Following a citation should land on the document, source, filing, paper, or dataset that owns the claim rather than a summary of it.
 
 **Does a later session reuse what an earlier run found?**
 
@@ -62,10 +67,10 @@ No, it now fires them for you. In the unreleased changes since v1.1, a charting 
 
 ## It's working if
 
-- Your own session keeps going. If you are sitting watching it read, the delegation didn't happen.
-- Exactly one new background task appears. A second one with a near-identical name is the nesting bug.
-- One new Markdown file shows up, in the folder the repo already uses for notes, and the agent tells you the path.
-- Every claim in it carries a link, and following two at random lands you on an official doc, a spec, or the actual source file, not on someone's write-up of it.
+- A focused question uses one short evidence path; a broad question is split into named, non-overlapping subquestions only when that improves coverage.
+- One final Markdown artifact appears in the repo's note location, unless you asked for chat-only output, and the agent tells you its path.
+- Material claims carry citations to primary sources, source conflicts are explained, and single-source claims are labelled.
+- Freshness-sensitive facts include concrete dates, while facts, inference, recommendation, and gaps stay visibly separate.
 - You can make the decision you were stuck on from the file alone, without going back to the sources yourself.
 
 ## Where it fits
