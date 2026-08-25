@@ -28,8 +28,9 @@ Choose the primary workflow from the user's main intent:
 
 Add a complementary review only when its scope is distinct from the primary:
 
-- Add `security-review` for authentication, authorization, secrets, untrusted input, uploads, APIs, payments, privacy, cryptography, or another trust boundary.
+- Add `security-review` for authentication, authorization, secrets, untrusted input, uploads, database queries, file-system operations, APIs, payments, privacy, cryptography, or another trust boundary.
 - Add the matching installed domain review when correctness depends on language, framework, platform, or game expertise absent from the primary.
+- Treat `review-standards` as overlapping policy already absorbed into `code-review`; never select it as a complementary pass.
 - Do not add another general-purpose code review merely because it is installed.
 - If `ponytail:ponytail-review` is available and is not primary, always add it as an advisory pass and run it last against the final candidate.
 

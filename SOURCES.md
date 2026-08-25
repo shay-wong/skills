@@ -92,7 +92,7 @@
 | 采用原因 | 保留一个可发现本机补充审查能力的个人统筹入口，以及安全提交、worktree 清理、按风险开发与测试、评审证据门槛和冲突决策规则 |
 | 来源归属 | `agent-rules` 及五个 standards Skill 由 ECC Claude Rules 迁移后持续本地化；其余条目由 Shay 的本地历史维护 |
 | 许可证 | ECC 派生规则遵循 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE)；本地新增内容遵循本仓库 [`LICENSE`](./LICENSE) |
-| 本地改动 | `review`、`commit` 与 `worktree-clean` 成为 promoted engineering Skill；`review` 保留为轻量统筹入口，优先复用当前 harness 的可用 Skill 清单，仅在清单缺失或不完整时扫描本地审查 Skill，并在 Ponytail 可用时把 `ponytail:ponytail-review` 作为最后的建议性审查；开发、测试、证据规则和 Git 冲突规则继续并入 Matt `implement`、`tdd`、`code-review` 与 `resolving-merge-conflicts`；`agent-rules`、standards 和 development wrapper 删除 |
+| 本地改动 | `review`、`commit` 与 `worktree-clean` 成为 promoted engineering Skill；`review` 保留为轻量统筹入口，优先复用当前 harness 的可用 Skill 清单，仅在清单缺失或不完整时扫描本地审查 Skill，并在 Ponytail 可用时把 `ponytail:ponytail-review` 作为最后的建议性审查；`review-standards` 的风险匹配验证、变化行为测试、信任边界、敏感信息和有界数据访问规则并入 Matt `code-review` 的 Standards 轴，不再作为独立审查；其他开发、测试、证据和 Git 冲突规则继续并入 Matt `implement`、`tdd`、`code-review` 与 `resolving-merge-conflicts`；`agent-rules`、standards 和 development wrapper 删除 |
 | 验证结果 | `review`、发现脚本自检、文档/插件索引均通过；全仓维持 53 个既有 frontmatter 兼容失败，未新增失败 |
 | 激活状态 | 通过 `skills.sh` 统一安装；本次仍未删除 `~/.codex/skills` 和 `~/.agents/skills` 的现有副本 |
 | 同步策略 | 当前仓库完成依赖整理并成为唯一来源后，停止从 `~/.codex/skills` 反向同步；后续修改直接在本仓库维护 |

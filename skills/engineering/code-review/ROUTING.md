@@ -14,11 +14,23 @@ Before launching reviewers, freeze:
 
 A material candidate change invalidates earlier verdicts. Reviewers may not reopen an explicit context decision without new evidence that invalidates its recorded premise.
 
+## Personal standards baseline
+
+Apply these checks inside the Standards axis, not as a separate review pass:
+
+- tests cover new or changed behavior, and validation evidence matches the change's risk;
+- errors are handled explicitly, and inputs or external data are validated at trust boundaries;
+- state mutation is explicit where immutability or ownership boundaries matter;
+- the change introduces no hardcoded secrets, credentials, private tokens, or production debug output;
+- changed database, file-system, or external-API paths are checked for injection, traversal, missing authorization, N+1 or unbounded access, and missing pagination where applicable.
+
+Repository rules govern conventions, and automated-tool findings are not duplicated. Neither weakens trust-boundary or data-integrity checks. Route a concrete trust-boundary concern to `security-review` rather than reporting it twice.
+
 ## Complementary passes
 
 | Signal | Add | Status |
 | --- | --- | --- |
-| Authentication, authorization, secrets, untrusted input, uploads, APIs, payments, privacy, cryptography, or another trust boundary | `security-review` when installed | Required |
+| Authentication, authorization, secrets, untrusted input, uploads, database queries, file-system operations, APIs, payments, privacy, cryptography, or another trust boundary | `security-review` when installed | Required |
 | A language, framework, or platform concern that the base axes cannot evaluate deeply | The matching installed domain review Skill | Required only when correctness depends on it |
 | The user explicitly asks to simplify, delete, remove dependencies, or audit over-engineering | `ponytail-review` when installed | Advisory unless simplification is the main request |
 | The user explicitly asks to address GitHub review comments | The installed GitHub feedback workflow | Required for that request |

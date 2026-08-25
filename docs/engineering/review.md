@@ -17,7 +17,7 @@ Type `/review`, or the agent reaches for it automatically when you ask for a gen
 
 ## One primary, distinct complements
 
-The primary workflow owns the verdict. Complementary Skills are added only when they answer a different question, such as a security boundary or framework-specific correctness concern. Another general code reviewer is not added merely because it is installed.
+The primary workflow owns the verdict. Complementary Skills are added only when they answer a different question, such as a security boundary or framework-specific correctness concern. Another general code reviewer is not added merely because it is installed, and `review-standards` is skipped because its policy already lives inside [code-review](https://aihero.dev/skills-code-review).
 
 Ponytail is the deliberate exception for general reviews: when available, it runs last and reports what can be deleted or simplified. Its advisory findings cannot weaken a correctness or security finding, and they do not block approval unless simplification was the explicit main request.
 
