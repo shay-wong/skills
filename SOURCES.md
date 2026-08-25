@@ -41,7 +41,7 @@
 | 导入范围 | 原始 286 个 Skill 中，276 个非重叠入口按领域保留；10 个重叠入口吸收进当前 canonical Skill |
 | 许可证 | MIT，见 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
 | 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口并融合进 canonical Skill；`tdd` 保留风险门禁、计划输入安全、真实 RED/GREEN、测试层级和证据交接；`research` 保留聚焦、比较、深度与监控候选模式、多来源交叉验证和分题并行；其余入口吸收进 Matt `implement` 和本地 `decision-notes` |
-| 验证结果 | `skills.sh` 发现 315 个 Skill；Codex `quick_validate.py` 为 263 通过、52 失败，其中 21 个是 Matt/beta 既有 Claude 字段，31 个是 ECC 上游 frontmatter 问题 |
+| 验证结果 | `skills.sh` 发现 316 个 Skill；Codex `quick_validate.py` 为 263 通过、53 失败，其中 22 个是 Matt/beta 既有 Claude 字段，31 个是 ECC 上游 frontmatter 问题 |
 | 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装；ECC 子目录不加入继承的 Matt plugin、`ask-matt` 或 maintainer linking script |
 | 激活前置 | 当前 `~/.agents/skills` 有 32 个 ECC 同名安装项；接入本仓库前必须逐项替换并验证，避免同时加载两份 |
 | 比较方式 | 从固定来源基线重建原始目录清单，再审查分类移动、10 个吸收入口、路径修复和 canonical 差异 |
