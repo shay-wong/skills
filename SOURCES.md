@@ -24,7 +24,7 @@
 | 上游分支 | `upstream/main` |
 | 本地范围 | 仓库基础结构，包括 Matt canonical `skills/`、`docs/`、清单和维护脚本；不包括 ECC 来源档案和本地吸收改动 |
 | 许可证 | MIT，见 [`LICENSE`](./LICENSE) |
-| 本地改动 | `tdd`、`research`、`implement`、`code-review`、`resolving-merge-conflicts` 吸收 ECC 与本地规则；新增 `commit`、`worktree-clean`；其余 Matt canonical 内容保持上游基线 |
+| 本地改动 | `tdd`、`research`、`implement`、`code-review`、`resolving-merge-conflicts` 吸收 ECC 与本地规则；新增个人 `review` 统筹入口、`commit`、`worktree-clean`；其余 Matt canonical 内容保持上游基线 |
 | 比较方式 | `git diff 5b15a47f2d7150f545fbcacbfe381787fc0230dc..main` |
 | 同步策略 | 保留 `upstream` 远端；同步前按本台账逐项检查个人改动，合并后更新固定基线 |
 
@@ -41,7 +41,7 @@
 | 导入范围 | 原始 286 个 Skill 中，276 个非重叠入口按领域保留；10 个重叠入口吸收进当前 canonical Skill |
 | 许可证 | MIT，见 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
 | 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口并融合进 canonical Skill；`tdd` 保留风险门禁、计划输入安全、真实 RED/GREEN、测试层级和证据交接；`research` 保留聚焦、比较、深度与监控候选模式、多来源交叉验证和分题并行；其余入口吸收进 Matt `implement` 和本地 `decision-notes` |
-| 验证结果 | `skills.sh` 发现 316 个 Skill；Codex `quick_validate.py` 为 263 通过、53 失败，其中 22 个是 Matt/beta 既有 Claude 字段，31 个是 ECC 上游 frontmatter 问题 |
+| 验证结果 | `skills.sh` 发现 317 个 Skill，名称全部唯一；Codex `quick_validate.py` 为 264 通过、53 失败，其中 22 个是 Matt/beta 既有 Claude 字段，31 个是 ECC 上游 frontmatter 问题 |
 | 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装；ECC 子目录不加入继承的 Matt plugin、`ask-matt` 或 maintainer linking script |
 | 激活前置 | 当前 `~/.agents/skills` 有 32 个 ECC 同名安装项；接入本仓库前必须逐项替换并验证，避免同时加载两份 |
 | 比较方式 | 从固定来源基线重建原始目录清单，再审查分类移动、10 个吸收入口、路径修复和 canonical 差异 |
@@ -83,17 +83,17 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | 2 个独立能力直接进入 engineering；7 个规则 Skill 吸收进 Matt canonical Skill；`add-dir` 主动移除 |
+| 状态 | 3 个独立能力直接进入 engineering；7 个规则 Skill 吸收进 Matt canonical Skill；`add-dir` 主动移除 |
 | 来源仓库 | 本机 Git 仓库 `/Users/Shay/.codex` |
 | 来源基线 | `c57e09d69347e7c284187e9bf6920a4704b81378` |
 | 额外来源 | 当前 `skills/review/SKILL.md` 工作副本，SHA-256 `d0dd795873de59714fcc2241e6a0f2ef62369d612c7c06d0b7df89493f4aa9b6` |
-| 来源路径 | `skills/add-dir`、`skills/agent-rules`、`skills/commit`、`skills/git-workflow-standards`、`skills/personal-coding-standards`、`skills/personal-development-workflow`、`skills/review-standards`、`skills/testing-standards`、`skills/typescript-standards`、`skills/worktree-clean` |
-| 本地路径 | [`skills/engineering/commit`](./skills/engineering/commit)、[`skills/engineering/worktree-clean`](./skills/engineering/worktree-clean)，以及已增强的 Matt canonical Skill |
-| 采用原因 | 保留安全提交、worktree 清理、按风险开发与测试、评审证据门槛和冲突决策规则，不保留并行 personal 入口 |
+| 来源路径 | `skills/add-dir`、`skills/agent-rules`、`skills/commit`、`skills/git-workflow-standards`、`skills/personal-coding-standards`、`skills/personal-development-workflow`、`skills/review`、`skills/review-standards`、`skills/testing-standards`、`skills/typescript-standards`、`skills/worktree-clean` |
+| 本地路径 | [`skills/engineering/review`](./skills/engineering/review)、[`skills/engineering/commit`](./skills/engineering/commit)、[`skills/engineering/worktree-clean`](./skills/engineering/worktree-clean)，以及已增强的 Matt canonical Skill |
+| 采用原因 | 保留一个可发现本机补充审查能力的个人统筹入口，以及安全提交、worktree 清理、按风险开发与测试、评审证据门槛和冲突决策规则 |
 | 来源归属 | `agent-rules` 及五个 standards Skill 由 ECC Claude Rules 迁移后持续本地化；其余条目由 Shay 的本地历史维护 |
 | 许可证 | ECC 派生规则遵循 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE)；本地新增内容遵循本仓库 [`LICENSE`](./LICENSE) |
-| 本地改动 | `commit` 与 `worktree-clean` 成为 promoted engineering Skill；开发、测试、`review` 路由与证据规则、Git 冲突规则并入 Matt `implement`、`tdd`、`code-review` 与 `resolving-merge-conflicts`；`agent-rules`、standards 和 development wrapper 删除 |
-| 验证结果 | 以当前 promoted Skill 校验、文档/插件索引一致性和安装发现结果为准 |
+| 本地改动 | `review`、`commit` 与 `worktree-clean` 成为 promoted engineering Skill；`review` 保留为轻量统筹入口，运行时发现本地审查 Skill，并在 Ponytail 可用时把 `ponytail:ponytail-review` 作为最后的建议性审查；开发、测试、证据规则和 Git 冲突规则继续并入 Matt `implement`、`tdd`、`code-review` 与 `resolving-merge-conflicts`；`agent-rules`、standards 和 development wrapper 删除 |
+| 验证结果 | `review`、发现脚本自检、文档/插件索引均通过；全仓维持 53 个既有 frontmatter 兼容失败，未新增失败 |
 | 激活状态 | 通过 `skills.sh` 统一安装；本次仍未删除 `~/.codex/skills` 和 `~/.agents/skills` 的现有副本 |
 | 同步策略 | 当前仓库完成依赖整理并成为唯一来源后，停止从 `~/.codex/skills` 反向同步；后续修改直接在本仓库维护 |
 
