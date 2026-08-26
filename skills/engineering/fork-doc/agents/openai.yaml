@@ -1,0 +1,6 @@
+interface:
+  display_name: "Fork Doc"
+  short_description: "Sync fork versions, docs, and agent rules"
+  default_prompt: "Use $fork-doc to audit this fork, enforce upstream-version-plus-fork.N releases, maintain its repository agent rule, and synchronize its fork documentation."
+policy:
+  allow_implicit_invocation: true

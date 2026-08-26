@@ -83,17 +83,17 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | 3 个独立能力直接进入 engineering；7 个规则 Skill 吸收进 Matt canonical Skill；`add-dir` 主动移除 |
+| 状态 | 5 个独立能力直接进入 engineering；7 个规则 Skill 吸收进 Matt canonical Skill；`add-dir` 主动移除 |
 | 来源仓库 | 本机 Git 仓库 `/Users/Shay/.codex` |
 | 来源基线 | `c57e09d69347e7c284187e9bf6920a4704b81378` |
-| 额外来源 | 当前 `skills/review/SKILL.md` 工作副本，SHA-256 `d0dd795873de59714fcc2241e6a0f2ef62369d612c7c06d0b7df89493f4aa9b6` |
-| 来源路径 | `skills/add-dir`、`skills/agent-rules`、`skills/commit`、`skills/git-workflow-standards`、`skills/personal-coding-standards`、`skills/personal-development-workflow`、`skills/review`、`skills/review-standards`、`skills/testing-standards`、`skills/typescript-standards`、`skills/worktree-clean` |
-| 本地路径 | [`skills/engineering/review`](./skills/engineering/review)、[`skills/engineering/commit`](./skills/engineering/commit)、[`skills/engineering/worktree-clean`](./skills/engineering/worktree-clean)，以及已增强的 Matt canonical Skill |
-| 采用原因 | 保留一个可发现本机补充审查能力的个人统筹入口，以及安全提交、worktree 清理、按风险开发与测试、评审证据门槛和冲突决策规则 |
+| 额外来源 | 当前 `skills/review/SKILL.md` 工作副本，SHA-256 `d0dd795873de59714fcc2241e6a0f2ef62369d612c7c06d0b7df89493f4aa9b6`；当前 `skills/gitlab-mr/SKILL.md` 与 `agents/openai.yaml` 工作副本，SHA-256 分别为 `d0b58dc1d3cb4496bc9297b5e5c12f45a8ca1570df95ce5178720a1844451fd3`、`af7c0c1ab9a4e077c2c201757eb5d0a8044a19d70d61b96722bd92147404a512`；当前 `skills/fork-doc/SKILL.md` 与 `agents/openai.yaml` 工作副本，SHA-256 分别为 `7d32c6d3c54f52eb198305a4185e1e86d2f8fa3477a9f6068ed3fffc62bebba8`、`df2d68b616f8caa1335c852119f4a3d0fc09a23f90f90d815e505685059726ab` |
+| 来源路径 | `skills/add-dir`、`skills/agent-rules`、`skills/commit`、`skills/fork-doc`、`skills/git-workflow-standards`、`skills/gitlab-mr`、`skills/personal-coding-standards`、`skills/personal-development-workflow`、`skills/review`、`skills/review-standards`、`skills/testing-standards`、`skills/typescript-standards`、`skills/worktree-clean` |
+| 本地路径 | [`skills/engineering/review`](./skills/engineering/review)、[`skills/engineering/commit`](./skills/engineering/commit)、[`skills/engineering/gitlab-mr`](./skills/engineering/gitlab-mr)、[`skills/engineering/fork-doc`](./skills/engineering/fork-doc)、[`skills/engineering/worktree-clean`](./skills/engineering/worktree-clean)，以及已增强的 Matt canonical Skill |
+| 采用原因 | 保留一个可发现本机补充审查能力的个人统筹入口，以及安全提交、GitLab MR 管理、Fork 差异与版本文档维护、worktree 清理、按风险开发与测试、评审证据门槛和冲突决策规则 |
 | 来源归属 | `agent-rules` 及五个 standards Skill 由 ECC Claude Rules 迁移后持续本地化；其余条目由 Shay 的本地历史维护 |
 | 许可证 | ECC 派生规则遵循 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE)；本地新增内容遵循本仓库 [`LICENSE`](./LICENSE) |
-| 本地改动 | `review`、`commit` 与 `worktree-clean` 成为 promoted engineering Skill；`review` 优先复用当前 harness 的可用 Skill 清单，仅在清单缺失或不完整时扫描本地审查 Skill；恢复本机版的 GitHub feedback、Ponytail audit、game、架构及语言框架路由，五级优先级、required/advisory 分类、上下文决策、finding ledger、证据门槛、冲突仲裁、五态结果、三轮审查、两轮修复、90 分钟预算和大型候选分片；ECC prompt 绝对路径改为已安装领域 Skill 映射；agent 等待、线程映射和 circuit-breaker 操作继续由 `AGENTS.md` 管理；`review-standards` 的风险匹配验证、变化行为测试、信任边界、敏感信息和有界数据访问规则并入 Matt `code-review` 的 Standards 轴，不再作为独立审查；其他开发、测试、证据和 Git 冲突规则继续并入 Matt `implement`、`tdd`、`code-review` 与 `resolving-merge-conflicts`；`agent-rules`、standards 和 development wrapper 删除 |
-| 验证结果 | `review`、扩展后的发现脚本自检、文档/插件索引均通过；全仓既有 frontmatter 兼容失败单独记录，不归因于本次改动 |
+| 本地改动 | `review`、`commit`、`gitlab-mr`、`fork-doc` 与 `worktree-clean` 成为 promoted engineering Skill；`commit` 保留无显式范围时的当前任务 fallback、Git 原生 ignored 检测和歧义分组处理，并新增提交请求不授权 push、PR、历史改写或远端修改的边界；`commit` 与 `worktree-clean` 将本机专用的 `/opt/homebrew/bin/git` 改为由 `PATH` 解析的 `git`，同时继续用 `git -C <repo>` 绑定仓库；`gitlab-mr` 采用本机当前工作副本，保留 Fork 默认值、重复 MR 防护、Jira 模板、增量更新和显式安装的 push 同步 Hook，将 Hook 中固定的 Git、`glab` 和 `codex` 路径改为环境变量优先、`PATH` 回退，并修复安装器把相对 hooks 路径解析到调用目录的问题；`fork-doc` 采用本机当前工作副本，保留 standalone 与父 Git workflow 的授权边界、准确的 upstream baseline、重要手工 merge resolution 的独立功能提交要求，以及禁止用文档提交伪装已拆分历史的规则；`review` 优先复用当前 harness 的可用 Skill 清单，仅在清单缺失或不完整时扫描本地审查 Skill；恢复本机版的 GitHub feedback、Ponytail audit、game、架构及语言框架路由，五级优先级、required/advisory 分类、上下文决策、finding ledger、证据门槛、冲突仲裁、五态结果、三轮审查、两轮修复、90 分钟预算和大型候选分片；ECC prompt 绝对路径改为已安装领域 Skill 映射；agent 等待、线程映射和 circuit-breaker 操作继续由 `AGENTS.md` 管理；`review-standards` 的风险匹配验证、变化行为测试、信任边界、敏感信息和有界数据访问规则并入 Matt `code-review` 的 Standards 轴，不再作为独立审查；其他开发、测试、证据和 Git 冲突规则继续并入 Matt `implement`、`tdd`、`code-review` 与 `resolving-merge-conflicts`；`agent-rules`、standards 和 development wrapper 删除 |
+| 验证结果 | `review`、扩展后的发现脚本自检、`commit`、`gitlab-mr`、`fork-doc` 与 `worktree-clean` Skill 校验、GitLab MR Hook 的 ShellCheck、语法及临时仓库安装烟测、文档/插件索引和 `claude plugin validate . --strict` 均通过；全仓既有 frontmatter 兼容失败单独记录，不归因于本次改动 |
 | 激活状态 | 通过 `skills.sh` 统一安装；本次仍未删除 `~/.codex/skills` 和 `~/.agents/skills` 的现有副本 |
 | 同步策略 | 当前仓库完成依赖整理并成为唯一来源后，停止从 `~/.codex/skills` 反向同步；后续修改直接在本仓库维护 |
 

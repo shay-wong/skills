@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitLab MR"
+  short_description: "按 Fork 仓库默认值创建、查看和增量更新 GitLab MR"
+  default_prompt: "使用 $gitlab-mr 按当前仓库规则创建、查看或增量更新 GitLab MR。"

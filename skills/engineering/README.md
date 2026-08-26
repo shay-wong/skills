@@ -32,6 +32,8 @@ Model- or user-reachable (rich trigger phrasing so the model can reach for them)
 - **[resolving-merge-conflicts](./resolving-merge-conflicts/SKILL.md)**: Work through an in-progress git merge or rebase conflict hunk by hunk, resolving by intent traced to each side's primary source, then finish the operation, never `--abort`.
 - **[wizard](./wizard/SKILL.md)**: Generate an interactive bash wizard that walks a human through steps only they can perform: provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover.
 - **[commit](./commit/SKILL.md)**: Create safe, scoped local commits while excluding unrelated, ignored, disposable, generated, and sensitive files.
+- **[gitlab-mr](./gitlab-mr/SKILL.md)**: Create, inspect, incrementally update, and verify GitLab merge requests using repository defaults, with optional push-triggered description sync.
+- **[fork-doc](./fork-doc/SKILL.md)**: Audit intentional fork differences, enforce fork release versioning, and synchronize repository rules, fork documentation, user docs, and changelog coverage.
 - **[worktree-clean](./worktree-clean/SKILL.md)**: Audit and safely remove unused agent worktrees for the current repository.
 
 ## Imported library

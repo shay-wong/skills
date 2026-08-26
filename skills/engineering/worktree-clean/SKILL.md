@@ -17,7 +17,7 @@ Resolve cleanup targets first, then require Handoff only when a target is this t
 
 ## Git and deletion safety
 
-- Prefer `/opt/homebrew/bin/git -C <repo> ...` and bind every Git operation to the resolved repository.
+- Use the Git executable resolved from `PATH`, and bind every Git operation to the resolved repository with `git -C <repo> ...`.
 - Resolve every exact worktree path before deletion. Never widen an ambiguous path, substring, glob, or `all` request across repositories.
 - Inspect tracked, untracked, and ignored content. Ignored does not mean disposable.
 - Skip live, pinned, user-maintained, ownership-ambiguous, or unmerged worktrees by default.
@@ -52,7 +52,7 @@ Require applicable evidence for:
 For each candidate that passes every check:
 
 1. Unlock only a proven stale or permitted controller-owned lock.
-2. Run `/opt/homebrew/bin/git -C <local-checkout> worktree remove <candidate>`.
+2. Run `git -C <local-checkout> worktree remove <candidate>`.
 3. Use `--force` only for proven disposable residue or explicit force mode.
 4. Delete only a proven disposable temporary branch, preferring `branch -d`.
 5. Run `worktree prune --verbose` once after the batch.
