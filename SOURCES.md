@@ -62,6 +62,38 @@
 
 此外，`ecc-tools-cost-audit` 有意引用独立的 `ECC-Tools` 仓库；`configure-ecc`、`plan-canvas` 和部分 Claude 专用工作流仍依赖 ECC 插件、npm 包、hooks 或 Claude 配置目录。这些属于运行依赖，不是本次快照缺失文件。
 
+### ComposioHQ/awesome-claude-skills: changelog-generator
+
+| 字段 | 当前值 |
+| --- | --- |
+| 状态 | 已吸收为本地 `changelog` Skill |
+| 来源仓库 | <https://github.com/ComposioHQ/awesome-claude-skills> |
+| 来源基线 | `044d48b594f060c164f3b20fac9ea01374721bca` |
+| 来源路径 | `changelog-generator/SKILL.md` |
+| 本地路径 | [`skills/engineering/changelog`](./skills/engineering/changelog) |
+| 采用原因 | 保留从 Git 历史生成用户可读变更记录、产品更新、App Store 文案和 Release Notes 的独立能力，并为完整发布流程提供单一的 changelog 入口 |
+| 许可证 | 上游 README 声明 Apache-2.0；固定来源提交没有仓库根 `LICENSE`，Skill 目录也没有独立许可证文件 |
+| 本地改动 | 重命名为短入口 `changelog`；删除营销式重复说明和固定 emoji 示例；吸收 Baoyu 发布流程中的精确范围、多语言文件、外部贡献者归属与独立 Release Notes 能力；增加无 Tag 仓库的范围 fallback、行为证据核查和不夸大结果规则；明确该 Skill 不修改版本、不提交、不打 Tag、不推送、不发布产物或 GitHub Release |
+| 验证方式 | 运行 Codex `quick_validate.py`；检查 `$release` 反向路由、文件链接、名称唯一性和 repository-owned prose 标点规则 |
+| 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装，不加入继承的 Matt plugin 或 `ask-me` |
+| 同步策略 | 对比新的固定上游提交，只同步能提高用户可读性、范围准确性和输出格式适配的行为；继续由本地 `changelog` 统一承接发布说明生成 |
+
+### JimLiu/baoyu-skills: release-skills
+
+| 字段 | 当前值 |
+| --- | --- |
+| 状态 | 已吸收为本地 `release` Skill |
+| 来源仓库 | <https://github.com/JimLiu/baoyu-skills> |
+| 来源基线 | `80a1c2970a17722e4f1242118600f90249e37b5a` |
+| 来源路径 | `.claude/skills/release-skills/SKILL.md` |
+| 本地路径 | [`skills/engineering/release`](./skills/engineering/release) |
+| 采用原因 | 保留多项目版本检测、语义版本建议、多语言 changelog、校验、release commit、annotated tag、产物 Hook、GitHub Release 和历史 Release 回填能力 |
+| 许可证 | 固定来源提交的 README 声明 MIT；当时没有仓库根 `LICENSE`，该 Skill 也没有独立许可证文件 |
+| 本地改动 | 重命名为短入口 `release`；将配置与回填模式拆到按需 references；删除 changelog fallback 与重复生成规则，由 `$changelog` 统一负责 changelog 和 Release Notes，已有且经用户批准的说明可直接复用；保留 `.releaserc.yml`、`prepare_artifact`、`publish_artifact`、signed tag 与 GitHub Release 行为；移除普通 `push` 强制升级为完整发布的规则；把版本、commit、tag、push、产物发布和 GitHub Release 拆成显式授权边界；将确认提前到文件与 Git 修改之前，并要求验证通过后才能 commit、tag 或发布；输入机制改为当前 runtime 中立表述 |
+| 验证方式 | 运行 Codex `quick_validate.py`；检查 `$changelog` 硬依赖、已有说明复用路径、references 链接、名称唯一性和 repository-owned prose 标点规则 |
+| 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装，不加入继承的 Matt plugin 或 `ask-me`；单独安装发布能力时使用 `npx skills@latest add shay-wong/skills -g --skill changelog release` 保持依赖闭包 |
+| 同步策略 | 对比新的固定上游提交，分别审查项目检测、版本规则、产物 Hook、Tag 与 GitHub Release 行为；保留本地授权边界、验证门禁和 `changelog` 单一职责分工 |
+
 ### czm15053/write-notes-like-deepseek
 
 | 字段 | 当前值 |

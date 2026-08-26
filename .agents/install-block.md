@@ -30,7 +30,17 @@ npx skills@latest update -g <name>
 
 </canonical-block>
 
-`skills@latest` is the pinned spelling in all three. The pages under `docs/` used to carry their own copy of these commands; those blocks are now deleted rather than corrected, because the site renders the install commands itself.
+`release` has a hard dependency on `changelog`. Install that pair together:
+
+<canonical-block name="skills-sh-release-pair">
+
+```bash
+npx skills@latest add shay-wong/skills -g --skill changelog release
+```
+
+</canonical-block>
+
+`skills@latest` is the pinned spelling in every command. The pages under `docs/` used to carry their own copy of these commands; those blocks are now deleted rather than corrected, because the site renders the install commands itself.
 
 ## Avoid duplicate installations
 

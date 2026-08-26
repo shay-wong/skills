@@ -64,6 +64,7 @@ Absorbed third-party engineering and technical Skills, including ECC. Install th
 - **[browser-qa](./browser-qa/SKILL.md)**: Use this skill to automate visual testing and UI interaction verification using browser automation after deploying features.
 - **[bun-runtime](./bun-runtime/SKILL.md)**: Bun as runtime, package manager, bundler, and test runner.
 - **[canary-watch](./canary-watch/SKILL.md)**: Use this skill to monitor and verify a deployed URL after releases : checks HTTP endpoints, SSE streams, static assets, console errors, and performance regressions after deploys, merges, or dependency upgrades.
+- **[changelog](./changelog/SKILL.md)**: Turn a Git range into accurate user-facing changelog entries, product updates, app store notes, or release notes without performing release mutations.
 - **[ck](./ck/SKILL.md)**: Persistent per-project memory for Claude Code.
 - **[click-path-audit](./click-path-audit/SKILL.md)**: Trace every user-facing button/touchpoint through its full state change sequence to find bugs where functions individually work but cancel each other out, produce wrong final state, or leave the UI in an inconsistent state.
 - **[clickhouse-io](./clickhouse-io/SKILL.md)**: ClickHouse database patterns, query optimization, analytics, and data engineering best practices for high-performance analytical workloads.
@@ -187,6 +188,7 @@ Absorbed third-party engineering and technical Skills, including ECC. Install th
 - **[react-testing](./react-testing/SKILL.md)**: React component testing with React Testing Library, Vitest/Jest, MSW for network mocking, accessibility assertions with axe, and the decision boundary between component tests and Playwright/Cypress end-to-end runs.
 - **[recsys-pipeline-architect](./recsys-pipeline-architect/SKILL.md)**: Design composable recommendation, ranking, and feed pipelines using the six-stage Source→Hydrator→Filter→Scorer→Selector→SideEffect framework popularized by xAI's open-sourced For You algorithm.
 - **[recursive-decision-ledger](./recursive-decision-ledger/SKILL.md)**: Use when the user asks for repeated rollouts, marked decision processes, high-dimensional search, stochastic optimization, local-optima exploration, ensemble comparison, or recursive reasoning with a visible evidence trail.
+- **[release](./release/SKILL.md)**: Prepare and publish a verified versioned release, delegating changelog generation to the companion `changelog` Skill.
 - **[redis-patterns](./redis-patterns/SKILL.md)**: Redis data structure patterns, caching strategies, distributed locks, rate limiting, pub/sub, and connection management for production applications.
 - **[regex-vs-llm-structured-text](./regex-vs-llm-structured-text/SKILL.md)**: Decision framework for choosing between regex and LLM when parsing structured text : start with regex, add LLM only for low-confidence edge cases.
 - **[remotion-video-creation](./remotion-video-creation/SKILL.md)**: Best practices for Remotion - Video creation in React.

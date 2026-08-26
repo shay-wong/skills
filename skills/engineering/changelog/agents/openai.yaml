@@ -1,0 +1,4 @@
+interface:
+  display_name: "Changelog"
+  short_description: "Draft accurate user-facing change summaries"
+  default_prompt: "Use $changelog to turn the selected Git range into release notes."
