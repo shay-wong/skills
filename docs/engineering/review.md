@@ -58,4 +58,4 @@ No. [code-review](https://aihero.dev/skills-code-review) remains the normal prim
 
 ## Where it fits
 
-`review` is a reach-for-it-anytime orchestration entrypoint around [code-review](https://aihero.dev/skills-code-review) and locally installed specialists. [ask-matt](https://aihero.dev/skills-ask-matt) routes to it when the review needs more than the two canonical Standards and Spec axes, or when several review results need one bounded decision.
+`review` is a reach-for-it-anytime orchestration entrypoint around [code-review](https://aihero.dev/skills-code-review) and locally installed specialists. [ask-me](https://aihero.dev/skills-ask-me) routes to it when the review needs more than the two canonical Standards and Spec axes, or when several review results need one bounded decision.

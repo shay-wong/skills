@@ -32,4 +32,4 @@ No. Push and pull request creation require separate authorization.
 
 ## Where it fits
 
-`commit` is the local history boundary after [implement](https://aihero.dev/skills-implement) and [code-review](https://aihero.dev/skills-code-review). [ask-matt](https://aihero.dev/skills-ask-matt) routes the earlier build and review phases.
+`commit` is the local history boundary after [implement](https://aihero.dev/skills-implement) and [code-review](https://aihero.dev/skills-code-review). [ask-me](https://aihero.dev/skills-ask-me) routes the earlier build and review phases.

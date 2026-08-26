@@ -8,7 +8,7 @@ Skills are organized into bucket folders under `skills/`:
 
 Third-party Skills are absorbed directly into the matching `engineering/`, `productivity/`, or `misc/` bucket. Source ownership lives in [`SOURCES.md`](./SOURCES.md), not in a directory namespace. Preserve imported files exactly except for path repairs and adaptations recorded there.
 
-Every direct child Skill in `engineering/`, `productivity/`, `misc/`, and `in-progress/` must appear in its bucket README. The top-level README, `ask-matt`, aihero docs, and inherited Matt plugin remain curated Matt-based surfaces; importing a third-party Skill into a bucket does not automatically promote it to those surfaces. `SOURCES.md` records which entries are Matt canonical, absorbed third-party, or local.
+Every direct child Skill in `engineering/`, `productivity/`, `misc/`, and `in-progress/` must appear in its bucket README. The top-level README, `ask-me`, aihero docs, and inherited Matt plugin remain curated Matt-based surfaces; importing a third-party Skill into a bucket does not automatically promote it to those surfaces. `SOURCES.md` records which entries are Matt canonical, absorbed third-party, or local.
 
 Install commands are copied verbatim from [.agents/install-block.md](./.agents/install-block.md). `.claude-plugin/marketplace.json` makes the repo its own single-plugin marketplace (a fallback the install block explains, not the documented route). Run `claude plugin validate . --strict` after touching either manifest. Why a Claude plugin but not (yet) a Codex one lives in [.agents/adr/0002-ship-as-a-claude-code-plugin.md](./.agents/adr/0002-ship-as-a-claude-code-plugin.md).
 
@@ -20,7 +20,7 @@ Matt-based curated Skills in `engineering/` and `productivity/` have a human-fac
 
 Every `SKILL.md` is either user-invoked (`disable-model-invocation: true` plus `policy.allow_implicit_invocation: false` in `agents/openai.yaml`, reachable only by the human) or model-invoked (model- or user-reachable). See [.agents/invocation.md](./.agents/invocation.md).
 
-[`ask-matt`](./skills/engineering/ask-matt/SKILL.md) is the router that maps every user-reachable skill and how they relate. The same trigger that re-syncs a docs page applies to it: whenever you add, rename, remove, or change how a user-reachable skill fits the flows, re-read `ask-matt`'s `SKILL.md` and update it so the map stays accurate: a new skill it never mentions, or a stale one it still routes to, is a router that lies.
+[`ask-me`](./skills/engineering/ask-me/SKILL.md) is the router that maps every user-reachable skill and how they relate. The same trigger that re-syncs a docs page applies to it: whenever you add, rename, remove, or change how a user-reachable skill fits the flows, re-read `ask-me`'s `SKILL.md` and update it so the map stays accurate: a new skill it never mentions, or a stale one it still routes to, is a router that lies.
 
 To (re)link every repository-owned skill into the local harness skill directories (`~/.claude/skills`, `~/.agents/skills`), run `scripts/link-skills.sh`. Vendored catalogs are excluded until their compatibility issues and duplicate installed names have been resolved. Each linked entry is a symlink into this repo, so a `git pull` keeps installed skills current; re-run the script after adding, removing, or renaming a linked skill.
 

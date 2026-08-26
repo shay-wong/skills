@@ -1,0 +1,5 @@
+interface:
+  display_name: "Ask Me"
+  short_description: "Navigate promoted skills and workflows"
+policy:
+  allow_implicit_invocation: false

@@ -32,4 +32,4 @@ Only inside the exact same-repository target scope named in the request. It does
 
 ## Where it fits
 
-`worktree-clean` is standalone repository maintenance after work is merged, abandoned or handed off. [ask-matt](https://aihero.dev/skills-ask-matt) routes active implementation and conflict work before cleanup.
+`worktree-clean` is standalone repository maintenance after work is merged, abandoned or handed off. [ask-me](https://aihero.dev/skills-ask-me) routes active implementation and conflict work before cleanup.

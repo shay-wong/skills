@@ -1,12 +1,12 @@
 ---
-name: ask-matt
-description: Ask which skill or flow fits your situation. A router over the skills in this repo.
+name: ask-me
+description: Ask which promoted skill or flow fits your situation. A hand-maintained router over this personal collection.
 disable-model-invocation: true
 ---
 
-# Ask Matt
+# Ask Me
 
-You don't remember every skill, so ask.
+You don't remember every promoted skill or how they connect, so ask.
 
 A **flow** is a path through the skills. Most paths run along one **main flow**, and two **on-ramps** merge onto it. Everything else is standalone, or a vocabulary layer that runs underneath.
 
