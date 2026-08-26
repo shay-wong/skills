@@ -97,8 +97,6 @@
 | 激活状态 | 通过 `skills.sh` 统一安装；本次仍未删除 `~/.codex/skills` 和 `~/.agents/skills` 的现有副本 |
 | 同步策略 | 当前仓库完成依赖整理并成为唯一来源后，停止从 `~/.codex/skills` 反向同步；后续修改直接在本仓库维护 |
 
-`add-dir` 因低使用价值且属于原生 workspace root 能力的薄封装而移除，不进入发行版。`skills/in-progress` 的 beta Skill 全部保留，未参与本轮去重。
-
 ## 新来源条目模板
 
 新增来源时复制以下字段，并删除不适用的说明：
