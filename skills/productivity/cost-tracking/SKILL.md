@@ -94,4 +94,3 @@ with four decimals, larger amounts with two.
 - `/cost-report` - Command-form report over the same metrics log.
 - `cost-aware-llm-pipeline` - Model-routing and budget-design patterns.
 - `token-budget-advisor` - Context and token-budget planning.
-- `strategic-compact` - Context compaction to reduce repeated token spend.

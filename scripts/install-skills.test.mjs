@@ -131,24 +131,6 @@ test("installs the external frontend design Skill", () => {
   assert.match(result.stdout, /npx --yes skills@latest add 'anthropics\/skills#3b3fad96af16a10759d930941b4520ba0c40edae' -g --skill frontend-design -y/);
 });
 
-test("installs pinned Skill and npm runtime dependencies", () => {
-  const repoScan = spawnSync(
-    process.execPath,
-    [script, "--dry-run", "--with-deps", "setup-repo-scan"],
-    { encoding: "utf8" },
-  );
-  assert.equal(repoScan.status, 0, repoScan.stderr);
-  assert.match(repoScan.stdout, /haibindev\/repo-scan#2742664ebcad1450c208eda0ae45d3c17fad5dd8/);
-
-  const planCanvas = spawnSync(
-    process.execPath,
-    [script, "--dry-run", "--with-deps", "plan-canvas"],
-    { encoding: "utf8" },
-  );
-  assert.equal(planCanvas.status, 0, planCanvas.stderr);
-  assert.match(planCanvas.stdout, /npm install --global ecc-universal@2\.2\.0/);
-});
-
 test("non-interactive dependency choice is explicit", () => {
   const result = spawnSync(process.execPath, [script, "--dry-run", "review"], {
     encoding: "utf8",

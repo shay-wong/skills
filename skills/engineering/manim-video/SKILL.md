@@ -87,4 +87,3 @@ Return:
 
 - `video-editing` for final polish
 - `remotion-video-creation` for motion-heavy post-processing or compositing
-- `content-engine` when the animation is part of a broader launch

@@ -40,7 +40,7 @@ Each layer has a specific job. Do not skip layers. Do not try to make one tool d
 Collect the source material:
 - **Screen Studio**: polished screen recordings for app demos, coding sessions, browser workflows
 - **Raw camera footage**: vlog footage, interviews, event recordings
-- **Desktop capture via VideoDB**: session recording with real-time context (see `videodb` skill)
+- **Desktop capture**: use the available screen recorder and preserve the original files
 
 Output: raw files ready for organization.
 
@@ -193,31 +193,11 @@ with open("voiceover.mp3", "wb") as f:
     f.write(resp.content)
 ```
 
-### Music and SFX with fal.ai
+### Music, SFX, and generated visuals
 
-Use the `fal-ai-media` skill for:
-- Background music generation
-- Sound effects (ThinkSound model for video-to-audio)
-- Transition sounds
-
-### Generated visuals with fal.ai
-
-Use for insert shots, thumbnails, or b-roll that doesn't exist:
-```
-generate(app_id: "fal-ai/nano-banana-pro", input_data: {
-  "prompt": "professional thumbnail for tech vlog, dark background, code on screen",
-  "image_size": "landscape_16_9"
-})
-```
-
-### VideoDB generative audio
-
-If VideoDB is configured:
-```python
-voiceover = coll.generate_voice(text="Narration here", voice="alloy")
-music = coll.generate_music(prompt="lo-fi background for coding vlog", duration=120)
-sfx = coll.generate_sound_effect(prompt="subtle whoosh transition")
-```
+Use an installed media-generation provider only for missing insert shots,
+thumbnails, background music, sound effects, or transition sounds. Keep provider
+selection outside this workflow so the editing pipeline remains portable.
 
 ## Layer 6: Final Polish (Descript / CapCut)
 
@@ -249,15 +229,6 @@ ffmpeg -i input.mp4 -vf "crop=ih*9/16:ih,scale=1080:1920" vertical.mp4
 
 # 16:9 to 1:1 (center crop)
 ffmpeg -i input.mp4 -vf "crop=ih:ih,scale=1080:1080" square.mp4
-```
-
-### Reframe with VideoDB
-
-```python
-from videodb import ReframeMode
-
-# Smart reframe (AI-guided subject tracking)
-reframed = video.reframe(start=0, end=60, target="vertical", mode=ReframeMode.smart)
 ```
 
 ## Scene Detection and Auto-Cut
@@ -303,9 +274,3 @@ identify the 5 most engaging 30-second clips for social media."
 4. **Remotion for repeatability.** If you'll do it more than once, make it a Remotion component.
 5. **Generate selectively.** Only use AI generation for assets that don't exist, not for everything.
 6. **Taste is the last layer.** AI clears repetitive work. You make the final creative calls.
-
-## Related Skills
-
-- `fal-ai-media` — AI image, video, and audio generation
-- `videodb` — Server-side video processing, indexing, and streaming
-- `content-engine` — Platform-native content distribution

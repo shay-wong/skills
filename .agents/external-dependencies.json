@@ -38,25 +38,6 @@
         "ref": "3b3fad96af16a10759d930941b4520ba0c40edae",
         "skill": "frontend-design"
       }
-    ],
-    "setup-repo-scan": [
-      {
-        "id": "repo-scan@haibindev/repo-scan",
-        "label": "repo-scan (pinned source)",
-        "type": "agent-skill",
-        "source": "haibindev/repo-scan",
-        "ref": "2742664ebcad1450c208eda0ae45d3c17fad5dd8",
-        "skill": "repo-scan"
-      }
-    ],
-    "plan-canvas": [
-      {
-        "id": "ecc-universal@npm",
-        "label": "ECC plan canvas runtime",
-        "type": "npm-global",
-        "package": "ecc-universal@2.2.0",
-        "packageName": "ecc-universal"
-      }
     ]
   }
 }

@@ -112,18 +112,16 @@ finds no close match.
 ```markdown
 | # | Skill | Source | Why it matches | Gap |
 | --- | --- | --- | --- | --- |
-| 1 | article-writing | Local ECC | Drafts articles and guides | Not focused on release notes |
-| 2 | content-engine | Local ECC | Multi-format content workflow | Heavier than needed |
-| 3 | blog-writer | GitHub | Blog writing skill with recent commits | Needs security review |
+| 1 | changelog | Local | Creates release notes from Git history | Not a general blog writer |
+| 2 | blog-writer | GitHub | Blog writing skill with recent commits | Needs security review |
 ```
 
 ### User-Facing Summary
 
 ```markdown
-I found two close local matches and one external candidate. The closest fit is
-`article-writing`; it covers drafting and revision, but it does not include the
-release-note checklist you asked for. I can either use it as-is, fork it into a
-release-note variant, or create a fresh skill.
+I found one close local match and one external candidate. The local `changelog`
+skill covers release notes from Git history but not general article drafting. I
+can either use it as-is, review the external candidate, or create a fresh skill.
 ```
 
 ## Anti-Patterns
@@ -133,9 +131,3 @@ release-note variant, or create a fresh skill.
 - Do not present a long unranked list of weak matches.
 - Do not treat web-only mentions as trusted sources.
 - Do not edit installed marketplace originals in place.
-
-## Related
-
-- `search-first` - General search-before-building workflow.
-- `skill-stocktake` - Audit installed skills for health, duplicates, and gaps.
-- `agent-sort` - Categorize and organize existing agents and skills.

@@ -38,14 +38,14 @@
 | 来源版本 | `2.2.0` |
 | 来源路径 | `skills/`、`rules/react/`、`docs/capability-surface-selection.md`、`LICENSE` |
 | 本地路径 | [`skills/engineering`](./skills/engineering)、[`skills/productivity`](./skills/productivity)、[`skills/misc`](./skills/misc)、[`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
-| 导入范围 | 原始 286 个 Skill 中，276 个非重叠入口按领域保留；10 个重叠入口吸收进当前 canonical Skill |
+| 导入范围 | 原始 286 个 Skill 中，168 个技术栈入口按领域保留；10 个重叠入口吸收进当前 canonical Skill；`continuous-learning-v2` 的实现归并到原名 `continuous-learning`；107 个非技术栈、外部产品入口或旧兼容入口移除 |
 | 许可证 | MIT，见 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
-| 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口并融合进 canonical Skill；`tdd` 保留风险门禁、计划输入安全、真实 RED/GREEN、测试层级和证据交接；`research` 保留聚焦、比较、深度与监控候选模式、多来源交叉验证和分题并行；`skill-stocktake` 改为优先审计 Agent Skills 目录、兼容 Claude 回退和仓库 `skills/`，仅识别 `SKILL.md`、跟随并去重符号链接，将结果缓存移出安装目录，并使用运行时中立的批量评估说明；其余入口吸收进 Matt `implement` 和本地 `decision-notes` |
-| 验证结果 | `skills.sh` 发现 317 个 Skill，名称全部唯一；Codex `quick_validate.py` 为 264 通过、53 失败，其中 22 个是 Matt/beta 既有 Claude 字段，31 个是 ECC 上游 frontmatter 问题 |
+| 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口并融合进 canonical Skill；只保留语言、框架、数据库、基础设施、网络、安全、测试、性能、移动端、Web3、医疗软件、视频工程与 AI 系统技术能力；删除内容、运营、研究、业务职能、ECC 管理、配置维护、外部产品和通用流程入口；删除旧兼容入口 `autonomous-loops`，统一使用 `continuous-agent-loop`；将 `continuous-learning-v2` 的完整项目级 instinct 实现迁回 `continuous-learning`，不保留版本化别名；`tdd` 保留风险门禁、计划输入安全、真实 RED/GREEN、测试层级和证据交接；`research` 保留聚焦、比较、深度与监控候选模式、多来源交叉验证和分题并行；其余重叠入口吸收进 Matt `implement` 和本地 `decision-notes` |
+| 验证结果 | `skills.sh` 发现 213 个 Skill，仓库清单检查确认名称全部唯一且四个 bucket README 与目录一致；Codex `quick_validate.py` 为 178 通过、35 失败，其中 23 个是 Matt、beta 或其他既有 Claude 字段，12 个是保留的 ECC 上游 frontmatter 问题；`continuous-learning` 的解析测试、Python 与 Shell 语法、安装器 9 项测试、插件清单严格校验、版本同步和 `git diff --check` 均通过 |
 | 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装；ECC 子目录不加入继承的 Matt plugin、`ask-me` 或 maintainer linking script |
-| 本机替换状态 | 本机此前安装的 ECC 同名副本已替换为指向本仓库对应目录的符号链接；未额外启用原先未安装的 ECC Skill |
+| 本机替换状态 | 本机保留入口使用指向本仓库对应目录的符号链接；本轮删除入口中仅清理解析到本仓库的失效链接，不影响其他来源 Skill |
 | 比较方式 | 从固定来源基线重建原始目录清单，再审查分类移动、10 个吸收入口、路径修复和 canonical 差异 |
-| 同步策略 | 从 ECC 的固定新提交先比较上游删除、重命名、依赖和兼容性变化，再按当前领域映射更新 276 个入口，并重新审查 10 个已吸收能力 |
+| 同步策略 | 从 ECC 的固定新提交先比较上游删除、重命名、依赖和兼容性变化，只同步技术栈范围内的 168 个入口，并重新审查 10 个已吸收能力；不恢复非技术栈、外部产品、版本化重复或旧兼容入口 |
 
 吸收到 canonical Skill 的 ECC 入口：
 
@@ -56,11 +56,15 @@
 
 合并后的 `tdd` 不保留 ECC 的自动 checkpoint commit、固定 80% 全仓覆盖或强制独立证据文件；`research` 不绑定 Firecrawl、Exa 或固定来源数量。这些行为与当前授权边界、按风险验证和可替换工具原则冲突，不属于需要保留的优势。
 
-当前 31 个上游兼容性问题均为 `SKILL.md` frontmatter 使用了 Codex 校验器不接受的顶层字段：
+删除的 107 个 ECC 入口：
 
-`agent-architecture-audit`、`agent-eval`、`agent-self-evaluation`、`benchmark-optimization-loop`、`blender-motion-state-inspection`、`carrier-relationship-management`、`ck`、`customs-trade-compliance`、`data-throughput-accelerator`、`ecc-recipes`、`energy-procurement`、`eval-harness`、`gan-style-harness`、`inventory-demand-planning`、`latency-critical-systems`、`logistics-exception-management`、`mailtrap-email-integration`、`ml-adoption-playbook`、`motion-advanced`、`motion-foundations`、`motion-patterns`、`parallel-execution-optimizer`、`production-scheduling`、`quality-nonconformance`、`react-native-patterns`、`recursive-decision-ledger`、`returns-reverse-logistics`、`skill-comply`、`taste`、`videodb`、`vue-patterns`。
+`agent-self-evaluation`、`agent-sort`、`agentic-engineering`、`ai-first-engineering`、`article-writing`、`automation-audit-ops`、`autonomous-loops`、`brand-discovery`、`brand-voice`、`carrier-relationship-management`、`ck`、`claude-devfleet`、`code-tour`、`codebase-onboarding`、`codehealth-mcp`、`competitive-platform-analysis`、`competitive-report-structure`、`config-gc`、`configure-ecc`、`connections-optimizer`、`content-engine`、`context-budget`、`council`、`council-multi-model`、`crosspost`、`customer-billing-ops`、`customs-trade-compliance`、`delivery-gate`、`dmux-workflows`、`documentation-lookup`、`ecc-guide`、`ecc-recipes`、`ecc-tools-cost-audit`、`email-ops`、`energy-procurement`、`exa-search`、`fal-ai-media`、`finance-billing-ops`、`flox-environments`、`frontend-slides`、`gan-style-harness`、`github-ops`、`google-workspace-ops`、`growth-log`、`hermes-imports`、`hookify-rules`、`inventory-demand-planning`、`investor-materials`、`investor-outreach`、`ito-baskets`、`ito-compute`、`ito-inference`、`ito-training`、`jira-integration`、`knowledge-ops`、`laravel-plugin-discovery`、`lead-intelligence`、`living-docs-governance`、`logistics-exception-management`、`mailtrap-email-integration`、`market-research`、`marketing-campaign`、`messages-ops`、`ml-adoption-playbook`、`nanoclaw-repl`、`nasiko-control-plane`、`nutrient-document-processing`、`openclaw-persona-forge`、`opensource-pipeline`、`parallel-execution-optimizer`、`plan-canvas`、`plan-orchestrate`、`prediction-market-oracle-research`、`prediction-market-risk-review`、`product-capability`、`product-lens`、`production-scheduling`、`project-flow-ops`、`prompt-optimizer`、`quality-nonconformance`、`recursive-decision-ledger`、`returns-reverse-logistics`、`rules-distill`、`scientific-db-pubmed-database`、`scientific-db-uspto-database`、`scientific-pkg-gget`、`scientific-thinking-literature-review`、`scientific-thinking-scholar-evaluation`、`search-first`、`security-scan`、`seo`、`setup-repo-scan`、`skill-comply`、`skill-stocktake`、`social-graph-ranker`、`social-publisher`、`strategic-compact`、`taste`、`tasteforge-video`、`terminal-ops`、`uncloud`、`unified-memory`、`unified-notifications-ops`、`videodb`、`visa-doc-translate`、`workspace-surface-audit`、`x-api`。
 
-此外，`ecc-tools-cost-audit` 有意引用独立的 `ECC-Tools` 仓库；`configure-ecc`、`plan-canvas` 和部分 Claude 专用工作流仍依赖 ECC 插件、npm 包、hooks 或 Claude 配置目录。这些属于运行依赖，不是本次快照缺失文件。原 ECC `repo-scan` 安装指针重命名并精简为仅限用户调用的 `setup-repo-scan`，避免覆盖所安装的外部 `repo-scan`；依赖感知安装器将 Anthropic `frontend-design`、固定提交的外部 `repo-scan` 和 `ecc-universal` plan-canvas runtime 放进各自入口的可选清单，Git 来源固定到不可变提交，`ecc-universal` 固定为 `2.2.0`，用户勾选后才执行对应的 Skill 或全局 npm 安装。
+当前保留的 12 个上游兼容性问题均为 `SKILL.md` frontmatter 使用了 Codex 校验器不接受的顶层字段：
+
+`agent-architecture-audit`、`agent-eval`、`benchmark-optimization-loop`、`blender-motion-state-inspection`、`data-throughput-accelerator`、`eval-harness`、`latency-critical-systems`、`motion-advanced`、`motion-foundations`、`motion-patterns`、`react-native-patterns`、`vue-patterns`。
+
+依赖感知安装器不再声明外部 `repo-scan` 或 `ecc-universal` plan-canvas runtime，因为对应仓库入口已删除。Anthropic `frontend-design` 仍由保留的 `frontend-design-direction` 提供可选安装入口。
 
 ### ComposioHQ/awesome-claude-skills: changelog-generator
 

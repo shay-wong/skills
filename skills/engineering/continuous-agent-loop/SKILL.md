@@ -7,7 +7,7 @@ metadata:
 
 # Continuous Agent Loop
 
-This is the v1.8+ canonical loop skill name. It supersedes `autonomous-loops` while keeping compatibility for one release.
+This is the v1.8+ canonical loop skill.
 
 ## Loop Selection Flow
 
@@ -29,7 +29,7 @@ Recommended production stack:
 1. RFC decomposition (`ralphinho-rfc-pipeline`)
 2. quality gates (`plankton-code-quality` + `/quality-gate`)
 3. eval loop (`eval-harness`)
-4. session persistence (`nanoclaw-repl`)
+4. filesystem-backed session notes for cross-iteration state
 
 ## Failure Modes
 
