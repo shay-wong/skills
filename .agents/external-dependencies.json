@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "dependencies": {
+    "review": [
+      {
+        "id": "ponytail@ponytail",
+        "label": "Ponytail",
+        "type": "codex-plugin",
+        "marketplace": {
+          "name": "ponytail",
+          "source": "https://github.com/DietrichGebert/ponytail.git",
+          "ref": "0a4dd63ad4541f4f655c4108a295916f3c1d8fda"
+        }
+      },
+      {
+        "id": "github@openai-curated",
+        "label": "GitHub PR feedback",
+        "type": "codex-plugin",
+        "marketplace": {
+          "name": "openai-curated"
+        }
+      },
+      {
+        "id": "review-game@PlayableIntelligence/game-creator",
+        "label": "Game review",
+        "type": "agent-skill",
+        "source": "PlayableIntelligence/game-creator",
+        "ref": "4e64b83b5fe400b34ad3a484d9b4a6090b26d512",
+        "skill": "review-game"
+      }
+    ],
+    "frontend-design-direction": [
+      {
+        "id": "frontend-design@anthropics/skills",
+        "label": "Anthropic frontend design",
+        "type": "agent-skill",
+        "source": "anthropics/skills",
+        "ref": "3b3fad96af16a10759d930941b4520ba0c40edae",
+        "skill": "frontend-design"
+      }
+    ],
+    "setup-repo-scan": [
+      {
+        "id": "repo-scan@haibindev/repo-scan",
+        "label": "repo-scan (pinned source)",
+        "type": "agent-skill",
+        "source": "haibindev/repo-scan",
+        "ref": "2742664ebcad1450c208eda0ae45d3c17fad5dd8",
+        "skill": "repo-scan"
+      }
+    ],
+    "plan-canvas": [
+      {
+        "id": "ecc-universal@npm",
+        "label": "ECC plan canvas runtime",
+        "type": "npm-global",
+        "package": "ecc-universal@2.2.0",
+        "packageName": "ecc-universal"
+      }
+    ]
+  }
+}

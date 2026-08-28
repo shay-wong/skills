@@ -1,6 +1,6 @@
 ---
 name: review
-description: Route a review request to one primary installed workflow plus materially relevant, non-overlapping complementary reviews, then arbitrate their evidence into one bounded verdict. Use for general, merge-readiness, security, architecture, domain, game, GitHub-feedback, or simplification reviews when the user has not already selected a narrower workflow.
+description: Orchestrate a general review across installed, non-overlapping specialists and synthesize one bounded verdict. Use when the user has not selected a narrower review workflow.
 ---
 
 # Review
@@ -26,7 +26,7 @@ An explicitly requested single review Skill is primary. When the user requests s
 | Diff-focused simplification, deletion, YAGNI, or over-engineering review | Call the Skill tool with `ponytail:ponytail-review` when available |
 | Security or trust-boundary review | Call the Skill tool with `security-review` when available |
 | General game-codebase review | Call the Skill tool with `review-game` when available |
-| Architecture, adversarial, or independent multi-lane review | Call the Skill tool with `oh-my-codex:code-review` when available |
+| Architecture or adversarial review | Call a matching installed architecture review Skill when available; otherwise use `code-review` as primary and run a direct architecture advisory pass |
 | A named language, framework, or platform review | Call the Skill tool with the matching installed model-invoked Skill |
 | General branch, pull request, working-tree, standards, spec, or merge-readiness review | Call the Skill tool with the unnamespaced Matt `code-review` when available; otherwise perform a direct correctness and requirements review |
 

@@ -1,4 +1,4 @@
-# mattpocock-skills
+# shay-skills
 
 ## 1.2.3
 

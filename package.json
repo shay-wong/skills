@@ -1,15 +1,20 @@
 {
-  "name": "mattpocock-skills",
+  "name": "shay-skills",
   "version": "1.2.3",
   "private": true,
-  "description": "Matt Pocock's agent skills for real engineering",
+  "description": "Shay's curated agent skills for practical engineering",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mattpocock/skills"
+    "url": "https://github.com/shay-wong/skills"
+  },
+  "bin": {
+    "install-shay-skills": "scripts/install-skills.mjs"
   },
   "license": "MIT",
   "scripts": {
     "changeset": "changeset",
+    "install:skills": "node scripts/install-skills.mjs",
+    "test:install-skills": "node --test scripts/install-skills.test.mjs",
     "version": "changeset version && node scripts/sync-plugin-version.mjs",
     "check-plugin-version": "node scripts/sync-plugin-version.mjs --check"
   },

@@ -1,6 +1,6 @@
 ---
 name: fork-doc
-description: "Audit a Git fork against its most recently merged upstream baseline, enforce upstream-version-plus-fork.N release versioning, batch-interview the maintainer about independent policy decisions, and synchronize its repository agent rule and fork documentation set: AGENTS.md workflow guidance, root FORK.md for maintainers and AI coding agents, every actively maintained user-documentation language for public fork capabilities, and CHANGELOG.md for current user-visible changes. Use when documenting intentional local-versus-upstream behavior, preparing recurring upstream merges or fork releases, or synchronizing documentation after local features change or upstream absorbs them."
+description: "Audit fork differences, enforce <upstream>-fork.N releases, and sync agent rules, FORK.md, user docs, and changelog. Use before upstream merges, fork releases, or capability changes."
 ---
 
 # Fork Doc

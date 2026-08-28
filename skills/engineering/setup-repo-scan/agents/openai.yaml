@@ -1,0 +1,5 @@
+interface:
+  display_name: "Set Up repo-scan"
+  short_description: "Install the pinned external repo-scan Skill"
+policy:
+  allow_implicit_invocation: false

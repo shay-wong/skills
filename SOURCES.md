@@ -24,7 +24,7 @@
 | 上游分支 | `upstream/main` |
 | 本地范围 | 仓库基础结构，包括 Matt canonical `skills/`、`docs/`、清单和维护脚本；不包括 ECC 来源档案和本地吸收改动 |
 | 许可证 | MIT，见 [`LICENSE`](./LICENSE) |
-| 本地改动 | `ask-matt` 无兼容别名地重命名为个人入口 `ask-me`；`tdd`、`research`、`implement`、`code-review`、`resolving-merge-conflicts` 吸收 ECC 与本地规则；新增个人 `review` 统筹入口、`commit`、`worktree-clean`；其余 Matt canonical 内容保持上游基线 |
+| 本地改动 | 发行包、Claude plugin 和 fallback marketplace 统一为 `shay-skills` / `shay` 与 `shay-wong/skills`；`setup-matt-pocock-skills` 无兼容别名地重命名为中立入口 `configure-skills`；`ask-matt` 无兼容别名地重命名为个人入口 `ask-me`，并按是否需要写入 `CONTEXT.md` 或 ADR 来选择 `grill-me` 与 `grill-with-docs`；`tdd`、`research`、`implement`、`code-review`、`resolving-merge-conflicts` 吸收 ECC 与本地规则；`code-review`、`wizard`、`codebase-design` 与 `to-tickets` 的入口描述压缩为触发条件和核心职责；新增个人 `review` 统筹入口、`commit`、`worktree-clean`；其余 Matt canonical 内容保持上游基线 |
 | 比较方式 | `git diff 5b15a47f2d7150f545fbcacbfe381787fc0230dc..main` |
 | 同步策略 | 保留 `upstream` 远端；同步前按本台账逐项检查个人改动，合并后更新固定基线 |
 
@@ -40,10 +40,10 @@
 | 本地路径 | [`skills/engineering`](./skills/engineering)、[`skills/productivity`](./skills/productivity)、[`skills/misc`](./skills/misc)、[`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
 | 导入范围 | 原始 286 个 Skill 中，276 个非重叠入口按领域保留；10 个重叠入口吸收进当前 canonical Skill |
 | 许可证 | MIT，见 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
-| 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口并融合进 canonical Skill；`tdd` 保留风险门禁、计划输入安全、真实 RED/GREEN、测试层级和证据交接；`research` 保留聚焦、比较、深度与监控候选模式、多来源交叉验证和分题并行；其余入口吸收进 Matt `implement` 和本地 `decision-notes` |
+| 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口并融合进 canonical Skill；`tdd` 保留风险门禁、计划输入安全、真实 RED/GREEN、测试层级和证据交接；`research` 保留聚焦、比较、深度与监控候选模式、多来源交叉验证和分题并行；`skill-stocktake` 改为优先审计 Agent Skills 目录、兼容 Claude 回退和仓库 `skills/`，仅识别 `SKILL.md`、跟随并去重符号链接，将结果缓存移出安装目录，并使用运行时中立的批量评估说明；其余入口吸收进 Matt `implement` 和本地 `decision-notes` |
 | 验证结果 | `skills.sh` 发现 317 个 Skill，名称全部唯一；Codex `quick_validate.py` 为 264 通过、53 失败，其中 22 个是 Matt/beta 既有 Claude 字段，31 个是 ECC 上游 frontmatter 问题 |
 | 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装；ECC 子目录不加入继承的 Matt plugin、`ask-me` 或 maintainer linking script |
-| 激活前置 | 当前 `~/.agents/skills` 有 32 个 ECC 同名安装项；接入本仓库前必须逐项替换并验证，避免同时加载两份 |
+| 本机替换状态 | 本机此前安装的 ECC 同名副本已替换为指向本仓库对应目录的符号链接；未额外启用原先未安装的 ECC Skill |
 | 比较方式 | 从固定来源基线重建原始目录清单，再审查分类移动、10 个吸收入口、路径修复和 canonical 差异 |
 | 同步策略 | 从 ECC 的固定新提交先比较上游删除、重命名、依赖和兼容性变化，再按当前领域映射更新 276 个入口，并重新审查 10 个已吸收能力 |
 
@@ -60,7 +60,7 @@
 
 `agent-architecture-audit`、`agent-eval`、`agent-self-evaluation`、`benchmark-optimization-loop`、`blender-motion-state-inspection`、`carrier-relationship-management`、`ck`、`customs-trade-compliance`、`data-throughput-accelerator`、`ecc-recipes`、`energy-procurement`、`eval-harness`、`gan-style-harness`、`inventory-demand-planning`、`latency-critical-systems`、`logistics-exception-management`、`mailtrap-email-integration`、`ml-adoption-playbook`、`motion-advanced`、`motion-foundations`、`motion-patterns`、`parallel-execution-optimizer`、`production-scheduling`、`quality-nonconformance`、`react-native-patterns`、`recursive-decision-ledger`、`returns-reverse-logistics`、`skill-comply`、`taste`、`videodb`、`vue-patterns`。
 
-此外，`ecc-tools-cost-audit` 有意引用独立的 `ECC-Tools` 仓库；`configure-ecc`、`plan-canvas` 和部分 Claude 专用工作流仍依赖 ECC 插件、npm 包、hooks 或 Claude 配置目录。这些属于运行依赖，不是本次快照缺失文件。
+此外，`ecc-tools-cost-audit` 有意引用独立的 `ECC-Tools` 仓库；`configure-ecc`、`plan-canvas` 和部分 Claude 专用工作流仍依赖 ECC 插件、npm 包、hooks 或 Claude 配置目录。这些属于运行依赖，不是本次快照缺失文件。原 ECC `repo-scan` 安装指针重命名并精简为仅限用户调用的 `setup-repo-scan`，避免覆盖所安装的外部 `repo-scan`；依赖感知安装器将 Anthropic `frontend-design`、固定提交的外部 `repo-scan` 和 `ecc-universal` plan-canvas runtime 放进各自入口的可选清单，Git 来源固定到不可变提交，`ecc-universal` 固定为 `2.2.0`，用户勾选后才执行对应的 Skill 或全局 npm 安装。
 
 ### ComposioHQ/awesome-claude-skills: changelog-generator
 
@@ -76,6 +76,7 @@
 | 本地改动 | 重命名为短入口 `changelog`；删除营销式重复说明和固定 emoji 示例；吸收 Baoyu 发布流程中的精确范围、多语言文件、外部贡献者归属与独立 Release Notes 能力；增加无 Tag 仓库的范围 fallback、行为证据核查和不夸大结果规则；明确该 Skill 不修改版本、不提交、不打 Tag、不推送、不发布产物或 GitHub Release |
 | 验证方式 | 运行 Codex `quick_validate.py`；检查 `$release` 反向路由、文件链接、名称唯一性和 repository-owned prose 标点规则 |
 | 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装，不加入继承的 Matt plugin 或 `ask-me` |
+| 本机替换状态 | 旧 `changelog-generator` 副本已移入废纸篓，本机改由 `~/.agents/skills/changelog` 与 `~/.claude/skills/changelog` 链接到本仓库版本 |
 | 同步策略 | 对比新的固定上游提交，只同步能提高用户可读性、范围准确性和输出格式适配的行为；继续由本地 `changelog` 统一承接发布说明生成 |
 
 ### JimLiu/baoyu-skills: release-skills
@@ -91,7 +92,8 @@
 | 许可证 | 固定来源提交的 README 声明 MIT；当时没有仓库根 `LICENSE`，该 Skill 也没有独立许可证文件 |
 | 本地改动 | 重命名为短入口 `release`；将配置与回填模式拆到按需 references；删除 changelog fallback 与重复生成规则，由 `$changelog` 统一负责 changelog 和 Release Notes，已有且经用户批准的说明可直接复用；保留 `.releaserc.yml`、`prepare_artifact`、`publish_artifact`、signed tag 与 GitHub Release 行为；移除普通 `push` 强制升级为完整发布的规则；把版本、commit、tag、push、产物发布和 GitHub Release 拆成显式授权边界；将确认提前到文件与 Git 修改之前，并要求验证通过后才能 commit、tag 或发布；输入机制改为当前 runtime 中立表述 |
 | 验证方式 | 运行 Codex `quick_validate.py`；检查 `$changelog` 硬依赖、已有说明复用路径、references 链接、名称唯一性和 repository-owned prose 标点规则 |
-| 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装，不加入继承的 Matt plugin 或 `ask-me`；单独安装发布能力时使用 `npx skills@latest add shay-wong/skills -g --skill changelog release` 保持依赖闭包 |
+| 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装，不加入继承的 Matt plugin 或 `ask-me`；单独安装发布能力时同时选择仓库内的 `changelog` 与 `release` |
+| 本机替换状态 | 旧 `release-skills` 副本已移入废纸篓，本机改由 `~/.agents/skills/release` 与 `~/.claude/skills/release` 链接到本仓库版本 |
 | 同步策略 | 对比新的固定上游提交，分别审查项目检测、版本规则、产物 Hook、Tag 与 GitHub Release 行为；保留本地授权边界、验证门禁和 `changelog` 单一职责分工 |
 
 ### czm15053/write-notes-like-deepseek
@@ -124,9 +126,9 @@
 | 采用原因 | 保留一个可发现本机补充审查能力的个人统筹入口，以及安全提交、GitLab MR 管理、Fork 差异与版本文档维护、worktree 清理、按风险开发与测试、评审证据门槛和冲突决策规则 |
 | 来源归属 | `agent-rules` 及五个 standards Skill 由 ECC Claude Rules 迁移后持续本地化；其余条目由 Shay 的本地历史维护 |
 | 许可证 | ECC 派生规则遵循 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE)；本地新增内容遵循本仓库 [`LICENSE`](./LICENSE) |
-| 本地改动 | `review`、`commit`、`gitlab-mr`、`fork-doc` 与 `worktree-clean` 成为 promoted engineering Skill；`commit` 保留无显式范围时的当前任务 fallback、Git 原生 ignored 检测和歧义分组处理，并新增提交请求不授权 push、PR、历史改写或远端修改的边界；`commit` 与 `worktree-clean` 将本机专用的 `/opt/homebrew/bin/git` 改为由 `PATH` 解析的 `git`，同时继续用 `git -C <repo>` 绑定仓库；`gitlab-mr` 采用本机当前工作副本，保留 Fork 默认值、重复 MR 防护、Jira 模板、增量更新和显式安装的 push 同步 Hook，将 Hook 中固定的 Git、`glab` 和 `codex` 路径改为环境变量优先、`PATH` 回退，并修复安装器把相对 hooks 路径解析到调用目录的问题；`fork-doc` 采用本机当前工作副本，保留 standalone 与父 Git workflow 的授权边界、准确的 upstream baseline、重要手工 merge resolution 的独立功能提交要求，以及禁止用文档提交伪装已拆分历史的规则；`review` 优先复用当前 harness 的可用 Skill 清单，仅在清单缺失或不完整时扫描本地审查 Skill；恢复本机版的 GitHub feedback、Ponytail audit、game、架构及语言框架路由，五级优先级、required/advisory 分类、上下文决策、finding ledger、证据门槛、冲突仲裁、五态结果、三轮审查、两轮修复、90 分钟预算和大型候选分片；ECC prompt 绝对路径改为已安装领域 Skill 映射；agent 等待、线程映射和 circuit-breaker 操作继续由 `AGENTS.md` 管理；`review-standards` 的风险匹配验证、变化行为测试、信任边界、敏感信息和有界数据访问规则并入 Matt `code-review` 的 Standards 轴，不再作为独立审查；其他开发、测试、证据和 Git 冲突规则继续并入 Matt `implement`、`tdd`、`code-review` 与 `resolving-merge-conflicts`；`agent-rules`、standards 和 development wrapper 删除 |
-| 验证结果 | `review`、扩展后的发现脚本自检、`commit`、`gitlab-mr`、`fork-doc` 与 `worktree-clean` Skill 校验、GitLab MR Hook 的 ShellCheck、语法及临时仓库安装烟测、文档/插件索引和 `claude plugin validate . --strict` 均通过；全仓既有 frontmatter 兼容失败单独记录，不归因于本次改动 |
-| 激活状态 | 通过 `skills.sh` 统一安装；本次仍未删除 `~/.codex/skills` 和 `~/.agents/skills` 的现有副本 |
+| 本地改动 | `review`、`commit`、`gitlab-mr`、`fork-doc` 与 `worktree-clean` 成为 promoted engineering Skill；`review` 与 `fork-doc` 的入口描述压缩为触发条件和核心职责；`commit` 保留无显式范围时的当前任务 fallback、Git 原生 ignored 检测和歧义分组处理，并新增提交请求不授权 push、PR、历史改写或远端修改的边界；`commit` 与 `worktree-clean` 将本机专用的 `/opt/homebrew/bin/git` 改为由 `PATH` 解析的 `git`，同时继续用 `git -C <repo>` 绑定仓库；`gitlab-mr` 采用本机当前工作副本，保留 Fork 默认值、重复 MR 防护、Jira 模板、增量更新和显式安装的 push 同步 Hook，将 Hook 中固定的 Git、`glab` 和 `codex` 路径改为环境变量优先、`PATH` 回退，并修复安装器把相对 hooks 路径解析到调用目录的问题；`fork-doc` 采用本机当前工作副本，保留 standalone 与父 Git workflow 的授权边界、准确的 upstream baseline、重要手工 merge resolution 的独立功能提交要求，以及禁止用文档提交伪装已拆分历史的规则；`review` 优先复用当前 harness 的可用 Skill 清单，仅在清单缺失或不完整时扫描本地审查 Skill；恢复本机版的 GitHub feedback、Ponytail audit、game、架构及语言框架路由，五级优先级、required/advisory 分类、上下文决策、finding ledger、证据门槛、冲突仲裁、五态结果、三轮审查、两轮修复、90 分钟预算和大型候选分片；ECC prompt 绝对路径改为已安装领域 Skill 映射；agent 等待、线程映射和 circuit-breaker 操作继续由 `AGENTS.md` 管理；`review-standards` 的风险匹配验证、变化行为测试、信任边界、敏感信息和有界数据访问规则并入 Matt `code-review` 的 Standards 轴，不再作为独立审查；其他开发、测试、证据和 Git 冲突规则继续并入 Matt `implement`、`tdd`、`code-review` 与 `resolving-merge-conflicts`；`agent-rules`、standards 和 development wrapper 删除 |
+| 验证结果 | `review`、扩展后的发现脚本自检、`commit`、`gitlab-mr`、`fork-doc` 与 `worktree-clean` Skill 校验、GitLab MR Hook 的 ShellCheck、语法及临时仓库安装烟测、外部依赖安装器的全选、逐项勾选、全部跳过、Ponytail marketplace 注册、Codex 插件安装、外部 Skill 安装、全局 npm runtime 和非交互保护路径、文档/插件索引和 `claude plugin validate . --strict` 均通过；全仓既有 frontmatter 兼容失败单独记录，不归因于本次改动 |
+| 激活状态 | 通过 `skills.sh` 统一安装；依赖感知安装器将 Ponytail、GitHub PR feedback 和 `review-game` 作为 `review` 的可选外部依赖；本机旧个人副本与已吸收的 wrapper 已移入废纸篓，保留入口通过 `~/.agents/skills` 与 `~/.claude/skills` 的符号链接直接使用本仓库版本 |
 | 同步策略 | 当前仓库完成依赖整理并成为唯一来源后，停止从 `~/.codex/skills` 反向同步；后续修改直接在本仓库维护 |
 
 ## 新来源条目模板

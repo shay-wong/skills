@@ -26,7 +26,7 @@ The same-session case is worth naming because the skill's own first line doesn't
 
 `implement` works on the branch you are on and does not create one. If the request includes commits, check that the current branch is the intended destination before starting.
 
-If the tickets came from [to-tickets](https://aihero.dev/skills-to-tickets), the tracker they live on was configured by [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills). `code-review` reads the same configuration to find the originating spec at close-out.
+If the tickets came from [to-tickets](https://aihero.dev/skills-to-tickets), the tracker they live on was configured by [configure-skills](https://aihero.dev/skills-configure-skills). `code-review` reads the same configuration to find the originating spec at close-out.
 
 ## What one run does
 

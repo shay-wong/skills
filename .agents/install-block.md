@@ -30,13 +30,15 @@ npx skills@latest update -g <name>
 
 </canonical-block>
 
-`release` has a hard dependency on `changelog`. Install that pair together:
+The standard picker installs exactly what you select. To resolve declared external dependencies, use the dependency-aware installer:
 
-<canonical-block name="skills-sh-release-pair">
+<canonical-block name="dependency-aware-install">
 
 ```bash
-npx skills@latest add shay-wong/skills -g --skill changelog release
+npx --yes github:shay-wong/skills --with-deps --yes review
 ```
+
+Replace `review` with one or more Skill names. The external dependency checklist includes Ponytail, GitHub PR feedback, game review, Anthropic frontend design, the pinned external `repo-scan`, and the ECC plan-canvas runtime when their owning Skills are selected. Git-backed and npm dependencies are pinned in `.agents/external-dependencies.json`; the preconfigured `openai-curated` marketplace is resolved by Codex. Skills already in this repository are not shown as dependencies. To choose dependencies individually, omit `--with-deps`; use Up/Down and Space in the checkbox list, then press Enter. To install only the selected repository Skills, use `--without-deps`. `--with-deps` installs every listed dependency, including global npm packages, so use the checklist when you want individual control. Installing Codex plugins requires the `codex` CLI.
 
 </canonical-block>
 
@@ -44,4 +46,4 @@ npx skills@latest add shay-wong/skills -g --skill changelog release
 
 ## Avoid duplicate installations
 
-Do not install `mattpocock-skills`, `ecc@ecc`, or separate manual ECC copies alongside this collection. The inherited `.claude-plugin` manifest still ships only the promoted Matt subset and is not the complete personal distribution.
+Do not install `mattpocock-skills`, `ecc@ecc`, or separate manual ECC copies alongside this collection. The `.claude-plugin` manifest ships only the promoted subset and is not the complete personal distribution.
