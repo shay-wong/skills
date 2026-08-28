@@ -1,29 +1,35 @@
 #!/usr/bin/env bash
 # scan.sh — enumerate skill files, extract frontmatter and UTC mtime
-# Usage: scan.sh [CWD_SKILLS_DIR]
+# Usage: scan.sh [PROJECT_SKILLS_DIR]
 # Output: JSON to stdout
 #
-# When CWD_SKILLS_DIR is omitted, defaults to $PWD/.claude/skills so the
-# script always picks up project-level skills without relying on the caller.
+# When PROJECT_SKILLS_DIR is omitted, prefer $PWD/skills, then project-level
+# Agent Skills and Claude Code directories.
 #
 # Environment:
-#   SKILL_STOCKTAKE_GLOBAL_DIR   Override ~/.claude/skills (for testing only;
+#   SKILL_STOCKTAKE_GLOBAL_DIR   Override ~/.agents/skills (for testing only;
 #                                do not set in production — intended for bats tests)
 #   SKILL_STOCKTAKE_PROJECT_DIR  Override project dir detection (for testing only)
 
 set -euo pipefail
 
-GLOBAL_DIR="${SKILL_STOCKTAKE_GLOBAL_DIR:-$HOME/.claude/skills}"
-CWD_SKILLS_DIR="${SKILL_STOCKTAKE_PROJECT_DIR:-${1:-$PWD/.claude/skills}}"
+GLOBAL_DIR="${SKILL_STOCKTAKE_GLOBAL_DIR:-$HOME/.agents/skills}"
+if [[ ! -d "$GLOBAL_DIR" && -z "${SKILL_STOCKTAKE_GLOBAL_DIR:-}" && -d "$HOME/.claude/skills" ]]; then
+  GLOBAL_DIR="$HOME/.claude/skills"
+fi
+
+PROJECT_SKILLS_DIR="${SKILL_STOCKTAKE_PROJECT_DIR:-${1:-}}"
+if [[ -z "$PROJECT_SKILLS_DIR" ]]; then
+  for candidate in "$PWD/skills" "$PWD/.agents/skills" "$PWD/.claude/skills"; do
+    if [[ -d "$candidate" ]]; then
+      PROJECT_SKILLS_DIR="$candidate"
+      break
+    fi
+  done
+fi
 # Path to JSONL file containing tool-use observations (optional; used for usage frequency counts).
 # Override via SKILL_STOCKTAKE_OBSERVATIONS env var if your setup uses a different path.
 OBSERVATIONS="${SKILL_STOCKTAKE_OBSERVATIONS:-$HOME/.claude/observations.jsonl}"
-
-# Validate CWD_SKILLS_DIR looks like a .claude/skills path (defense-in-depth).
-# Only warn when the path exists — a nonexistent path poses no traversal risk.
-if [[ -n "$CWD_SKILLS_DIR" && -d "$CWD_SKILLS_DIR" && "$CWD_SKILLS_DIR" != */.claude/skills* ]]; then
-  echo "Warning: CWD_SKILLS_DIR does not look like a .claude/skills path: $CWD_SKILLS_DIR" >&2
-fi
 
 # Extract a frontmatter field (handles both quoted and unquoted single-line values).
 # Does NOT support multi-line YAML blocks (| or >) or nested YAML keys.
@@ -97,6 +103,7 @@ scan_dir_to_json() {
   local i=0
   while IFS= read -r file; do
     local name desc mtime u7 u30 dp
+    file=$(realpath "$file")
     name=$(extract_field "$file" "name")
     desc=$(extract_field "$file" "description")
     mtime=$(date -u -r "$file" +%Y-%m-%dT%H:%M:%SZ)
@@ -118,7 +125,7 @@ scan_dir_to_json() {
       '{path:$path,name:$name,description:$description,use_7d:$use_7d,use_30d:$use_30d,mtime:$mtime}' \
       > "$tmpdir/$i.json"
     i=$((i+1))
-  done < <(find "$dir" -name "*.md" -type f 2>/dev/null | sort)
+  done < <(find -L "$dir" -name "SKILL.md" -type f 2>/dev/null | sort)
 
   if [[ $i -eq 0 ]]; then
     echo "[]"
@@ -144,15 +151,15 @@ project_path=""
 project_count=0
 project_skills="[]"
 
-if [[ -n "$CWD_SKILLS_DIR" && -d "$CWD_SKILLS_DIR" ]]; then
+if [[ -n "$PROJECT_SKILLS_DIR" && -d "$PROJECT_SKILLS_DIR" ]]; then
   project_found="true"
-  project_path="$CWD_SKILLS_DIR"
-  project_skills=$(scan_dir_to_json "$CWD_SKILLS_DIR")
+  project_path="$PROJECT_SKILLS_DIR"
+  project_skills=$(scan_dir_to_json "$PROJECT_SKILLS_DIR")
   project_count=$(echo "$project_skills" | jq 'length')
 fi
 
 # Merge global + project skills into one array
-all_skills=$(jq -s 'add' <(echo "$global_skills") <(echo "$project_skills"))
+all_skills=$(jq -s 'add | unique_by(.path)' <(echo "$global_skills") <(echo "$project_skills"))
 
 jq -n \
   --arg global_found "$global_found" \

@@ -64,7 +64,7 @@ Absorbed third-party research, content, business, and personal workflow Skills, 
 - **[returns-reverse-logistics](./returns-reverse-logistics/SKILL.md)**: Codified expertise for returns authorization, receipt and inspection, disposition decisions, refund processing, fraud detection, and warranty claims management.
 - **[seo](./seo/SKILL.md)**: Audit, plan, and implement SEO improvements across technical SEO, on-page optimization, structured data, Core Web Vitals, and content strategy.
 - **[skill-scout](./skill-scout/SKILL.md)**: Search existing local, marketplace, GitHub, and web skill sources before creating a new skill.
-- **[skill-stocktake](./skill-stocktake/SKILL.md)**: Use when auditing Claude skills and commands for quality.
+- **[skill-stocktake](./skill-stocktake/SKILL.md)**: Audit installed or repository Skill catalogs for overlap, stale guidance, broken discovery, and low-value entries.
 - **[social-graph-ranker](./social-graph-ranker/SKILL.md)**: Weighted social-graph ranking for warm intro discovery, bridge scoring, and network gap analysis across X and LinkedIn.
 - **[social-publisher](./social-publisher/SKILL.md)**: Agent-driven scheduling and publishing of social media posts across 13 platforms via SocialClaw.
 - **[strategic-compact](./strategic-compact/SKILL.md)**: Suggests manual context compaction at logical intervals to preserve context through task phases rather than arbitrary auto-compaction.

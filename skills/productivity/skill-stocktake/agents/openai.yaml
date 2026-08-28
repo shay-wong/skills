@@ -1,0 +1,3 @@
+interface:
+  display_name: "Skill Stocktake"
+  short_description: "Audit installed and repository Skill catalogs"
