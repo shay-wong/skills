@@ -15,15 +15,20 @@ set -euo pipefail
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 DESTS=("$HOME/.claude/skills" "$HOME/.agents/skills")
 
-# Link the curated Matt-based plugin set. The complete absorbed catalog is
-# distributed through skills.sh rather than this maintainer helper.
 names=()
 srcs=()
-while IFS= read -r skill_path; do
-  src="$REPO/${skill_path#./}"
+while IFS= read -r skill_file; do
+  src="${skill_file%/SKILL.md}"
   names+=("$(basename "$src")")
   srcs+=("$src")
-done < <(node -e 'for (const skill of require(process.argv[1]).skills) console.log(skill)' "$REPO/.claude-plugin/plugin.json")
+done < <(
+  find \
+    "$REPO/skills/engineering" \
+    "$REPO/skills/productivity" \
+    "$REPO/skills/misc" \
+    "$REPO/skills/in-progress" \
+    -mindepth 2 -maxdepth 2 -name SKILL.md -print | sort
+)
 
 for DEST in "${DESTS[@]}"; do
   # If $DEST is a symlink that resolves into this repo, we'd end up writing the
@@ -42,13 +47,37 @@ for DEST in "${DESTS[@]}"; do
 
   mkdir -p "$DEST"
 
+  # Remove only broken links previously created by this repository.
+  for target in "$DEST"/*; do
+    [ -L "$target" ] || continue
+    linked_path="$(readlink "$target")"
+    case "$linked_path" in
+      "$REPO"/*)
+        if [ ! -e "$target" ]; then
+          rm "$target"
+          echo "removed stale link $target"
+        fi
+        ;;
+    esac
+  done
+
   for i in "${!names[@]}"; do
     name="${names[$i]}"
     src="${srcs[$i]}"
     target="$DEST/$name"
 
-    if [ -e "$target" ] && [ ! -L "$target" ]; then
-      rm -rf "$target"
+    if [ -L "$target" ]; then
+      linked_path="$(readlink "$target")"
+      case "$linked_path" in
+        "$REPO"/*) ;;
+        *)
+          echo "skipped $target (managed by another source)"
+          continue
+          ;;
+      esac
+    elif [ -e "$target" ]; then
+      echo "skipped $target (not a symlink)"
+      continue
     fi
 
     ln -sfn "$src" "$target"

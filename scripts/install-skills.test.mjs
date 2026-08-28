@@ -1,6 +1,15 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readlinkSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -14,6 +23,8 @@ import {
 } from "./install-skills.mjs";
 
 const script = fileURLToPath(new URL("./install-skills.mjs", import.meta.url));
+const linkScript = fileURLToPath(new URL("./link-skills.sh", import.meta.url));
+const repo = fileURLToPath(new URL("..", import.meta.url));
 
 test("uses the personal release identity and generic configuration entrypoint", () => {
   const packageManifest = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
@@ -186,5 +197,40 @@ test("installs selected external dependencies after the repository Skill", () =>
     ]);
   } finally {
     rmSync(directory, { force: true, recursive: true });
+  }
+});
+
+test("links the complete repository catalog without replacing foreign skills", () => {
+  const home = mkdtempSync(join(tmpdir(), "link-shay-skills-"));
+  const agents = join(home, ".agents", "skills");
+  const claude = join(home, ".claude", "skills");
+  const foreignCommit = join(agents, "commit");
+  const stale = join(agents, "removed-shay-skill");
+
+  mkdirSync(foreignCommit, { recursive: true });
+  writeFileSync(join(foreignCommit, "owner"), "foreign\n");
+  symlinkSync(join(repo, "skills", "engineering", "removed-shay-skill"), stale);
+
+  try {
+    const result = spawnSync("bash", [linkScript], {
+      encoding: "utf8",
+      env: { ...process.env, HOME: home },
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(readFileSync(join(foreignCommit, "owner"), "utf8"), "foreign\n");
+    assert.equal(lstatSync(stale, { throwIfNoEntry: false }), undefined);
+
+    for (const destination of [agents, claude]) {
+      const continuousLearning = join(destination, "continuous-learning");
+      const writingShape = join(destination, "writing-shape");
+      assert.equal(lstatSync(continuousLearning).isSymbolicLink(), true);
+      assert.equal(lstatSync(writingShape).isSymbolicLink(), true);
+      assert.equal(
+        readlinkSync(continuousLearning),
+        join(repo, "skills", "engineering", "continuous-learning"),
+      );
+    }
+  } finally {
+    rmSync(home, { force: true, recursive: true });
   }
 });
