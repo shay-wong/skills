@@ -26,6 +26,22 @@ const script = fileURLToPath(new URL("./install-skills.mjs", import.meta.url));
 const linkScript = fileURLToPath(new URL("./link-skills.sh", import.meta.url));
 const repo = fileURLToPath(new URL("..", import.meta.url));
 
+test("publishes routed grill entrypoints with a catalog fallback", () => {
+  const pluginManifest = JSON.parse(readFileSync(new URL("../.claude-plugin/plugin.json", import.meta.url), "utf8"));
+  const grillMe = readFileSync(new URL("../skills/productivity/grill-me/SKILL.md", import.meta.url), "utf8");
+  const grillWithDocs = readFileSync(new URL("../skills/engineering/grill-with-docs/SKILL.md", import.meta.url), "utf8");
+
+  assert.ok(pluginManifest.skills.includes("./skills/productivity/grill-me"));
+  assert.ok(pluginManifest.skills.includes("./skills/productivity/grilling"));
+  assert.ok(pluginManifest.skills.includes("./skills/engineering/domain-modeling"));
+  assert.match(grillMe, /`grilling`/);
+  assert.match(grillWithDocs, /`grilling` and `domain-modeling`/);
+  assert.match(grillMe, /available-Skills catalog/);
+  assert.match(grillWithDocs, /available-Skills catalog/);
+  assert.doesNotMatch(grillMe, /frontier/i);
+  assert.doesNotMatch(grillWithDocs, /Offer an ADR/);
+});
+
 test("uses the personal release identity and generic configuration entrypoint", () => {
   const packageManifest = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
   const pluginManifest = JSON.parse(readFileSync(new URL("../.claude-plugin/plugin.json", import.meta.url), "utf8"));

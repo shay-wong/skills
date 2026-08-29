@@ -24,7 +24,7 @@
 | 上游分支 | `upstream/main` |
 | 本地范围 | 仓库基础结构，包括 Matt canonical `skills/`、`docs/`、清单和维护脚本；不包括 ECC 来源档案和本地吸收改动 |
 | 许可证 | MIT，见 [`LICENSE`](./LICENSE) |
-| 本地改动 | 发行包、Claude plugin 和 fallback marketplace 统一为 `shay-skills` / `shay` 与 `shay-wong/skills`；`setup-matt-pocock-skills` 无兼容别名地重命名为中立入口 `configure-skills`；`ask-matt` 无兼容别名地重命名为个人入口 `ask-me`，并按是否需要写入 `CONTEXT.md` 或 ADR 来选择 `grill-me` 与 `grill-with-docs`；`tdd`、`research`、`implement`、`code-review`、`resolving-merge-conflicts` 吸收 ECC 与本地规则；`code-review`、`wizard`、`codebase-design` 与 `to-tickets` 的入口描述压缩为触发条件和核心职责；新增个人 `review` 统筹入口、`commit`、`worktree-clean`；其余 Matt canonical 内容保持上游基线 |
+| 本地改动 | 发行包、Claude plugin 和 fallback marketplace 统一为 `shay-skills` / `shay` 与 `shay-wong/skills`；`setup-matt-pocock-skills` 无兼容别名地重命名为中立入口 `configure-skills`；`ask-matt` 无兼容别名地重命名为个人入口 `ask-me`，并按是否需要写入 `CONTEXT.md` 或 ADR 来选择 `grill-me` 与 `grill-with-docs`；两个显式 grill 入口通过 Skill tool 或可用 Skills 目录复用 `grilling` 与 `domain-modeling`，不复制共享协议；`tdd`、`research`、`implement`、`code-review`、`resolving-merge-conflicts` 吸收 ECC 与本地规则；`code-review`、`wizard`、`codebase-design` 与 `to-tickets` 的入口描述压缩为触发条件和核心职责；新增个人 `review` 统筹入口、`commit`、`worktree-clean`；其余 Matt canonical 内容保持上游基线 |
 | 比较方式 | `git diff 5b15a47f2d7150f545fbcacbfe381787fc0230dc..main` |
 | 同步策略 | 保留 `upstream` 远端；同步前按本台账逐项检查个人改动，合并后更新固定基线 |
 

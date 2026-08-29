@@ -14,7 +14,7 @@ A **flow** is a path through the skills. Most paths run along one **main flow**,
 
 The route most work travels. You have an idea and want it built.
 
-1. Start with an interview. Use **`/grill-with-docs`** when the outcome should persist in `CONTEXT.md` or ADRs. Use **`/grill-me`** when you only need to settle the idea in conversation, even if a working directory exists. Both run the same `/grilling` primitive; only `grill-with-docs` adds the documentation layer.
+1. Start with an interview. Use **`/grill-with-docs`** when the outcome should persist in `CONTEXT.md` or ADRs. Use **`/grill-me`** when you only need to settle the idea in conversation, even if a working directory exists. Both use the same grilling discipline; only `grill-with-docs` adds the documentation layer.
 2. **Branch: can you settle every question in conversation?** If a question needs a runnable answer (state, business logic, a UI you have to see), detour through a prototype, bridged by **`/handoff`** in both directions (a prototype lives in its own directory, which is exactly what `/handoff` is for; see Phase boundaries):
    - **`/handoff`** out, then open a fresh session against that file,
    - **`/prototype`** to answer the question with throwaway code,
@@ -77,7 +77,7 @@ Read [PHASE-BOUNDARIES.md](PHASE-BOUNDARIES.md) for the ordered tree: the five q
 Off the main flow entirely.
 
 - **`/grill-me`**: the same relentless interview as `/grill-with-docs`, but **stateless**: it saves nothing locally and builds no `CONTEXT.md`. Reach for it when the decisions only need to live in the conversation. Use `/grill-with-docs` when the interview should also maintain project vocabulary or durable decisions in `CONTEXT.md` and ADRs.
-- **`/grilling`** is the interview primitive itself: rounds, the frontier, facts are the agent's job and decisions are yours. `/grill-me` and `/grill-with-docs` are the two named ways in, and `/triage`, `/wayfinder` and `/improve-codebase-architecture` all run it internally. Reach for it directly only when you want the interview with no wrapper around it.
+- **`/grilling`** is the model-reachable interview primitive: rounds, the frontier, facts are the agent's job and decisions are yours. `/grill-me` invokes it directly, while `/grill-with-docs` combines it with `/domain-modeling`; `/triage`, `/wayfinder` and `/improve-codebase-architecture` also reuse it.
 - **`/resolving-merge-conflicts`** works an in-progress merge or rebase conflict hunk by hunk, resolving by **intent** traced to each side's primary source rather than by picking lines, then finishes the operation. It never runs `--abort`. Standalone and off every flow: reach for it when you are already mid-conflict.
 - **`/review`** is the personal review orchestrator. It discovers installed review Skills at invocation time, selects one primary, prioritizes distinct complementary scopes, and carries task decisions, findings, conflicts, and bounded repair rounds into one evidence-backed verdict. Use `/code-review` directly when you only need its Standards and Spec axes.
 - **`/commit`** creates local commits with strict path and scope control. Use it when the implementation is already stable and only the commit boundary remains.

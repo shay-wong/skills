@@ -13,13 +13,15 @@ Bucket `README.md`s and the top-level `README.md` group entries into **User-invo
 
 ## Dependencies between them
 
-Dependencies are expressed as an explicit instruction to **call the Skill tool** with the named skill (`Call the Skill tool with "grilling"`), not deep `../other-skill/FILE.md` cross-references, and not a bare `/skill`-style mention left for the model to interpret. Naming the tool is what gets it fired: most harnesses expose skill invocation as a tool the model calls, and spelling that out gets a higher hit rate than dropping a `/name` into prose and hoping it's read as a command. Dropping the leading `/` also keeps this harness-neutral rather than less: a skill name on its own carries no assumption about which harness's trigger syntax it belongs to. Shared reference docs live inside the skill that owns them; other skills reach that material by calling the Skill tool with it, not by linking across folders.
+Dependencies name the target Skill explicitly. Call the Skill tool with the exact installed name when the current harness exposes it. Otherwise use the authoritative available-Skills catalog to locate the target, read its complete `SKILL.md`, and follow it. Codex documents explicit and implicit activation from turn input, but it also supplies the available Skills catalog and loads a selected Skill's full instructions. The catalog-read fallback makes the composition explicit without duplicating the target workflow.
+
+Do not use deep `../other-skill/FILE.md` references as a substitute because separate installation breaks them. Do not copy the dependency's instructions into every caller because those copies drift.
 
 This is about **operative** instructions: a skill's own steps telling the agent to go run another skill right now. Router prose that just names skills for a human to pick from (`ask-me`, bucket `README.md`s) isn't invoking anything, so it keeps `/skill`-style names as plain labels.
 
-The Skill tool takes one skill per call. A step that needs two skills is two calls, not one call with two names: say so (`Call the Skill tool twice, for "grilling" and "domain-modeling"`), not "call it with X and Y," which reads as a single call taking both.
+The Skill tool takes one skill per call in harnesses that expose it. A step that needs two skills is two calls, not one call with two names. Under the catalog fallback, locate and read both complete `SKILL.md` files before applying them together.
 
-This whole convention only holds when the named skill is **model-invoked**. A user-invoked skill can never be reached this way, full stop: per the invariant above, no other skill can call it, including by naming it to the Skill tool. When a step's precondition is a user-invoked skill (e.g. `configure-skills`), phrase it as an instruction for the human to act on: "tell the user to run `/configure-skills`", never as a Skill tool call.
+Do not use cross-skill activation to bypass an explicit-only policy. When a step's precondition is a user-invoked skill (for example, `configure-skills`), tell the human to run it.
 
 ## Passive vs active domain work
 
