@@ -21,7 +21,7 @@ You invoke this by typing `/ask-me`; the agent won't reach for it on its own.
 
 The router names skills; it does not install them. Everything it points at has to be installed for the recommendation to be actionable, and it only knows the promoted skills in this repo.
 
-The tracker-dependent routes (triage, `to-spec`, `to-tickets`, `implement`) assume [configure-skills](https://aihero.dev/skills-configure-skills) has already configured an issue tracker in the repo. The router will happily recommend them before that has happened.
+The tracker-dependent routes need a remote publication target. With active Panel or Jira planning context, `to-spec` and `to-tickets` write complete `.scratch` mirrors first and publish the same content through `manage-panel`; otherwise [configure-skills](https://aihero.dev/skills-configure-skills) must have configured a tracker in the repo. During execution, an active Panel Issue is read and claimed through `manage-panel`, while its `.scratch` ticket mirrors the returned `in_progress` and `in_review` states. The router will happily recommend these routes before either target exists.
 
 ## Flows, not skills
 
@@ -50,7 +50,7 @@ Two of those are routinely got wrong, which is why the router carries the order 
 
 **Isn't there just a list of the skills in the right order?**
 
-People keep asking for one in the README. This skill is that list: it is what it exists for. A static table would say `wayfinder → to-spec → to-tickets → implement → code-review` and be wrong for most situations, because the interesting parts are the branches: is there a codebase, does the build span sessions, can this question be settled by talking. The honest cost is that the router is hand-maintained and lags the repo. `/grilling` and `/resolving-merge-conflicts` both shipped long before the router named them.
+People keep asking for one in the README. This skill is that list: it is what it exists for. A static table would say `wayfinder → to-spec → to-tickets → implement → review` and be wrong for most situations, because the interesting parts are the branches: is there a codebase, does the build span sessions, can this question be settled by talking. The honest cost is that the router is hand-maintained and lags the repo. `/grilling` and `/resolving-merge-conflicts` both shipped long before the router named them.
 
 **It told me half the skills aren't installed.**
 

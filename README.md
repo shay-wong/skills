@@ -28,7 +28,7 @@ Replace `review` with one or more Skill names. The external dependency checklist
 
 ### Configure the engineering workflow
 
-Run `/configure-skills` once per repo. It will:
+Run `/configure-skills` when the repo needs a configured tracker, triage labels, or domain-doc layout. Active Panel and Jira planning conversations dual-write `to-spec` and `to-tickets` to `.scratch` and through `manage-panel` without duplicating remote tracker setup; published tickets record their Panel identity and status locally, and `implement` keeps later execution-state transitions synchronized. The configuration flow will:
 
 - Ask you which issue tracker you want to use (GitHub, Linear, or local files)
 - Ask you what labels you apply to tickets when you triage them (`/triage` uses labels)
@@ -156,10 +156,10 @@ Skills for daily code work.
 - **[grill-with-docs](./skills/engineering/grill-with-docs/SKILL.md)**: Grilling session that also builds your project's domain model, sharpening terminology and updating `CONTEXT.md` and ADRs inline.
 - **[triage](./skills/engineering/triage/SKILL.md)**: Move issues through a state machine of triage roles.
 - **[improve-codebase-architecture](./skills/engineering/improve-codebase-architecture/SKILL.md)**: Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
-- **[configure-skills](./skills/engineering/configure-skills/SKILL.md)**: Configure this repo for the engineering skills (issue tracker, triage labels, domain doc layout). Run once per repo before using the other engineering skills.
-- **[to-spec](./skills/engineering/to-spec/SKILL.md)**: Turn the current conversation into a spec and publish it to the issue tracker. No interview, just synthesizes what you've already discussed.
-- **[to-tickets](./skills/engineering/to-tickets/SKILL.md)**: Turn a plan, spec, or conversation into tracer-bullet tickets with explicit blocking edges, published to the configured tracker.
-- **[implement](./skills/engineering/implement/SKILL.md)**: Build the work described by a spec or set of tickets, driving `/tdd` at pre-agreed seams and closing out with `/code-review` before committing.
+- **[configure-skills](./skills/engineering/configure-skills/SKILL.md)**: Configure this repo's issue tracker fallback, triage labels, and domain doc layout when active Panel context does not provide the publication target.
+- **[to-spec](./skills/engineering/to-spec/SKILL.md)**: Turn the current conversation into a spec and dual-write it to `.scratch` plus active Panel context, or publish it to the configured tracker. No interview, just synthesis of what you've already discussed.
+- **[to-tickets](./skills/engineering/to-tickets/SKILL.md)**: Turn a plan, spec, or conversation into tracer-bullet tickets with explicit blocking edges, dual-written to `.scratch` plus active Panel context, or published to the configured tracker.
+- **[implement](./skills/engineering/implement/SKILL.md)**: Build the work described by a spec or tickets, close through `/review`, and dual-write active Panel execution status to its `.scratch` mirror.
 - **[wayfinder](./skills/engineering/wayfinder/SKILL.md)**: Plan a huge chunk of work, more than one agent session can hold, as a shared map of decision tickets on the issue tracker, and resolve them one at a time until the way to the destination is clear.
 
 **Model-invoked**
@@ -171,7 +171,7 @@ Skills for daily code work.
 - **[domain-modeling](./skills/engineering/domain-modeling/SKILL.md)**: Actively build and sharpen a project's domain model: challenge terms against the glossary, stress-test with edge-case scenarios, and update `CONTEXT.md` and ADRs inline.
 - **[codebase-design](./skills/engineering/codebase-design/SKILL.md)**: Apply deep-module vocabulary to interface, seam, testability, and code-shape decisions.
 - **[code-review](./skills/engineering/code-review/SKILL.md)**: Review a fixed diff independently against repository standards and its originating spec.
-- **[review](./skills/engineering/review/SKILL.md)**: Orchestrate installed, non-overlapping review specialists and synthesize one bounded verdict.
+- **[review](./skills/engineering/review/SKILL.md)**: Orchestrate installed, non-overlapping review specialists for general review or implement closeout, then synthesize one bounded verdict.
 - **[resolving-merge-conflicts](./skills/engineering/resolving-merge-conflicts/SKILL.md)**: Work through an in-progress git merge or rebase conflict hunk by hunk, resolving by intent traced to each side's primary source, then finish the operation (never `--abort`).
 - **[wizard](./skills/engineering/wizard/SKILL.md)**: Generate an interactive bash wizard for setup, credentials, migrations, and other steps only a human can perform.
 - **[commit](./skills/engineering/commit/SKILL.md)**: Create safe, scoped local commits while excluding unrelated, ignored, disposable, generated, and sensitive files.

@@ -1,12 +1,20 @@
 ---
 name: to-spec
-description: "Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you've already discussed."
+description: "Turn the current conversation into a spec and publish it to a local .scratch mirror plus active Panel context, or to the configured tracker: no interview, just synthesis of what you've already discussed."
 disable-model-invocation: true
 ---
 
 This skill takes the current conversation context and codebase understanding and produces a spec. Do NOT interview the user; just synthesize what you already know.
 
-The issue tracker and triage label vocabulary should have been provided to you. If not, tell the user to run `/configure-skills`.
+## Resolve the publication path
+
+Prefer the installed model-invoked `manage-panel` Skill when it is available. Call the Skill tool with `manage-panel` when the current harness exposes it. Otherwise locate `manage-panel` in the authoritative available-Skills catalog, read its complete `SKILL.md`, and follow it.
+
+Let `manage-panel` inspect the current context before any write. If it confirms an active Panel or Jira planning context, use dual-write mode: save the complete local spec at `.scratch/<feature-slug>/spec.md`, then publish the same content through `manage-panel`. Include `Local artifact: .scratch/<feature-slug>/spec.md` in the remote artifact so the two copies can be matched.
+
+If `manage-panel` is unavailable or confirms there is no active Panel context, use the issue tracker and triage vocabulary configured for the repository. If neither path is available, tell the user to run `/configure-skills`.
+
+Resolve the feature slug and publication target before writing. In dual-write mode, write the local artifact first. If remote publication fails, keep the local artifact, report it as not synchronized, and do not retry through another remote tracker.
 
 ## Process
 
@@ -16,7 +24,10 @@ The issue tracker and triage label vocabulary should have been provided to you. 
 
 Check with the user that these seams match their expectations.
 
-3. Write the spec using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
+3. Write the spec using the template below, then publish it through the resolved path.
+
+   - With active Panel or Jira planning context, first write the completed spec to `.scratch/<feature-slug>/spec.md`, then hand the same spec and its local relative path to `manage-panel`. In a Jira planning conversation it saves the Spec as the planning artifact and does not create a Panel Issue. In an ordinary Panel context it searches for the existing requirement before updating or creating an Issue.
+   - With the configured tracker fallback, publish the spec as an issue and apply the `ready-for-agent` triage label. No additional triage is needed.
 
 <spec-template>
 

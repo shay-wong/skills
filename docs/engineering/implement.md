@@ -1,6 +1,6 @@
 ## What it does
 
-`implement` builds work that has already been decided. You point it at a [ticket](https://www.aihero.dev/ai-coding-dictionary/ticket), a [spec](https://www.aihero.dev/ai-coding-dictionary/spec), or the plan you just agreed in the conversation. It right-sizes the run, builds thin vertical slices, drives [tdd](https://aihero.dev/skills-tdd) where the risk gate applies, verifies the stable change, runs [code-review](https://aihero.dev/skills-code-review), and commits only when the active request authorizes it.
+`implement` builds work that has already been decided. You point it at a [ticket](https://www.aihero.dev/ai-coding-dictionary/ticket), a [spec](https://www.aihero.dev/ai-coding-dictionary/spec), or the plan you just agreed in the conversation. It right-sizes the run, builds thin vertical slices, drives [tdd](https://aihero.dev/skills-tdd) where the risk gate applies, verifies the stable change, closes through [review](https://aihero.dev/skills-review), and commits only when the active request authorizes it. When the run owns an active Panel Issue, it also uses the installed `manage-panel` workflow to claim the work and move the verified result to `in_review`.
 
 It never reopens the plan. There is no interview, no clarifying round, no proposal of a different approach. Whatever was settled upstream is the input, and the skill's whole job is to turn that into a commit. That is what separates it from typing "build this" at a fresh [agent](https://www.aihero.dev/ai-coding-dictionary/agent), which will happily redesign the work while it builds it.
 
@@ -18,7 +18,8 @@ Where the work currently lives decides whether this is the right skill:
 | Only in the conversation you just had, and it's still small | `/implement` right there, in the same window |
 | Not written down anywhere yet | [grill-with-docs](https://aihero.dev/skills-grill-with-docs), or [grill-me](https://aihero.dev/skills-grill-me) if there's no codebase |
 | One concrete behaviour you want test-first, with no spec | [tdd](https://aihero.dev/skills-tdd) directly |
-| Already built, and you want it checked | [code-review](https://aihero.dev/skills-code-review) directly |
+| Already built, and you want a general check | [review](https://aihero.dev/skills-review) directly |
+| Already built, and you only want Standards + Spec | [code-review](https://aihero.dev/skills-code-review) directly |
 
 The same-session case is worth naming because the skill's own first line doesn't cover it. `SKILL.md` says "the spec or tickets", which nudges the [model](https://www.aihero.dev/ai-coding-dictionary/model) to go hunting for a file that doesn't exist. If the plan lives only in the thread, say so when you invoke it.
 
@@ -26,17 +27,20 @@ The same-session case is worth naming because the skill's own first line doesn't
 
 `implement` works on the branch you are on and does not create one. If the request includes commits, check that the current branch is the intended destination before starting.
 
-If the tickets came from [to-tickets](https://aihero.dev/skills-to-tickets), the tracker they live on was configured by [configure-skills](https://aihero.dev/skills-configure-skills). `code-review` reads the same configuration to find the originating spec at close-out.
+If the tickets came from [to-tickets](https://aihero.dev/skills-to-tickets), pass their full reference into the run. `review` carries the originating spec or ticket into its `code-review` primary as the acceptance contract at closeout.
+
+An active Panel Issue also supplies execution state. `implement` reads and claims it through `manage-panel` before editing, then writes the returned `in_progress` state to the `.scratch` ticket named by the Issue's `Local artifact` field. After review, it moves the Panel Issue to `in_review` and mirrors that returned state locally. Any later `blocked`, `canceled`, or explicitly accepted `done` transition follows the same remote-first mirror rule. Jira planning conversations cannot execute code; implementation starts from the published Panel Issue instead. Without an active Panel Issue, `implement` remains tracker-neutral.
 
 ## What one run does
 
-A run is five beats, in order:
+A run is six beats, in order:
 
-1. Read the ticket or spec and work out the seams.
+1. Read and claim an active Panel Issue when one exists, then read the ticket or spec and work out the seams.
 2. Drive [tdd](https://aihero.dev/skills-tdd) at the pre-agreed seams, one red-green slice at a time.
 3. Typecheck often, run single test files as it goes.
 4. Run the full test suite once, at the end.
-5. Run [code-review](https://aihero.dev/skills-code-review), present the stable diff and logical groups, then use [commit](https://aihero.dev/skills-commit) when commits are authorized.
+5. Run [review](https://aihero.dev/skills-review), with [code-review](https://aihero.dev/skills-code-review) as the primary and distinct installed specialists as complements, then present the stable diff and logical groups and use [commit](https://aihero.dev/skills-commit) when commits are authorized.
+6. When validation passes and review has no accepted blocking findings, post the implementation summary to the active Panel Issue, move it to `in_review`, then mirror the returned status in its `.scratch` ticket. Only explicit user acceptance moves it to `done`.
 
 One run covers one ticket. The tickets [to-tickets](https://aihero.dev/skills-to-tickets) produces are tracer-bullet vertical slices sized to fit a single fresh [context window](https://www.aihero.dev/ai-coding-dictionary/context-window), so the intended rhythm is: clear context, implement one ticket, commit, clear again. Each ticket is self-contained, which is what makes the previous ticket's context disposable.
 
@@ -50,7 +54,7 @@ The word "pre-agreed" is doing real work, and it is also the skill's weakest joi
 
 **It finished, but my ticket is still open and the acceptance criteria are still unchecked.**
 
-Correct, and expected. `implement` has no completion step. It ends at the commit and never touches the work item, confirmed on GitHub Issues and on the local markdown tracker, so it is not a tracker integration problem. It also does not act on the findings `code-review` produced, and does not tick the `- [ ]` boxes on the originating issue. Close the ticket and reconcile the criteria yourself. This bites hardest on a dependency chain, because `to-tickets` defines the frontier as tickets whose blockers are all closed. If nothing gets closed, nothing ever becomes visibly unblocked.
+For an active Panel Issue, `implement` leaves it open deliberately but moves both Panel and the matching `.scratch` mirror to `in_review` after posting the changes, verification, review result, and remaining risks. It never marks its own work `done`; that transition requires your explicit acceptance. A GitHub, GitLab, Linear, or local-markdown ticket is unchanged because those trackers remain governed by the repository's configured workflow.
 
 **Can I point it at all my tickets at once, or run several in parallel?**
 
@@ -60,11 +64,11 @@ No. One invocation, one ticket. Batch dispatch across a ticket queue and [subage
 
 Not built in. `implement` never treats a build request as permission to push or open a PR. Those remote actions remain separate requests.
 
-**`code-review` says it cannot see my changes.**
+**The closing review says it cannot see my changes.**
 
-`code-review` can freeze the working-tree patch against `HEAD`, including relevant untracked files, so the closing review can inspect the stable candidate before a commit exists.
+`review` can freeze the working-tree patch against `HEAD`, including relevant untracked files, so every selected reviewer inspects the same stable candidate before a commit exists.
 
-Separately, some people deliberately do not want the review inside the run at all, because an agent reviewing the code it just wrote is biased toward its own solution. Running [code-review](https://aihero.dev/skills-code-review) in a fresh session against a fixed point is a legitimate alternative, and is the same reason that skill runs its two axes in separate sub-agents.
+Separately, some people deliberately do not want the review inside the run at all, because an agent reviewing the code it just wrote is biased toward its own solution. Running [review](https://aihero.dev/skills-review), or the narrower [code-review](https://aihero.dev/skills-code-review), in a fresh session against a fixed point is a legitimate alternative.
 
 **One ticket burned 150k tokens. Am I using it wrong?**
 
@@ -77,9 +81,11 @@ Probably the ticket is too big rather than the skill being misused. A run does c
 ## It's working if
 
 - The session opens by reading the ticket or spec and restating what it will build, rather than asking you what to build.
-- You can see an actual `/tdd` invocation in the trace, not just tests appearing in the diff.
+- The trace loads `tdd` through the Skill tool or the available-Skills catalog, rather than merely adding tests without its risk gate and seam rules.
 - Typechecks and single test files run repeatedly during the run, and the full suite runs once near the end.
+- The closing trace loads `review`, keeps `code-review` primary, and carries the originating spec or ticket as the contract.
 - When commits were requested, the run presents the stable logical groups and reaches scoped commits through `commit`.
+- For an active Panel Issue, the trace reads and claims it before editing, mirrors `in_progress` locally, then posts the verified result and moves both copies to `in_review` without marking either `done`.
 - The diff is one ticket's worth of change: a vertical slice through every layer, not several tickets swept together.
 
 ## Where it fits
@@ -87,10 +93,10 @@ Probably the ticket is too big rather than the skill being misused. A run does c
 `implement` is the build step of the main chain, second from the end:
 
 ```txt
-grill-with-docs → to-spec → to-tickets → implement → code-review
+grill-with-docs → to-spec → to-tickets → implement → review
 ```
 
-Its neighbours are [to-tickets](https://aihero.dev/skills-to-tickets), which produces the tickets it consumes and declares the blocking edges that decide their order; [tdd](https://aihero.dev/skills-tdd), which it drives internally at each seam; and [code-review](https://aihero.dev/skills-code-review), which it runs before committing. It sits downstream of the planning skills and trusts them. It does not re-validate the shape of what it was handed, so a badly-structured map or a horizontally-layered ticket gets built as written.
+Its neighbours are [to-tickets](https://aihero.dev/skills-to-tickets), which produces the tickets it consumes and declares the blocking edges that decide their order; [tdd](https://aihero.dev/skills-tdd), which it drives internally at each seam; and [review](https://aihero.dev/skills-review), which keeps [code-review](https://aihero.dev/skills-code-review) primary and adds distinct specialists before committing. For an active Panel Issue, `manage-panel` owns the surrounding claim, comment, and `in_review` state transitions. `implement` sits downstream of the planning skills and trusts them. It does not re-validate the shape of what it was handed, so a badly-structured map or a horizontally-layered ticket gets built as written.
 
 That trust is why [wayfinder](https://aihero.dev/skills-wayfinder) merges onto the chain at [to-spec](https://aihero.dev/skills-to-spec) rather than looping its map straight into `implement`. Go straight to `implement` from a map only when the effort turned out genuinely small.
 

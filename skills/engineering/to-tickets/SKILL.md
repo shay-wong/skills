@@ -1,6 +1,6 @@
 ---
 name: to-tickets
-description: Turn a plan, spec, or conversation into tracer-bullet tickets with explicit blocking edges, published to the configured tracker.
+description: Turn a plan, spec, or conversation into tracer-bullet tickets with explicit blocking edges, published to local .scratch mirrors plus active Panel context, or to the configured tracker.
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,15 @@ disable-model-invocation: true
 
 Break a plan, spec, or conversation into a set of **tickets**: tracer-bullet vertical slices, each declaring the tickets that **block** it.
 
-The issue tracker and triage label vocabulary should have been provided to you. If not, tell the user to run `/configure-skills`.
+## Resolve the publication path
+
+Prefer the installed model-invoked `manage-panel` Skill when it is available. Call the Skill tool with `manage-panel` when the current harness exposes it. Otherwise locate `manage-panel` in the authoritative available-Skills catalog, read its complete `SKILL.md`, and follow it.
+
+Let `manage-panel` inspect the current context before any write. If it confirms an active Panel or Jira planning context, use dual-write mode: save every approved ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, then publish the same tickets through `manage-panel`. Include each `Local artifact: .scratch/<feature-slug>/issues/<NN>-<slug>.md` path in its remote ticket so the copies can be matched. After publication succeeds, record the exact returned Panel identifier and status in the local ticket's `Panel issue` and `Panel status` fields.
+
+If `manage-panel` is unavailable or confirms there is no active Panel context, use the issue tracker and triage vocabulary configured for the repository. If neither path is available, tell the user to run `/configure-skills`.
+
+Resolve the feature slug and publication target before writing. In dual-write mode, write every local ticket first. If remote publication fails, keep the complete local set, report it as not synchronized, and do not retry through another remote tracker.
 
 ## Process
 
@@ -55,10 +63,11 @@ Ask the user:
 
 Iterate until the user approves the breakdown.
 
-### 5. Publish the tickets to the configured tracker
+### 5. Publish the tickets through the resolved path
 
-Publish the approved tickets. **How** depends on the tracker `/configure-skills` configured; the tickets are the same either way, only the shape of the blocking edges changes:
+Publish only the approved breakdown. The tickets are the same either way; only the publication mechanism and relationship representation change:
 
+- **Panel or Jira planning through `manage-panel`** → first write the approved ticket set under `.scratch/<feature-slug>/issues/`, including `Panel issue: pending-publication` and `Panel status: pending-publication`, then hand the same breakdown and local-path mapping to that workflow. In an ordinary Panel context, let it search before creating, preserve the existing parent requirement, and create the appropriate parent/sub-issue and blocking relations. In a Jira planning conversation, publish one approved manifest through the Jira planning workflow; do not create tickets one by one. After either publication path succeeds, replace both pending values with the exact identifier and status returned for each Panel Issue. If this local metadata update fails, report the local mirror as unsynchronized instead of claiming dual-write completion.
 - **Local files** → write one file per ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01` in dependency order (blockers first). Each file's "Blocked by" lists the numbers/titles it depends on. Use the per-ticket file template below: one ticket per file, never a single combined file.
 - **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Apply the `ready-for-agent` triage label unless instructed otherwise; the tickets are agent-grabbable by construction.
 
@@ -75,6 +84,11 @@ Do NOT close or modify any parent issue.
 **Blocked by:** the numbers/titles of the tickets that gate this one, or "None (can start immediately)".
 
 **Status:** ready-for-agent
+
+<!-- Dual-write mode only. Replace both values after Panel publication succeeds. -->
+**Panel issue:** pending-publication
+
+**Panel status:** pending-publication
 
 - [ ] Acceptance criterion 1
 - [ ] Acceptance criterion 2

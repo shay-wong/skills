@@ -28,7 +28,7 @@ Communication to and from subagents should be sparse. Communicate primarily thro
 
 6. If this changes the **frontier** of available tickets, kick off more **implementer subagents** to work on the new tickets. This allows for maximum concurrency.
 
-7. Once all tickets are complete, run /code-review on the PR branch. Fix all issues raised by the code review in a single **implementer subagent**.
+7. Once all tickets are complete, use the installed model-invoked `review` Skill for closeout. Call the Skill tool with `review` when the current harness exposes it. Otherwise locate `review` in the authoritative available-Skills catalog, read its complete `SKILL.md`, and apply it directly. Give it the frozen PR candidate, the originating spec and tickets as the acceptance contract, validation evidence, and the current authorization for fixes. Fix accepted blocking findings in a single **implementer subagent**, then rerun every required review invalidated by the repair.
 
 8. Mark the PR as ready for review.
 

@@ -42,6 +42,81 @@ test("publishes routed grill entrypoints with a catalog fallback", () => {
   assert.doesNotMatch(grillWithDocs, /Offer an ADR/);
 });
 
+test("routes planning and implementation closeout through installed orchestrators", () => {
+  const pluginManifest = JSON.parse(readFileSync(new URL("../.claude-plugin/plugin.json", import.meta.url), "utf8"));
+  const externalDependencies = JSON.parse(readFileSync(new URL("../.agents/external-dependencies.json", import.meta.url), "utf8"));
+  const toSpec = readFileSync(new URL("../skills/engineering/to-spec/SKILL.md", import.meta.url), "utf8");
+  const toTickets = readFileSync(new URL("../skills/engineering/to-tickets/SKILL.md", import.meta.url), "utf8");
+  const implement = readFileSync(new URL("../skills/engineering/implement/SKILL.md", import.meta.url), "utf8");
+  const review = readFileSync(new URL("../skills/engineering/review/SKILL.md", import.meta.url), "utf8");
+
+  for (const skill of ["to-spec", "to-tickets", "implement", "review"]) {
+    assert.ok(pluginManifest.skills.includes(`./skills/engineering/${skill}`));
+  }
+
+  assert.match(toSpec, /model-invoked `manage-panel`/);
+  assert.match(toTickets, /model-invoked `manage-panel`/);
+  assert.match(implement, /model-invoked `manage-panel`/);
+  assert.match(toSpec, /available-Skills catalog/);
+  assert.match(toTickets, /available-Skills catalog/);
+  assert.match(toSpec, /\.scratch\/<feature-slug>\/spec\.md/);
+  assert.match(toTickets, /\.scratch\/<feature-slug>\/issues\/<NN>-<slug>\.md/);
+  assert.match(toSpec, /write the local artifact first/);
+  assert.match(toTickets, /write every local ticket first/);
+  assert.match(toSpec, /Local artifact:/);
+  assert.match(toTickets, /Local artifact:/);
+  assert.match(toTickets, /Panel issue:\*\* pending-publication/);
+  assert.match(toTickets, /Panel status:\*\* pending-publication/);
+  assert.match(implement, /model-invoked `review`/);
+  assert.match(implement, /originating spec or tickets as the acceptance contract/);
+  assert.match(implement, /Panel status: in_progress/);
+  assert.match(implement, /move it to `in_review`/);
+  assert.match(implement, /Panel status: in_review/);
+  assert.match(implement, /Never move it directly to `done`/);
+  assert.match(implement, /including `blocked`, `canceled`, or `done` after explicit user acceptance/);
+  assert.match(review, /When `implement` invokes this Skill for closeout/);
+  assert.match(review, /Matt `code-review` as primary/);
+  assert.equal(externalDependencies.dependencies["to-spec"], undefined);
+  assert.equal(externalDependencies.dependencies["to-tickets"], undefined);
+  assert.equal(externalDependencies.dependencies.implement, undefined);
+});
+
+test("keeps composed workflows executable without a Skill tool", () => {
+  const paths = [
+    "../skills/engineering/implement/SKILL.md",
+    "../skills/engineering/review/SKILL.md",
+    "../skills/engineering/wayfinder/SKILL.md",
+    "../skills/engineering/triage/SKILL.md",
+    "../skills/engineering/improve-codebase-architecture/SKILL.md",
+    "../skills/engineering/tdd/SKILL.md",
+    "../skills/in-progress/implement-spec/SKILL.md",
+    "../skills/in-progress/loop-me/SKILL.md",
+    "../skills/in-progress/retro/SKILL.md",
+    "../skills/in-progress/setup-ts-deep-modules/SKILL.md",
+  ];
+
+  for (const path of paths) {
+    const skill = readFileSync(new URL(path, import.meta.url), "utf8");
+    assert.match(skill, /authoritative available-Skills catalog/);
+  }
+
+  const implement = readFileSync(new URL("../skills/engineering/implement/SKILL.md", import.meta.url), "utf8");
+  const review = readFileSync(new URL("../skills/engineering/review/SKILL.md", import.meta.url), "utf8");
+  const implementSpec = readFileSync(new URL("../skills/in-progress/implement-spec/SKILL.md", import.meta.url), "utf8");
+  const continuousLoop = readFileSync(new URL("../skills/engineering/continuous-agent-loop/SKILL.md", import.meta.url), "utf8");
+
+  assert.match(implement, /Skill tool with `tdd`/);
+  assert.match(implement, /Skill tool with `commit`/);
+  assert.match(review, /absence of a Skill tool does not make a catalog-listed Skill unavailable/i);
+  assert.match(implementSpec, /originating spec and tickets as the acceptance contract/);
+  assert.match(implementSpec, /validation evidence/);
+  assert.match(continuousLoop, /ralphinho-rfc-pipeline/);
+  assert.match(continuousLoop, /plankton-code-quality/);
+  assert.match(continuousLoop, /verification-loop/);
+  assert.match(continuousLoop, /agent-architecture-audit/);
+  assert.doesNotMatch(continuousLoop, /continuous-pr|rfc-dag|\/quality-gate|\/harness-audit/);
+});
+
 test("uses the personal release identity and generic configuration entrypoint", () => {
   const packageManifest = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
   const pluginManifest = JSON.parse(readFileSync(new URL("../.claude-plugin/plugin.json", import.meta.url), "utf8"));

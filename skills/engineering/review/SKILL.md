@@ -1,6 +1,6 @@
 ---
 name: review
-description: Orchestrate a general review across installed, non-overlapping specialists and synthesize one bounded verdict. Use when the user has not selected a narrower review workflow.
+description: Orchestrate a general review across installed, non-overlapping specialists and synthesize one bounded verdict. Use for general review or implement closeout when the user has not selected a narrower workflow.
 ---
 
 # Review
@@ -13,22 +13,26 @@ Use the current harness's authoritative available-Skills catalog. A model-visibl
 
 Do not rely on install-time discovery. The supported `npx skills` installer has no repository post-install hook, and local plugins can change after installation.
 
-Read every selected Skill's complete `SKILL.md` before using it. Report a missing optional Skill once and skip it. Never install, enable, disable, copy, or update another Skill or plugin as part of a review.
+Read every selected Skill's complete `SKILL.md` before using it. Execute it through the Skill tool when the current harness exposes that tool. Otherwise apply the catalog-loaded workflow directly. The absence of a Skill tool does not make a catalog-listed Skill unavailable. Report a missing optional Skill once and skip it. Never install, enable, disable, copy, or update another Skill or plugin as part of a review.
 
 ## Route the review
 
-An explicitly requested single review Skill is primary. When the user requests several focuses, the workflow that owns the broadest correctness or merge-readiness verdict is primary and narrower focuses are complementary. Otherwise apply the first matching row:
+An explicitly requested single review Skill is primary. When the user requests several focuses, the workflow that owns the broadest correctness or merge-readiness verdict is primary and narrower focuses are complementary.
+
+When `implement` invokes this Skill for closeout, use the unnamespaced Matt `code-review` as primary when available. Treat the originating spec or tickets as the acceptance contract, and add installed complementary reviewers only for distinct material risks in the candidate. If `code-review` is unavailable, perform the direct correctness and requirements fallback and report the missing primary once.
+
+Otherwise apply the first matching row:
 
 | Main intent | Primary |
 | --- | --- |
-| Address unresolved GitHub comments, requested changes, or review threads | Call the Skill tool with the installed GitHub feedback workflow |
-| Whole-repository bloat, deletion, or over-engineering audit | Call the Skill tool with `ponytail:ponytail-audit` when available |
-| Diff-focused simplification, deletion, YAGNI, or over-engineering review | Call the Skill tool with `ponytail:ponytail-review` when available |
-| Security or trust-boundary review | Call the Skill tool with `security-review` when available |
-| General game-codebase review | Call the Skill tool with `review-game` when available |
+| Address unresolved GitHub comments, requested changes, or review threads | Use the installed GitHub feedback workflow |
+| Whole-repository bloat, deletion, or over-engineering audit | Use `ponytail:ponytail-audit` when available |
+| Diff-focused simplification, deletion, YAGNI, or over-engineering review | Use `ponytail:ponytail-review` when available |
+| Security or trust-boundary review | Use `security-review` when available |
+| General game-codebase review | Use `review-game` when available |
 | Architecture or adversarial review | Call a matching installed architecture review Skill when available; otherwise use `code-review` as primary and run a direct architecture advisory pass |
-| A named language, framework, or platform review | Call the Skill tool with the matching installed model-invoked Skill |
-| General branch, pull request, working-tree, standards, spec, or merge-readiness review | Call the Skill tool with the unnamespaced Matt `code-review` when available; otherwise perform a direct correctness and requirements review |
+| A named language, framework, or platform review | Use the matching installed model-invoked Skill |
+| General branch, pull request, working-tree, standards, spec, or merge-readiness review | Use the unnamespaced Matt `code-review` when available; otherwise perform a direct correctness and requirements review |
 
 Add a complementary review only when its scope is distinct from the primary:
 

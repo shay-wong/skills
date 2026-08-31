@@ -10,10 +10,10 @@ Reachable only when you type them (Claude Code: `disable-model-invocation: true`
 - **[grill-with-docs](./grill-with-docs/SKILL.md)**: Grilling session that also builds your project's domain model, sharpening terminology and updating `CONTEXT.md` and ADRs inline.
 - **[triage](./triage/SKILL.md)**: Move issues through a state machine of triage roles.
 - **[improve-codebase-architecture](./improve-codebase-architecture/SKILL.md)**: Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
-- **[configure-skills](./configure-skills/SKILL.md)**: Configure this repo for the engineering skills (issue tracker, triage labels, domain doc layout). Run once per repo.
-- **[to-spec](./to-spec/SKILL.md)**: Turn the current conversation into a spec and publish it to the issue tracker.
-- **[to-tickets](./to-tickets/SKILL.md)**: Turn a plan, spec, or conversation into tracer-bullet tickets with explicit blocking edges, published to the configured tracker.
-- **[implement](./implement/SKILL.md)**: Build the work described by a spec or set of tickets, driving `/tdd` at pre-agreed seams and closing out with `/code-review` before committing.
+- **[configure-skills](./configure-skills/SKILL.md)**: Configure this repo's issue tracker fallback, triage labels, and domain doc layout when active Panel context does not provide the publication target.
+- **[to-spec](./to-spec/SKILL.md)**: Turn the current conversation into a spec and dual-write it to `.scratch` plus active Panel context, or publish it to the configured tracker.
+- **[to-tickets](./to-tickets/SKILL.md)**: Turn a plan, spec, or conversation into tracer-bullet tickets with explicit blocking edges, dual-written to `.scratch` plus active Panel context, or published to the configured tracker.
+- **[implement](./implement/SKILL.md)**: Build the work described by a spec or tickets, close through `/review`, and dual-write active Panel execution status to its `.scratch` mirror.
 - **[wayfinder](./wayfinder/SKILL.md)**: Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on the issue tracker, resolved one at a time until the way to the destination is clear.
 
 ## Model-invoked
@@ -28,7 +28,7 @@ Model- or user-reachable (rich trigger phrasing so the model can reach for them)
 - **[domain-modeling](./domain-modeling/SKILL.md)**: Actively build and sharpen a project's domain model by challenging terms, stress-testing with scenarios, and updating `CONTEXT.md` and ADRs inline.
 - **[codebase-design](./codebase-design/SKILL.md)**: Apply deep-module vocabulary to interface, seam, testability, and code-shape decisions.
 - **[code-review](./code-review/SKILL.md)**: Review a fixed diff independently against repository standards and its originating spec.
-- **[review](./review/SKILL.md)**: Orchestrate installed, non-overlapping review specialists and synthesize one bounded verdict.
+- **[review](./review/SKILL.md)**: Orchestrate installed, non-overlapping review specialists for general review or implement closeout, then synthesize one bounded verdict.
 - **[resolving-merge-conflicts](./resolving-merge-conflicts/SKILL.md)**: Work through an in-progress git merge or rebase conflict hunk by hunk, resolving by intent traced to each side's primary source, then finish the operation, never `--abort`.
 - **[wizard](./wizard/SKILL.md)**: Generate an interactive bash wizard for setup, credentials, migrations, and other steps only a human can perform.
 - **[commit](./commit/SKILL.md)**: Create safe, scoped local commits while excluding unrelated, ignored, disposable, generated, and sensitive files.

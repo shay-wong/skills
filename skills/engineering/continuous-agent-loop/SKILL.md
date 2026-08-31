@@ -14,9 +14,9 @@ This is the v1.8+ canonical loop skill.
 ```text
 Start
   |
-  +-- Need strict CI/PR control? -- yes --> continuous-pr
+  +-- Need strict CI/PR control? -- yes --> ralphinho-rfc-pipeline
   |
-  +-- Need RFC decomposition? -- yes --> rfc-dag
+  +-- Need RFC decomposition? -- yes --> ralphinho-rfc-pipeline
   |
   +-- Need exploratory parallel generation? -- yes --> infinite
   |
@@ -27,9 +27,10 @@ Start
 
 Recommended production stack:
 1. RFC decomposition (`ralphinho-rfc-pipeline`)
-2. quality gates (`plankton-code-quality` + `/quality-gate`)
+2. write-time quality checks (`plankton-code-quality`)
 3. eval loop (`eval-harness`)
-4. filesystem-backed session notes for cross-iteration state
+4. final acceptance verification (`verification-loop`)
+5. filesystem-backed session notes for cross-iteration state
 
 ## Failure Modes
 
@@ -41,6 +42,6 @@ Recommended production stack:
 ## Recovery
 
 - freeze loop
-- run `/harness-audit`
+- diagnose the harness with `agent-architecture-audit`
 - reduce scope to failing unit
 - replay with explicit acceptance criteria

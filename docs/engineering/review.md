@@ -1,6 +1,6 @@
 ## What it does
 
-`review` is one entrypoint over the review Skills available on the current machine. It freezes one candidate, selects one primary workflow, adds only complementary scopes, assigns their priority, and synthesizes one evidence-backed verdict.
+`review` is one entrypoint over the review Skills available on the current machine and the closeout used by `implement`. It freezes one candidate, selects one primary workflow, adds only complementary scopes, assigns their priority, and synthesizes one evidence-backed verdict.
 
 Availability is resolved again on every invocation. The current agent's Skill catalog is used directly when it is authoritative; filesystem scanning is only a fallback for [harnesses](https://www.aihero.dev/ai-coding-dictionary/harness) that omit local or plugin Skills. If Ponytail is enabled and `ponytail-review` is available, general reviews add it as the final advisory pass. The review never installs or changes plugins.
 
@@ -10,6 +10,7 @@ Type `/review`, or the agent reaches for it automatically when you ask for a gen
 
 | Your situation | Reach for |
 | --- | --- |
+| An `implement` run is ready for closeout | `review`, which keeps `code-review` primary and carries the originating Spec or Ticket as the contract |
 | You want one general entrypoint that can combine installed review specialties | `review` |
 | You only want repository standards and spec compliance | [code-review](https://aihero.dev/skills-code-review) |
 | Simplification is the main question | `review`, with Ponytail selected as primary when available |
@@ -28,6 +29,12 @@ For a multi-scope or repair-enabled review, `review` maintains one contract and 
 
 The default ceiling is three broad review waves, two material repair rounds, and 90 minutes. Large candidates are partitioned by feature, ownership, commit, or trust boundary while retaining one combined verdict.
 
+## Implementation closeout
+
+When `implement` hands off a stable candidate, [code-review](https://aihero.dev/skills-code-review) is the primary workflow. The original Spec or Ticket becomes its acceptance contract. Security, framework, game, architecture, and Ponytail passes are added only when the changed paths and risks justify a distinct question.
+
+That keeps the ordinary Standards + Spec gate intact while allowing one implementation run to use the stronger specialists already installed on the machine. If `review` itself is unavailable, `implement` falls back to `code-review` and reports that the complementary orchestration was skipped.
+
 ## Common questions
 
 **Does installation wire Ponytail into `review`?**
@@ -37,6 +44,10 @@ No. The supported `npx skills` installer has no repository post-install hook. `r
 **What happens when Ponytail is missing or disabled?**
 
 The review reports it as unavailable and continues. It does not install, enable, or copy Ponytail.
+
+**My harness has no Skill tool. Are installed reviewers unavailable?**
+
+No. A reviewer listed in the current available-Skills catalog is available. `review` reads its complete instructions and applies them directly when the harness does not expose a Skill tool; it reports the reviewer as missing only when neither route can find it.
 
 **Does this replace `code-review`?**
 
@@ -51,6 +62,7 @@ No. [code-review](https://aihero.dev/skills-code-review) remains the normal prim
 - Every pass reviews the same frozen candidate.
 - The report names one primary and explains every complementary selection.
 - Explicit task decisions and exclusions are not repeatedly reported as new findings.
+- An implementation closeout checks the exact originating Spec or Ticket instead of reconstructing requirements from the diff.
 - Blocking findings have test, contract, or reachable code-path evidence.
 - An available Ponytail review appears last on a general review.
 - Missing optional Skills are skipped without turning the review into a failure.
@@ -58,4 +70,4 @@ No. [code-review](https://aihero.dev/skills-code-review) remains the normal prim
 
 ## Where it fits
 
-`review` is a reach-for-it-anytime orchestration entrypoint around [code-review](https://aihero.dev/skills-code-review) and locally installed specialists. [ask-me](https://aihero.dev/skills-ask-me) routes to it when the review needs more than the two canonical Standards and Spec axes, or when several review results need one bounded decision.
+`review` is both the tail of the main build chain (`grill-with-docs → to-spec → to-tickets → implement → review`) and a reach-for-it-anytime orchestration entrypoint around [code-review](https://aihero.dev/skills-code-review) and locally installed specialists. [ask-me](https://aihero.dev/skills-ask-me) routes to it when the review needs more than the two canonical Standards and Spec axes, or when several review results need one bounded decision.

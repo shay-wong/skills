@@ -8,7 +8,7 @@ The user has asked for a **retrospective**. You are suggesting improvements to t
 
 ## Steps
 
-1. Call the Skill tool with `writing-for-agents` for the writing style guide.
+1. Use the installed model-invoked `writing-for-agents` Skill for the writing style guide. Call the Skill tool with `writing-for-agents` when the current harness exposes it. Otherwise locate `writing-for-agents` in the authoritative available-Skills catalog, read its complete `SKILL.md`, and apply it directly. Report it as unavailable only when neither route can find it.
 
 2. Read the primary sources for the session the user specifies. This may mean searching through session logs on this machine. If the user doesn't specify a session, default to the current one.
 

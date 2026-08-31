@@ -1,6 +1,6 @@
 ## What it does
 
-`to-tickets` takes a plan, a [spec](https://www.aihero.dev/ai-coding-dictionary/spec), or the conversation you are in, and breaks it into a set of **[tickets](https://www.aihero.dev/ai-coding-dictionary/ticket)** on your issue tracker. Each ticket declares its **blocking edges**: the other tickets that have to finish before it can start.
+`to-tickets` takes a plan, a [spec](https://www.aihero.dev/ai-coding-dictionary/spec), or the conversation you are in, and breaks it into a set of **[tickets](https://www.aihero.dev/ai-coding-dictionary/ticket)**. With active Panel or Jira planning context, it writes complete `.scratch/<feature>/issues/` mirrors and publishes the same tickets remotely; otherwise it uses your configured issue tracker. Each ticket declares its **blocking edges**: the other tickets that have to finish before it can start.
 
 Every ticket is a **tracer bullet**: a narrow but complete path through every layer of the change (schema, API, UI, tests) that can be demoed on its own the moment it lands. That is the constraint that makes it behave differently from the obvious way to split work, which is to cut one layer at a time and integrate at the end. It also sizes each ticket to fit in a single fresh [context window](https://www.aihero.dev/ai-coding-dictionary/context-window), because the thing that will pick the ticket up is a [session](https://www.aihero.dev/ai-coding-dictionary/session) that has never seen your spec.
 
@@ -20,7 +20,7 @@ Tickets that `to-tickets` produced are agent-ready by construction. Don't run [t
 
 ## Prerequisites
 
-`to-tickets` publishes into a tracker, so [configure-skills](https://aihero.dev/skills-configure-skills) must have configured one for this repo, along with the triage-label vocabulary. Either kind works: a real tracker like GitHub or Linear, or local markdown files under `.scratch/`, which is supported out of the box.
+If the conversation has an active Panel or Jira planning context, `to-tickets` uses the installed `manage-panel` workflow and creates its `.scratch` mirrors automatically, with no duplicate remote tracker setup. Otherwise [configure-skills](https://aihero.dev/skills-configure-skills) must have configured a tracker and triage-label vocabulary. That fallback can be a real tracker like GitHub or Linear, or local markdown files under `.scratch/`.
 
 ## Tracer bullets, not layers
 
@@ -32,10 +32,12 @@ Two things happen before anything is published. `to-tickets` looks for prefactor
 
 ## Blocking edges
 
-The edges are the point of the artifact. They read two ways depending on the tracker:
+The edges are the point of the artifact. They are published differently depending on the tracker:
 
 | Tracker | Where the edges live | How you work them |
 | --- | --- | --- |
+| Panel | Complete local files with the returned Panel identifier and status, plus native blocking and parent/sub-issue relations created after duplicate search | Write `.scratch` first, then work any remote issue whose blockers are done |
+| Jira planning | Complete local files with the published Panel identifiers and statuses, plus one approved planning manifest; dependency keys become Panel blocking relations on publication | Review the whole manifest once, then publish it once |
 | Local markdown | Text in one file per ticket under `.scratch/<feature>/issues/<NN>-<slug>.md`, numbered blockers-first | Top to bottom, by hand |
 | A real tracker (GitHub, Linear) | Native blocking links, or sub-issues where the tracker has them | Any ticket whose blockers are done is on the **frontier** and can be grabbed |
 
@@ -87,13 +89,15 @@ The skill stops at the artifact, and there is no auto-dispatch mode. Dispatch is
 - Nothing in a ticket body is a file path or a line number, except a snippet a prototype produced.
 - Each ticket reads like something a fresh session could finish without you in the room.
 - Prefactoring, where it found any, is at the front of the order rather than mixed into feature tickets.
+- Active Panel publication leaves every complete ticket under `.scratch/<feature>/issues/`, records each path remotely, and writes the returned Panel identifier and status back to the local file.
+- A Jira planning conversation publishes one approved manifest instead of creating tickets one at a time.
 
 ## Where it fits
 
 `to-tickets` is a step in the main build chain:
 
 ```txt
-grill-with-docs → to-spec → to-tickets → implement → code-review
+grill-with-docs → to-spec → to-tickets → implement → review
 ```
 
-Upstream is [to-spec](https://aihero.dev/skills-to-spec), which hands it a settled spec to slice against; keep both in one unbroken context window. Downstream is [implement](https://aihero.dev/skills-implement), which builds one ticket per fresh session, driving [tdd](https://aihero.dev/skills-tdd) for the tests and closing with [code-review](https://aihero.dev/skills-code-review). When you're unsure which skill or flow fits, [ask-me](https://aihero.dev/skills-ask-me) routes you.
+Upstream is [to-spec](https://aihero.dev/skills-to-spec), which hands it a settled spec to slice against; keep both in one unbroken context window. Downstream is [implement](https://aihero.dev/skills-implement), which builds one ticket per fresh session, drives [tdd](https://aihero.dev/skills-tdd) for the tests, and closes through [review](https://aihero.dev/skills-review) with [code-review](https://aihero.dev/skills-code-review) as the normal primary. When you're unsure which skill or flow fits, [ask-me](https://aihero.dev/skills-ask-me) routes you.

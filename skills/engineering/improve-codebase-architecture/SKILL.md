@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 Surface architectural friction and propose **deepening opportunities**: refactors that turn shallow modules into deep ones. The aim is testability and AI-navigability.
 
+Whenever this workflow calls another model-invoked Skill, use the Skill tool when the current harness exposes it. Otherwise locate the exact Skill in the authoritative available-Skills catalog, read its complete `SKILL.md`, and apply it directly. Report it as unavailable only when neither route can find it.
+
 This command is _informed_ by the project's domain model and built on a shared design vocabulary:
 
 - Call the Skill tool with "codebase-design" for the architecture vocabulary (**module**, **interface**, **depth**, **seam**, **adapter**, **leverage**, **locality**) and its principles (the deletion test, "the interface is the test surface", "one adapter = hypothetical seam, two = real"). Use these terms exactly in every suggestion, and don't drift into "component," "service," "API," or "boundary."
