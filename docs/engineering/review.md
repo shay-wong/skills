@@ -14,6 +14,7 @@ Type `/review`, or the agent reaches for it automatically when you ask for a gen
 | You want one general entrypoint that can combine installed review specialties | `review` |
 | You only want repository standards and spec compliance | [code-review](https://aihero.dev/skills-code-review) |
 | Simplification is the main question | `review`, with Ponytail selected as primary when available |
+| Duplicate code, DRY, clones, or copy-paste are the main question | `review`, with [code-dedup](https://aihero.dev/skills-code-dedup) selected as primary when available |
 | You need GitHub feedback, security, game, architecture, or language-specific review combined with a general verdict | `review`, which routes each distinct scope |
 | You already know the exact specialist you want | Invoke that specialist directly |
 
@@ -23,6 +24,8 @@ The primary workflow owns the verdict. Complementary Skills are added only when 
 
 Ponytail is the deliberate exception for general reviews: when available, it runs last and reports what can be deleted or simplified. Its advisory findings cannot weaken a correctness or security finding, and they do not block approval unless simplification was the explicit main request.
 
+[code-dedup](https://aihero.dev/skills-code-dedup) answers a different question. It uses Deslop evidence to identify similar implementations. It becomes primary for an explicit duplicate-code review, or complementary when `.deslop.toml` exists and a normal candidate introduces a plausible clone surface. Ponytail still owns YAGNI and simplification.
+
 Review scopes are ordered by functional correctness, security and data integrity, domain correctness, maintainability, then simplification. Selected correctness, security, and domain scopes are required. Simplification stays advisory unless it is the main request.
 
 For a multi-scope or repair-enabled review, `review` maintains one contract and finding ledger across every reviewer. It records explicit requirements and exclusions, rejects unsupported preferences, merges duplicate findings, and requires independent evidence before a finding can block approval.
@@ -31,7 +34,7 @@ The default ceiling is three broad review waves, two material repair rounds, and
 
 ## Implementation closeout
 
-When `implement` hands off a stable candidate, [code-review](https://aihero.dev/skills-code-review) is the primary workflow. The original Spec or Ticket becomes its acceptance contract. Security, framework, game, architecture, and Ponytail passes are added only when the changed paths and risks justify a distinct question.
+When `implement` hands off a stable candidate, [code-review](https://aihero.dev/skills-code-review) is the primary workflow. The original Spec or Ticket becomes its acceptance contract. Security, framework, game, architecture, Deslop duplicate evidence, and Ponytail passes are added only when the changed paths and risks justify a distinct question.
 
 That keeps the ordinary Standards + Spec gate intact while allowing one implementation run to use the stronger specialists already installed on the machine. If `review` itself is unavailable, `implement` falls back to `code-review` and reports that the complementary orchestration was skipped.
 
@@ -44,6 +47,10 @@ No. The supported `npx skills` installer has no repository post-install hook. `r
 **What happens when Ponytail is missing or disabled?**
 
 The review reports it as unavailable and continues. It does not install, enable, or copy Ponytail.
+
+**Do Deslop and Ponytail duplicate each other?**
+
+No. Deslop reports similar code and canonical occurrences. Ponytail asks whether code is necessary, over-engineered, or simpler when deleted. A Deslop finding can justify reuse without proving the feature is unnecessary, and a Ponytail finding can remove code that has no duplicate at all.
 
 **My harness has no Skill tool. Are installed reviewers unavailable?**
 
@@ -65,9 +72,10 @@ No. [code-review](https://aihero.dev/skills-code-review) remains the normal prim
 - An implementation closeout checks the exact originating Spec or Ticket instead of reconstructing requirements from the diff.
 - Blocking findings have test, contract, or reachable code-path evidence.
 - An available Ponytail review appears last on a general review.
+- A Deslop-configured candidate with material clone risk receives a separate `code-dedup` evidence pass rather than folding that question into Ponytail.
 - Missing optional Skills are skipped without turning the review into a failure.
 - Only independently verified blocking findings can produce `REQUEST_CHANGES`.
 
 ## Where it fits
 
-`review` is both the tail of the main build chain (`grill-with-docs → to-spec → to-tickets → implement → review`) and a reach-for-it-anytime orchestration entrypoint around [code-review](https://aihero.dev/skills-code-review) and locally installed specialists. [ask-me](https://aihero.dev/skills-ask-me) routes to it when the review needs more than the two canonical Standards and Spec axes, or when several review results need one bounded decision.
+`review` is both the tail of the main build chain (`grill-with-docs → to-spec → to-tickets → implement → review`) and a reach-for-it-anytime orchestration entrypoint around [code-review](https://aihero.dev/skills-code-review), [code-dedup](https://aihero.dev/skills-code-dedup), and locally installed specialists. [ask-me](https://aihero.dev/skills-ask-me) routes to it when the review needs more than the two canonical Standards and Spec axes, or when several review results need one bounded decision.

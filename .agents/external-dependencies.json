@@ -27,6 +27,56 @@
         "source": "PlayableIntelligence/game-creator",
         "ref": "4e64b83b5fe400b34ad3a484d9b4a6090b26d512",
         "skill": "review-game"
+      },
+      {
+        "id": "deslop@system",
+        "label": "Deslop duplicate analysis",
+        "type": "system-tool",
+        "executables": ["deslop", "deslop-mcp"],
+        "install": {
+          "darwin": {
+            "manager": "brew",
+            "package": "nimblesite/tap/deslop"
+          },
+          "linux": {
+            "manager": "brew",
+            "package": "nimblesite/tap/deslop"
+          },
+          "win32": {
+            "manager": "scoop",
+            "package": "deslop",
+            "bucket": {
+              "name": "nimblesite",
+              "source": "https://github.com/Nimblesite/scoop-bucket"
+            }
+          }
+        }
+      }
+    ],
+    "code-dedup": [
+      {
+        "id": "deslop@system",
+        "label": "Deslop duplicate analysis",
+        "type": "system-tool",
+        "executables": ["deslop", "deslop-mcp"],
+        "install": {
+          "darwin": {
+            "manager": "brew",
+            "package": "nimblesite/tap/deslop"
+          },
+          "linux": {
+            "manager": "brew",
+            "package": "nimblesite/tap/deslop"
+          },
+          "win32": {
+            "manager": "scoop",
+            "package": "deslop",
+            "bucket": {
+              "name": "nimblesite",
+              "source": "https://github.com/Nimblesite/scoop-bucket"
+            }
+          }
+        }
       }
     ],
     "frontend-design-direction": [

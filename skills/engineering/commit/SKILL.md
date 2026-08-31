@@ -18,8 +18,14 @@ Create local commits with strict scope control.
    If ownership or grouping cannot be safely inferred, ask instead of including questionable files.
 4. Split independent features, fixes, refactors, docs, config, tooling, and test-only changes into separate commits. Use one commit only when the files are one tightly coupled change or the user explicitly requests one.
 5. Preserve existing staged work. Stage only the paths for the current group, then inspect the staged stat and names before committing. If staged files do not match the group, commit only the intended paths when safe; otherwise ask for a grouping decision.
-6. Follow the user's message rules first, then repository rules. Otherwise use concise conventional commits with Chinese prose by default.
-7. After each commit, report its short hash and any skipped files.
+6. Resolve any task reference before composing the message, in this order:
+   - an explicit user-supplied message or task reference;
+   - a verified Jira `externalKey` associated with the active Panel Issue;
+   - repository commit-message rules;
+   - no task reference.
+   When an active Panel Issue exists but no verified Jira key was handed in, request a read-only linked Jira lookup through the installed model-invoked `manage-panel` Skill. Call the Skill tool with `manage-panel` when the current harness exposes it. Otherwise locate `manage-panel` in the authoritative available-Skills catalog, read its complete `SKILL.md`, and ask it to resolve the exact Panel Issue through its supported CLI. Accept only the returned `context.jira.externalKey` as the linked Jira key. If no Jira is linked or the lookup is unavailable, omit the task reference; do not fall back to the Panel identifier.
+7. Follow the resolved reference and the user's message rules first, then repository rules. Otherwise use concise conventional commits with Chinese prose by default.
+8. After each commit, report its short hash and any skipped files.
 
 ## Safety
 
@@ -31,4 +37,5 @@ Create local commits with strict scope control.
   - `git -C <repo> check-ignore -v <path>`
 - Never commit secrets, credentials, local state, caches, build output, logs, or unrelated changes.
 - Do not discard a file that may contain user work. Leave it untouched unless deletion or cleanup was separately requested.
+- Never use a Panel `id` or `identifier` as a task reference. They are internal workflow identities, not Jira keys.
 - A commit request authorizes local commits only. Do not push, open a PR, rewrite history, or alter remote state unless separately requested.

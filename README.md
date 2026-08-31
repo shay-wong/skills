@@ -24,7 +24,7 @@ The standard picker installs exactly what you select. To resolve declared extern
 npx --yes github:shay-wong/skills --with-deps --yes review
 ```
 
-Replace `review` with one or more Skill names. The external dependency checklist includes Ponytail, GitHub PR feedback, game review, and Anthropic frontend design when their owning Skills are selected. Git-backed dependencies are pinned in `.agents/external-dependencies.json`; the preconfigured `openai-curated` marketplace is resolved by Codex. Skills already in this repository are not shown as dependencies. To choose dependencies individually, omit `--with-deps`; use Up/Down and Space in the checkbox list, then press Enter. To install only the selected repository Skills, use `--without-deps`. `--with-deps` installs every listed dependency, so use the checklist when you want individual control. Installing Codex plugins requires the `codex` CLI.
+Replace `review` with one or more Skill names. The external dependency checklist includes Ponytail, GitHub PR feedback, game review, Deslop duplicate analysis, and Anthropic frontend design when their owning Skills are selected. Git-backed dependencies are pinned in `.agents/external-dependencies.json`; the preconfigured `openai-curated` marketplace is resolved by Codex. Deslop uses Homebrew on macOS and Linux or Scoop on Windows, verifies both `deslop` and `deslop-mcp`, and does not modify MCP client configuration. Skills already in this repository are not shown as dependencies. To choose dependencies individually, omit `--with-deps`; use Up/Down and Space in the checkbox list, then press Enter. To install only the selected repository Skills, use `--without-deps`. `--with-deps` installs every listed dependency, so use the checklist when you want individual control. Installing Codex plugins requires the `codex` CLI.
 
 ### Configure the engineering workflow
 
@@ -170,11 +170,12 @@ Skills for daily code work.
 - **[tdd](./skills/engineering/tdd/SKILL.md)**: Risk-based test-driven development at pre-agreed public seams, one red-green vertical slice at a time.
 - **[domain-modeling](./skills/engineering/domain-modeling/SKILL.md)**: Actively build and sharpen a project's domain model: challenge terms against the glossary, stress-test with edge-case scenarios, and update `CONTEXT.md` and ADRs inline.
 - **[codebase-design](./skills/engineering/codebase-design/SKILL.md)**: Apply deep-module vocabulary to interface, seam, testability, and code-shape decisions.
+- **[code-dedup](./skills/engineering/code-dedup/SKILL.md)**: Prevent and investigate duplicate code with Deslop evidence while leaving edits to the implementation workflow.
 - **[code-review](./skills/engineering/code-review/SKILL.md)**: Review a fixed diff independently against repository standards and its originating spec.
 - **[review](./skills/engineering/review/SKILL.md)**: Orchestrate installed, non-overlapping review specialists for general review or implement closeout, then synthesize one bounded verdict.
 - **[resolving-merge-conflicts](./skills/engineering/resolving-merge-conflicts/SKILL.md)**: Work through an in-progress git merge or rebase conflict hunk by hunk, resolving by intent traced to each side's primary source, then finish the operation (never `--abort`).
 - **[wizard](./skills/engineering/wizard/SKILL.md)**: Generate an interactive bash wizard for setup, credentials, migrations, and other steps only a human can perform.
-- **[commit](./skills/engineering/commit/SKILL.md)**: Create safe, scoped local commits while excluding unrelated, ignored, disposable, generated, and sensitive files.
+- **[commit](./skills/engineering/commit/SKILL.md)**: Create safe, scoped local commits with verified linked Jira references while excluding unrelated, ignored, disposable, generated, and sensitive files.
 - **[gitlab-mr](./skills/engineering/gitlab-mr/SKILL.md)**: Create, inspect, incrementally update, and verify GitLab merge requests using repository defaults, with optional push-triggered description sync.
 - **[fork-doc](./skills/engineering/fork-doc/SKILL.md)**: Audit fork differences, enforce `<upstream>-fork.N` releases, and synchronize agent rules and fork documentation.
 - **[worktree-clean](./skills/engineering/worktree-clean/SKILL.md)**: Audit and safely remove unused agent worktrees for the current repository.

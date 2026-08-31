@@ -27,11 +27,12 @@ Model- or user-reachable (rich trigger phrasing so the model can reach for them)
 - **[tdd](./tdd/SKILL.md)**: Risk-based test-driven development at pre-agreed public seams, one red-green vertical slice at a time.
 - **[domain-modeling](./domain-modeling/SKILL.md)**: Actively build and sharpen a project's domain model by challenging terms, stress-testing with scenarios, and updating `CONTEXT.md` and ADRs inline.
 - **[codebase-design](./codebase-design/SKILL.md)**: Apply deep-module vocabulary to interface, seam, testability, and code-shape decisions.
+- **[code-dedup](./code-dedup/SKILL.md)**: Prevent and investigate duplicate code with Deslop evidence while leaving edits to the implementation workflow.
 - **[code-review](./code-review/SKILL.md)**: Review a fixed diff independently against repository standards and its originating spec.
 - **[review](./review/SKILL.md)**: Orchestrate installed, non-overlapping review specialists for general review or implement closeout, then synthesize one bounded verdict.
 - **[resolving-merge-conflicts](./resolving-merge-conflicts/SKILL.md)**: Work through an in-progress git merge or rebase conflict hunk by hunk, resolving by intent traced to each side's primary source, then finish the operation, never `--abort`.
 - **[wizard](./wizard/SKILL.md)**: Generate an interactive bash wizard for setup, credentials, migrations, and other steps only a human can perform.
-- **[commit](./commit/SKILL.md)**: Create safe, scoped local commits while excluding unrelated, ignored, disposable, generated, and sensitive files.
+- **[commit](./commit/SKILL.md)**: Create safe, scoped local commits with verified linked Jira references while excluding unrelated, ignored, disposable, generated, and sensitive files.
 - **[gitlab-mr](./gitlab-mr/SKILL.md)**: Create, inspect, incrementally update, and verify GitLab merge requests using repository defaults, with optional push-triggered description sync.
 - **[fork-doc](./fork-doc/SKILL.md)**: Audit fork differences, enforce `<upstream>-fork.N` releases, and synchronize agent rules and fork documentation.
 - **[worktree-clean](./worktree-clean/SKILL.md)**: Audit and safely remove unused agent worktrees for the current repository.

@@ -24,7 +24,7 @@
 | 上游分支 | `upstream/main` |
 | 本地范围 | 仓库基础结构，包括 Matt canonical `skills/`、`docs/`、清单和维护脚本；不包括 ECC 来源档案和本地吸收改动 |
 | 许可证 | MIT，见 [`LICENSE`](./LICENSE) |
-| 本地改动 | 发行包、Claude plugin 和 fallback marketplace 统一为 `shay-skills` / `shay` 与 `shay-wong/skills`；`setup-matt-pocock-skills` 无兼容别名地重命名为中立入口 `configure-skills`；`ask-matt` 无兼容别名地重命名为个人入口 `ask-me`，并按是否需要写入 `CONTEXT.md` 或 ADR 来选择 `grill-me` 与 `grill-with-docs`；两个显式 grill 入口通过 Skill tool 或可用 Skills 目录复用 `grilling` 与 `domain-modeling`，不复制共享协议；`to-spec` 与 `to-tickets` 在活动 Panel 或 Jira planning 上下文中先写完整 `.scratch` 本地副本，再通过已安装的 `manage-panel` 发布同一内容并记录本地相对路径，`to-tickets` 还把返回的 Panel 标识和状态写回本地 ticket，没有有效上下文时才回退到 `configure-skills` 的 tracker；`implement` 通过个人 `review` 统筹入口收尾，由 `review` 固定 `code-review` 主审并携带原 Spec 或 Ticket 契约，同时通过 `manage-panel` 读取和认领活动 Panel Issue，在验证、审查和已授权提交完成后写结果评论并移到 `in_review`，每次成功转换后把 `in_progress` 或 `in_review` 镜像到 `.scratch` ticket，不自行标记 `done`；`tdd`、`research`、`implement`、`code-review`、`resolving-merge-conflicts` 吸收 ECC 与本地规则；`code-review`、`wizard`、`codebase-design` 与 `to-tickets` 的入口描述压缩为触发条件和核心职责；新增个人 `review` 统筹入口、`commit`、`worktree-clean`；其余 Matt canonical 内容保持上游基线 |
+| 本地改动 | 发行包、Claude plugin 和 fallback marketplace 统一为 `shay-skills` / `shay` 与 `shay-wong/skills`；`setup-matt-pocock-skills` 无兼容别名地重命名为中立入口 `configure-skills`；`ask-matt` 无兼容别名地重命名为个人入口 `ask-me`，并按是否需要写入 `CONTEXT.md` 或 ADR 来选择 `grill-me` 与 `grill-with-docs`；两个显式 grill 入口通过 Skill tool 或可用 Skills 目录复用 `grilling` 与 `domain-modeling`，不复制共享协议；`to-spec` 与 `to-tickets` 在活动 Panel 或 Jira planning 上下文中先写完整 `.scratch` 本地副本，再通过已安装的 `manage-panel` 发布同一内容并记录本地相对路径，`to-tickets` 还把返回的 Panel 标识和状态写回本地 ticket，没有有效上下文时才回退到 `configure-skills` 的 tracker；`implement` 通过个人 `review` 统筹入口收尾，由 `review` 固定 `code-review` 主审并携带原 Spec 或 Ticket 契约，同时通过 `manage-panel` 读取和认领活动 Panel Issue、解析关联 Jira `externalKey` 并传给 `commit`，在验证、审查和已授权提交完成后写结果评论并移到 `in_review`，每次成功转换后把 `in_progress` 或 `in_review` 镜像到 `.scratch` ticket，不自行标记 `done`；`tdd`、`research`、`implement`、`code-review`、`resolving-merge-conflicts` 吸收 ECC 与本地规则；`code-review`、`wizard`、`codebase-design` 与 `to-tickets` 的入口描述压缩为触发条件和核心职责；新增个人 `review` 统筹入口、`commit`、`worktree-clean`；其余 Matt canonical 内容保持上游基线 |
 | 比较方式 | `git diff 5b15a47f2d7150f545fbcacbfe381787fc0230dc..main` |
 | 同步策略 | 保留 `upstream` 远端；同步前按本台账逐项检查个人改动，合并后更新固定基线 |
 
@@ -121,6 +121,24 @@
 | 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装，不加入继承的 Matt plugin |
 | 同步策略 | 对比新的固定上游提交，只同步 Agent Note 生命周期、格式和校验行为；同时对照 ECC ADR 契约，保留本地单入口、既有目录兼容、标点与安装边界 |
 
+### Nimblesite/Deslop
+
+| 字段 | 当前值 |
+| --- | --- |
+| 状态 | 已接入为 promoted `code-dedup` 薄路由和可选系统工具依赖，不复制上游实现 |
+| 来源仓库 | <https://github.com/Nimblesite/Deslop> |
+| 来源基线 | `d9f06d0cd2b038abec5ff623d6f0535c8c545b82` |
+| 参考版本 | `v0.32.0`，Tag 提交 `f92300e5e1004ef6c53a94174a0d7e842232ec80` |
+| 来源路径 | `README.md`、`docs/snippets/agents-md-recipe.md`、Deslop `For AI` 与 `AI integration` 官方文档，以及官方 Homebrew Tap 和 Scoop manifest |
+| 本地路径 | [`skills/engineering/code-dedup`](./skills/engineering/code-dedup)、[`.agents/external-dependencies.json`](./.agents/external-dependencies.json)、[`scripts/install-skills.mjs`](./scripts/install-skills.mjs) |
+| 采用原因 | 在生成新函数、方法、helper、fixture、parser 或 route handler 前查询现有实现，并为差异审查和全仓去重提供可定位的 cluster 证据 |
+| 许可证 | MIT，见上游 [`LICENSE`](https://github.com/Nimblesite/Deslop/blob/f92300e5e1004ef6c53a94174a0d7e842232ec80/LICENSE) |
+| 本地改动 | 不复制 Deslop 的 Rust workspace、构建命令或仓库内部路径；将官方 agent recipe 重写为运行时中立的 evidence-only `code-dedup`，按 authoring、file/range review 和 repository cleanup 选择 `find-similar`、`report-for-file`、`report-for-range`、`top-offenders` 与 `cluster-by-id`；MCP 不可用时回退到 `deslop . --notext --nohtml --no-color` 并只解析 `.deslop/deslop-report.json`；实际编辑、测试和收尾继续由 `implement` 与 `review` 负责 |
+| 编排改动 | `implement` 仅在根目录存在 `.deslop.toml` 时于非平凡新代码写入前调用；`review` 在显式 duplicate/DRY 请求时可将其作为主审，在普通 closeout 中仅对已配置且有实质 clone 风险的候选补充调用；Ponytail 继续独立负责 YAGNI 和简化 |
+| 安装行为 | 依赖清单把 Deslop 挂到 `code-dedup` 与 `review`，按依赖 ID 去重；macOS 和 Linux 使用 `brew install nimblesite/tap/deslop`，Windows 先确认 `nimblesite` Scoop bucket 再安装 `deslop`；安装前探测、安装后验证 `deslop --version` 与 `deslop-mcp --version`；不修改 `~/.codex/config.toml` 或其他 MCP 客户端配置 |
+| 验证方式 | 运行安装器测试覆盖 manifest 校验、平台 dry-run、共享依赖去重、已安装跳过、安装后双 executable 验证和缺少 package manager 的失败路径；运行 `quick_validate.py`、Claude plugin 严格校验、版本同步检查和 `git diff --check` |
+| 同步策略 | 对比新的固定上游提交和稳定 Release，优先同步 MCP 工具语义、JSON schema、CLI 参数、支持平台与官方安装路径变化；保留本地 evidence-only 边界和 `.deslop.toml` 条件路由 |
+
 ### Shay 本地 Skills
 
 | 字段 | 当前值 |
@@ -134,7 +152,7 @@
 | 采用原因 | 保留一个可发现本机补充审查能力的个人统筹入口，以及安全提交、GitLab MR 管理、Fork 差异与版本文档维护、worktree 清理、按风险开发与测试、评审证据门槛和冲突决策规则 |
 | 来源归属 | `agent-rules` 及五个 standards Skill 由 ECC Claude Rules 迁移后持续本地化；其余条目由 Shay 的本地历史维护 |
 | 许可证 | ECC 派生规则遵循 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE)；本地新增内容遵循本仓库 [`LICENSE`](./LICENSE) |
-| 本地改动 | `review`、`commit`、`gitlab-mr`、`fork-doc` 与 `worktree-clean` 成为 promoted engineering Skill；`review` 与 `fork-doc` 的入口描述压缩为触发条件和核心职责；`commit` 保留无显式范围时的当前任务 fallback、Git 原生 ignored 检测和歧义分组处理，并新增提交请求不授权 push、PR、历史改写或远端修改的边界；`commit` 与 `worktree-clean` 将本机专用的 `/opt/homebrew/bin/git` 改为由 `PATH` 解析的 `git`，同时继续用 `git -C <repo>` 绑定仓库；`gitlab-mr` 采用本机当前工作副本，保留 Fork 默认值、重复 MR 防护、Jira 模板、增量更新和显式安装的 push 同步 Hook，将 Hook 中固定的 Git、`glab` 和 `codex` 路径改为环境变量优先、`PATH` 回退，并修复安装器把相对 hooks 路径解析到调用目录的问题；`fork-doc` 采用本机当前工作副本，保留 standalone 与父 Git workflow 的授权边界、准确的 upstream baseline、重要手工 merge resolution 的独立功能提交要求，以及禁止用文档提交伪装已拆分历史的规则；`review` 优先复用当前 harness 的可用 Skill 清单，仅在清单缺失或不完整时扫描本地审查 Skill，并在 `implement` 收尾时固定 `code-review` 主审、原 Spec 或 Ticket 验收契约与按风险补充的非重叠专项审查；恢复本机版的 GitHub feedback、Ponytail audit、game、架构及语言框架路由，五级优先级、required/advisory 分类、上下文决策、finding ledger、证据门槛、冲突仲裁、五态结果、三轮审查、两轮修复、90 分钟预算和大型候选分片；ECC prompt 绝对路径改为已安装领域 Skill 映射；agent 等待、线程映射和 circuit-breaker 操作继续由 `AGENTS.md` 管理；`review-standards` 的风险匹配验证、变化行为测试、信任边界、敏感信息和有界数据访问规则并入 Matt `code-review` 的 Standards 轴，不再作为独立审查；其他开发、测试、证据和 Git 冲突规则继续并入 Matt `implement`、`tdd`、`code-review` 与 `resolving-merge-conflicts`；`agent-rules`、standards 和 development wrapper 删除 |
+| 本地改动 | `review`、`commit`、`gitlab-mr`、`fork-doc` 与 `worktree-clean` 成为 promoted engineering Skill；`review` 与 `fork-doc` 的入口描述压缩为触发条件和核心职责；`commit` 保留无显式范围时的当前任务 fallback、Git 原生 ignored 检测和歧义分组处理，并新增提交请求不授权 push、PR、历史改写或远端修改的边界，以及“用户显式引用、关联 Jira `externalKey`、仓库规则、无引用”的提交引用优先级，禁止把 Panel 内部 `id` 或 `identifier` 写成任务号；`commit` 与 `worktree-clean` 将本机专用的 `/opt/homebrew/bin/git` 改为由 `PATH` 解析的 `git`，同时继续用 `git -C <repo>` 绑定仓库；`gitlab-mr` 采用本机当前工作副本，保留 Fork 默认值、重复 MR 防护、Jira 模板、增量更新和显式安装的 push 同步 Hook，将 Hook 中固定的 Git、`glab` 和 `codex` 路径改为环境变量优先、`PATH` 回退，并修复安装器把相对 hooks 路径解析到调用目录的问题；`fork-doc` 采用本机当前工作副本，保留 standalone 与父 Git workflow 的授权边界、准确的 upstream baseline、重要手工 merge resolution 的独立功能提交要求，以及禁止用文档提交伪装已拆分历史的规则；`review` 优先复用当前 harness 的可用 Skill 清单，仅在清单缺失或不完整时扫描本地审查 Skill，并在 `implement` 收尾时固定 `code-review` 主审、原 Spec 或 Ticket 验收契约与按风险补充的非重叠专项审查；恢复本机版的 GitHub feedback、Ponytail audit、game、架构及语言框架路由，五级优先级、required/advisory 分类、上下文决策、finding ledger、证据门槛、冲突仲裁、五态结果、三轮审查、两轮修复、90 分钟预算和大型候选分片；ECC prompt 绝对路径改为已安装领域 Skill 映射；agent 等待、线程映射和 circuit-breaker 操作继续由 `AGENTS.md` 管理；`review-standards` 的风险匹配验证、变化行为测试、信任边界、敏感信息和有界数据访问规则并入 Matt `code-review` 的 Standards 轴，不再作为独立审查；其他开发、测试、证据和 Git 冲突规则继续并入 Matt `implement`、`tdd`、`code-review` 与 `resolving-merge-conflicts`；`agent-rules`、standards 和 development wrapper 删除 |
 | 验证结果 | `review`、扩展后的发现脚本自检、`commit`、`gitlab-mr`、`fork-doc` 与 `worktree-clean` Skill 校验、GitLab MR Hook 的 ShellCheck、语法及临时仓库安装烟测、外部依赖安装器的全选、逐项勾选、全部跳过、Ponytail marketplace 注册、Codex 插件安装、外部 Skill 安装、全局 npm runtime 和非交互保护路径、文档/插件索引和 `claude plugin validate . --strict` 均通过；全仓既有 frontmatter 兼容失败单独记录，不归因于本次改动 |
 | 激活状态 | 通过 `skills.sh` 统一安装；依赖感知安装器将 Ponytail、GitHub PR feedback 和 `review-game` 作为 `review` 的可选外部依赖；本机旧个人副本与已吸收的 wrapper 已移入废纸篓，保留入口通过 `~/.agents/skills` 与 `~/.claude/skills` 的符号链接直接使用本仓库版本 |
 | 同步策略 | 当前仓库完成依赖整理并成为唯一来源后，停止从 `~/.codex/skills` 反向同步；后续修改直接在本仓库维护 |

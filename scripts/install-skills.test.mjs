@@ -48,6 +48,7 @@ test("routes planning and implementation closeout through installed orchestrator
   const toSpec = readFileSync(new URL("../skills/engineering/to-spec/SKILL.md", import.meta.url), "utf8");
   const toTickets = readFileSync(new URL("../skills/engineering/to-tickets/SKILL.md", import.meta.url), "utf8");
   const implement = readFileSync(new URL("../skills/engineering/implement/SKILL.md", import.meta.url), "utf8");
+  const commit = readFileSync(new URL("../skills/engineering/commit/SKILL.md", import.meta.url), "utf8");
   const review = readFileSync(new URL("../skills/engineering/review/SKILL.md", import.meta.url), "utf8");
 
   for (const skill of ["to-spec", "to-tickets", "implement", "review"]) {
@@ -74,11 +75,44 @@ test("routes planning and implementation closeout through installed orchestrator
   assert.match(implement, /Panel status: in_review/);
   assert.match(implement, /Never move it directly to `done`/);
   assert.match(implement, /including `blocked`, `canceled`, or `done` after explicit user acceptance/);
+  assert.match(implement, /linked Jira `externalKey`/);
+  assert.match(implement, /pass the verified Jira key to `commit`/i);
+  assert.match(commit, /read-only linked Jira lookup through the installed model-invoked `manage-panel` Skill/);
+  assert.match(commit, /explicit user-supplied message or task reference[\s\S]*verified Jira `externalKey`[\s\S]*repository commit-message rules/i);
+  assert.match(commit, /Never use a Panel `id` or `identifier` as a task reference/);
+  assert.match(commit, /omit the task reference[\s\S]*do not fall back to the Panel identifier/i);
   assert.match(review, /When `implement` invokes this Skill for closeout/);
   assert.match(review, /Matt `code-review` as primary/);
   assert.equal(externalDependencies.dependencies["to-spec"], undefined);
   assert.equal(externalDependencies.dependencies["to-tickets"], undefined);
   assert.equal(externalDependencies.dependencies.implement, undefined);
+});
+
+test("routes duplicate prevention and review through code-dedup", () => {
+  const pluginManifest = JSON.parse(readFileSync(new URL("../.claude-plugin/plugin.json", import.meta.url), "utf8"));
+  const externalDependencies = JSON.parse(readFileSync(new URL("../.agents/external-dependencies.json", import.meta.url), "utf8"));
+  const implement = readFileSync(new URL("../skills/engineering/implement/SKILL.md", import.meta.url), "utf8");
+  const review = readFileSync(new URL("../skills/engineering/review/SKILL.md", import.meta.url), "utf8");
+  const codeDedup = readFileSync(new URL("../skills/engineering/code-dedup/SKILL.md", import.meta.url), "utf8");
+
+  assert.ok(pluginManifest.skills.includes("./skills/engineering/code-dedup"));
+  assert.match(implement, /\.deslop\.toml/);
+  assert.match(implement, /model-invoked `code-dedup`/);
+  assert.match(review, /\.deslop\.toml/);
+  assert.match(review, /`code-dedup`/);
+  assert.match(codeDedup, /`find-similar`/);
+  assert.match(codeDedup, /`report-for-file`/);
+  assert.match(codeDedup, /`report-for-range`/);
+  assert.match(codeDedup, /`top-offenders`/);
+  assert.match(codeDedup, /`cluster-by-id`/);
+  assert.match(codeDedup, /deslop \. --notext --nohtml --no-color/);
+  assert.match(codeDedup, /does not install/i);
+  assert.equal(
+    resolveExternalDependencies(["review", "code-dedup"], externalDependencies.dependencies)
+      .filter((dependency) => dependency.id === "deslop@system")
+      .length,
+    1,
+  );
 });
 
 test("keeps composed workflows executable without a Skill tool", () => {
@@ -143,6 +177,25 @@ const ponytail = {
   },
 };
 
+const deslop = {
+  id: "deslop@system",
+  label: "Deslop duplicate analysis",
+  type: "system-tool",
+  executables: ["deslop", "deslop-mcp"],
+  install: {
+    darwin: { manager: "brew", package: "nimblesite/tap/deslop" },
+    linux: { manager: "brew", package: "nimblesite/tap/deslop" },
+    win32: {
+      manager: "scoop",
+      package: "deslop",
+      bucket: {
+        name: "nimblesite",
+        source: "https://github.com/Nimblesite/scoop-bucket",
+      },
+    },
+  },
+};
+
 test("resolves shared external dependencies once", () => {
   const graph = {
     review: [ponytail],
@@ -180,6 +233,25 @@ test("validates dependency names against the catalog", () => {
     ),
     /does not match marketplace/,
   );
+  assert.deepEqual(
+    validateDependencyManifest(
+      { version: 1, dependencies: { "code-dedup": [deslop] } },
+      new Set(["code-dedup"]),
+    ),
+    { "code-dedup": [deslop] },
+  );
+  assert.throws(
+    () => validateDependencyManifest(
+      {
+        version: 1,
+        dependencies: {
+          "code-dedup": [{ ...deslop, executables: [] }],
+        },
+      },
+      new Set(["code-dedup"]),
+    ),
+    /Invalid system tool dependency/,
+  );
 });
 
 test("selects individual checklist dependencies with keyboard controls", () => {
@@ -204,12 +276,18 @@ test("dry-run includes or skips declared external dependencies", () => {
     { encoding: "utf8" },
   );
   assert.equal(withDependencies.status, 0, withDependencies.stderr);
-  assert.match(withDependencies.stdout, /External dependencies selected: ponytail@ponytail, github@openai-curated, review-game@PlayableIntelligence\/game-creator/);
+  assert.match(withDependencies.stdout, /External dependencies selected: ponytail@ponytail, github@openai-curated, review-game@PlayableIntelligence\/game-creator, deslop@system/);
   assert.match(withDependencies.stdout, /--skill review/);
   assert.match(withDependencies.stdout, /codex plugin marketplace add https:\/\/github\.com\/DietrichGebert\/ponytail\.git --ref 0a4dd63ad4541f4f655c4108a295916f3c1d8fda/);
   assert.match(withDependencies.stdout, /codex plugin add ponytail@ponytail/);
   assert.match(withDependencies.stdout, /codex plugin add github@openai-curated/);
   assert.match(withDependencies.stdout, /npx --yes skills@latest add 'PlayableIntelligence\/game-creator#4e64b83b5fe400b34ad3a484d9b4a6090b26d512' -g --skill review-game -y/);
+  if (process.platform === "win32") {
+    assert.match(withDependencies.stdout, /scoop bucket add nimblesite https:\/\/github\.com\/Nimblesite\/scoop-bucket/);
+    assert.match(withDependencies.stdout, /scoop install deslop/);
+  } else {
+    assert.match(withDependencies.stdout, /brew install nimblesite\/tap\/deslop/);
+  }
 
   const withoutDependencies = spawnSync(
     process.execPath,
@@ -260,6 +338,8 @@ test("installs selected external dependencies after the repository Skill", () =>
     if (args.join(" ") === "plugin marketplace list --json") console.log(JSON.stringify({ marketplaces: [{ name: "openai-curated" }] }));
     if (args.join(" ") === "plugin list --json") console.log(JSON.stringify({ installed: [] }));
   `);
+  stub("deslop", "process.exit(0);");
+  stub("deslop-mcp", "process.exit(0);");
 
   try {
     const result = spawnSync(
@@ -286,6 +366,119 @@ test("installs selected external dependencies after the repository Skill", () =>
       "codex plugin add github@openai-curated",
       "npx --yes skills@latest add PlayableIntelligence/game-creator#4e64b83b5fe400b34ad3a484d9b4a6090b26d512 -g --skill review-game -y",
     ]);
+  } finally {
+    rmSync(directory, { force: true, recursive: true });
+  }
+});
+
+test("installs and verifies the Deslop system tool after the repository Skill", () => {
+  const directory = mkdtempSync(join(tmpdir(), "install-shay-skills-deslop-"));
+  const log = join(directory, "commands.log");
+  const marker = join(directory, "installed");
+  const manager = process.platform === "win32" ? "scoop" : "brew";
+  const stub = (name, body) => {
+    const path = join(directory, name);
+    writeFileSync(path, `#!/usr/bin/env node\n${body}\n`, { mode: 0o755 });
+  };
+
+  stub("npx", `
+    require("node:fs").appendFileSync(process.env.INSTALL_LOG, "npx " + process.argv.slice(2).join(" ") + "\\n");
+  `);
+  for (const executable of ["deslop", "deslop-mcp"]) {
+    stub(executable, `
+      const fs = require("node:fs");
+      fs.appendFileSync(process.env.INSTALL_LOG, "${executable} " + process.argv.slice(2).join(" ") + "\\n");
+      process.exit(fs.existsSync(process.env.DESLOP_MARKER) ? 0 : 1);
+    `);
+  }
+  stub(manager, `
+    const fs = require("node:fs");
+    const args = process.argv.slice(2);
+    fs.appendFileSync(process.env.INSTALL_LOG, "${manager} " + args.join(" ") + "\\n");
+    if (args[0] === "install") fs.writeFileSync(process.env.DESLOP_MARKER, "installed\\n");
+    if (args.join(" ") === "bucket list") console.log("Name\\n----\\n");
+  `);
+
+  try {
+    const result = spawnSync(
+      process.execPath,
+      [script, "--with-deps", "--yes", "code-dedup"],
+      {
+        encoding: "utf8",
+        env: {
+          ...process.env,
+          DESLOP_MARKER: marker,
+          INSTALL_LOG: log,
+          PATH: `${directory}:${process.env.PATH}`,
+        },
+      },
+    );
+    assert.equal(result.status, 0, result.stderr);
+    const commands = readFileSync(log, "utf8").trim().split("\n");
+    assert.equal(commands[0], "npx --yes skills@latest add shay-wong/skills -g --skill code-dedup -y");
+    assert.equal(commands.filter((command) => command === "deslop --version").length, 2);
+    assert.equal(commands.filter((command) => command === "deslop-mcp --version").length, 2);
+    assert.ok(commands.some((command) => command === `${manager} install ${process.platform === "win32" ? "deslop" : "nimblesite/tap/deslop"}`));
+    assert.match(result.stdout, /External dependency verified: Deslop duplicate analysis \(deslop@system\)/);
+  } finally {
+    rmSync(directory, { force: true, recursive: true });
+  }
+});
+
+test("skips Deslop installation when both executables are available", () => {
+  const directory = mkdtempSync(join(tmpdir(), "install-shay-skills-deslop-present-"));
+  const log = join(directory, "commands.log");
+  const manager = process.platform === "win32" ? "scoop" : "brew";
+  const stub = (name, body) => {
+    const path = join(directory, name);
+    writeFileSync(path, `#!/usr/bin/env node\n${body}\n`, { mode: 0o755 });
+  };
+
+  stub("npx", "process.exit(0);");
+  stub("deslop", "process.exit(0);");
+  stub("deslop-mcp", "process.exit(0);");
+  stub(manager, `require("node:fs").appendFileSync(process.env.INSTALL_LOG, "${manager}\\n");`);
+
+  try {
+    const result = spawnSync(
+      process.execPath,
+      [script, "--with-deps", "--yes", "code-dedup"],
+      {
+        encoding: "utf8",
+        env: { ...process.env, INSTALL_LOG: log, PATH: `${directory}:${process.env.PATH}` },
+      },
+    );
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /External dependency already installed: Deslop duplicate analysis \(deslop@system\)/);
+    assert.equal(lstatSync(log, { throwIfNoEntry: false }), undefined);
+  } finally {
+    rmSync(directory, { force: true, recursive: true });
+  }
+});
+
+test("fails clearly when the Deslop package manager is unavailable", () => {
+  const directory = mkdtempSync(join(tmpdir(), "install-shay-skills-deslop-manager-"));
+  const stub = (name, body) => {
+    const path = join(directory, name);
+    writeFileSync(path, `#!/usr/bin/env node\n${body}\n`, { mode: 0o755 });
+  };
+
+  symlinkSync(process.execPath, join(directory, "node"));
+  stub("npx", "process.exit(0);");
+  stub("deslop", "process.exit(1);");
+  stub("deslop-mcp", "process.exit(1);");
+
+  try {
+    const result = spawnSync(
+      process.execPath,
+      [script, "--with-deps", "--yes", "code-dedup"],
+      {
+        encoding: "utf8",
+        env: { ...process.env, PATH: `${directory}:/usr/bin:/bin` },
+      },
+    );
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /Required command is unavailable: (brew|scoop)/);
   } finally {
     rmSync(directory, { force: true, recursive: true });
   }

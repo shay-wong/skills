@@ -28,6 +28,7 @@ Otherwise apply the first matching row:
 | Address unresolved GitHub comments, requested changes, or review threads | Use the installed GitHub feedback workflow |
 | Whole-repository bloat, deletion, or over-engineering audit | Use `ponytail:ponytail-audit` when available |
 | Diff-focused simplification, deletion, YAGNI, or over-engineering review | Use `ponytail:ponytail-review` when available |
+| Duplicate-code, DRY, clone, copy-paste, or deduplication review | Use `code-dedup` when available |
 | Security or trust-boundary review | Use `security-review` when available |
 | General game-codebase review | Use `review-game` when available |
 | Architecture or adversarial review | Call a matching installed architecture review Skill when available; otherwise use `code-review` as primary and run a direct architecture advisory pass |
@@ -40,6 +41,7 @@ Add a complementary review only when its scope is distinct from the primary:
 - There is no numeric cap. Select every materially justified, non-overlapping scope and omit the rest.
 - Add `security-review` for authentication, authorization, secrets, untrusted input, uploads, database queries, file-system operations, APIs, payments, privacy, cryptography, or another trust boundary.
 - Add `review-game` for material engine, game-loop, state, event, asset-lifecycle, gameplay-performance, scoring, session, or anti-cheat concerns.
+- Add `code-dedup` when the repository contains `.deslop.toml` and the candidate adds or materially changes repeated helpers, fixtures, parsers, route handlers, implementations, or another plausible clone surface. It supplies duplicate evidence only. Ponytail remains a separate YAGNI and simplification pass.
 - Use changed paths, the nearest manifest, and framework imports to add every matching installed domain review whose expertise is absent from the primary. Mixed-language candidates may select several profiles.
 - Use a GitHub feedback workflow only when the user explicitly asks to inspect or fix that feedback. Use `ponytail:ponytail-audit` only for an explicitly repository-wide audit.
 - If `ponytail:ponytail-review` is available and is not primary, always add it as an advisory pass and run it last against the final candidate.

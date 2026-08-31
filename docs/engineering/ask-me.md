@@ -2,7 +2,7 @@
 
 `ask-me` is the router over the promoted skills in this personal collection. You describe the situation you are in (an idea you cannot start, a pile of incoming bug reports, a [session](https://www.aihero.dev/ai-coding-dictionary/session) that has run long), and it names the skill or the sequence of skills that fits, plus where the human decisions in that sequence sit.
 
-It recommends and stops. It does not grill, write a [spec](https://www.aihero.dev/ai-coding-dictionary/spec), open a file or fire the skill it just named; what you get back is the next thing to type, and you type it. It is a hand-written map rather than a scan of what is installed. Local promoted entries such as `review`, `commit`, and `worktree-clean` belong in the map, while imported library entries stay out until they are explicitly promoted.
+It recommends and stops. It does not grill, write a [spec](https://www.aihero.dev/ai-coding-dictionary/spec), open a file or fire the skill it just named; what you get back is the next thing to type, and you type it. It is a hand-written map rather than a scan of what is installed. Local promoted entries such as `review`, `code-dedup`, `commit`, and `worktree-clean` belong in the map, while imported library entries stay out until they are explicitly promoted.
 
 ## When to reach for it
 
@@ -13,7 +13,7 @@ You invoke this by typing `/ask-me`; the agent won't reach for it on its own.
 | An idea, and no idea where to start | The head of the main flow, and whether the build is small enough to skip the spec |
 | Bugs and requests arriving from other people | The [triage](https://aihero.dev/skills-triage) on-ramp, and why [tickets](https://www.aihero.dev/ai-coding-dictionary/ticket) you generated yourself don't belong on it |
 | Two skills that look interchangeable | The line between them, and it is usually one concrete test rather than a matter of taste. [grill-me](https://aihero.dev/skills-grill-me) or [grill-with-docs](https://aihero.dev/skills-grill-with-docs) turns on whether the interview should update `CONTEXT.md` or ADRs; [grill-with-docs](https://aihero.dev/skills-grill-with-docs) or [wayfinder](https://aihero.dev/skills-wayfinder) turns on whether the effort fits one session |
-| The external `repo-scan` Skill is missing | The one-time `/setup-repo-scan` bootstrap, followed by a harness reload and a separate `repo-scan` invocation |
+| You want to prevent or investigate duplicate code | [code-dedup](https://aihero.dev/skills-code-dedup), either before authoring or against a file, range, or ranked cluster |
 | A long session and a decision about the [context](https://www.aihero.dev/ai-coding-dictionary/context) | The ordered tree over the five options at a phase boundary |
 | A skill you have already picked | Nothing useful. Invoke that skill directly. |
 
@@ -21,15 +21,15 @@ You invoke this by typing `/ask-me`; the agent won't reach for it on its own.
 
 The router names skills; it does not install them. Everything it points at has to be installed for the recommendation to be actionable, and it only knows the promoted skills in this repo.
 
-The tracker-dependent routes need a remote publication target. With active Panel or Jira planning context, `to-spec` and `to-tickets` write complete `.scratch` mirrors first and publish the same content through `manage-panel`; otherwise [configure-skills](https://aihero.dev/skills-configure-skills) must have configured a tracker in the repo. During execution, an active Panel Issue is read and claimed through `manage-panel`, while its `.scratch` ticket mirrors the returned `in_progress` and `in_review` states. The router will happily recommend these routes before either target exists.
+The tracker-dependent routes need a remote publication target. With active Panel or Jira planning context, `to-spec` and `to-tickets` write complete `.scratch` mirrors first and publish the same content through `manage-panel`; otherwise [configure-skills](https://aihero.dev/skills-configure-skills) must have configured a tracker in the repo. During execution, an active Panel Issue is read and claimed through `manage-panel`, while its `.scratch` ticket mirrors the returned `in_progress` and `in_review` states. A linked Jira `externalKey` is passed to `commit`; Panel's internal Issue identity never substitutes for a missing Jira key. The router will happily recommend these routes before either target exists.
 
 ## Flows, not skills
 
 The word the skill gives you to think with is **flow**: a path *through* the skills, not a single one. Naming your situation places you on a flow at a step, which is a different answer from "here is the skill that matches your keywords". Four kinds of route exist, and the skill itself carries them in full:
 
-- **The main flow**, idea to ship. Grill, spec, tickets, implement, review, with two branches inside it: a prototype detour when a question needs runnable code to settle, and the spec-and-tickets split, which only earns its cost when the build spans more than one session.
+- **The main flow**, idea to ship. Grill, spec, tickets, implement, review, with two branches inside it: a prototype detour when a question needs runnable code to settle, and the spec-and-tickets split, which only earns its cost when the build spans more than one session. In a Deslop-configured repository, `implement` checks [code-dedup](https://aihero.dev/skills-code-dedup) before non-trivial new code and `review` adds it only when clone risk remains.
 - **On-ramps**, for a situation that generates work and then merges onto the main flow: incoming bug reports, something broken, or an effort too foggy and too large to hold in one session.
-- **Standalones**, off every flow, reached for on their own terms: the prototype, the questionnaire, the merge conflict you are already sitting in.
+- **Standalones**, off every flow, reached for on their own terms: the prototype, the questionnaire, duplicate evidence, or the merge conflict you are already sitting in.
 - **A vocabulary layer underneath**, the two references the other skills pull in when the words rather than the process are the problem.
 
 ## The phase boundary
@@ -81,6 +81,7 @@ Check the changelog for a rename before assuming it is gone. This collection ren
 - It ends by naming what to type and stops there, instead of starting the work itself.
 - The route it gives back mentions where to clear or compact context and where you are expected to review, not just a list of skill names.
 - Where two skills are close, it says which one and why the other is wrong for you.
+- It keeps duplicate evidence in `code-dedup` separate from Ponytail's deletion and YAGNI advice.
 - Any claim it makes about another skill's behaviour shows up in the trace as it reading that skill's `SKILL.md`.
 - You recognise your own situation in what it hands back, rather than the nearest generic scenario.
 

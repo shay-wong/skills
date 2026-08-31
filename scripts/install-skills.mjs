@@ -123,6 +123,40 @@ export function validateDependencyManifest(manifest, knownSkills) {
         ) {
           throw new Error(`Invalid global npm dependency for ${skill}.`);
         }
+      } else if (dependency.type === "system-tool") {
+        const executables = dependency.executables;
+        const installers = dependency.install;
+        const validExecutables = Array.isArray(executables)
+          && executables.length > 0
+          && new Set(executables).size === executables.length
+          && executables.every((executable) => typeof executable === "string" && executable.length > 0)
+          && dependency.id === `${executables[0]}@system`;
+        const validInstallers = installers
+          && typeof installers === "object"
+          && !Array.isArray(installers)
+          && Object.keys(installers).length > 0
+          && Object.entries(installers).every(([platform, installer]) => {
+            if (!["darwin", "linux", "win32"].includes(platform)) return false;
+            if (
+              typeof installer?.manager !== "string"
+              || typeof installer.package !== "string"
+              || !["brew", "scoop"].includes(installer.manager)
+            ) return false;
+            if (installer.bucket === undefined) return true;
+            if (
+              installer.manager !== "scoop"
+              || typeof installer.bucket?.name !== "string"
+              || typeof installer.bucket.source !== "string"
+            ) return false;
+            try {
+              return new URL(installer.bucket.source).protocol === "https:";
+            } catch {
+              return false;
+            }
+          });
+        if (!validExecutables || !validInstallers) {
+          throw new Error(`Invalid system tool dependency for ${skill}.`);
+        }
       } else {
         throw new Error(`Unsupported external dependency type for ${dependency.id}.`);
       }
@@ -249,11 +283,43 @@ function readCommandJson(command, args) {
 function runCommand(command, args) {
   console.log(`Command: ${formatCommand(command, args)}`);
   const result = spawnSync(command, args, { stdio: "inherit" });
+  if (result.error?.code === "ENOENT") throw new Error(`Required command is unavailable: ${command}.`);
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(`${formatCommand(command, args)} failed with status ${result.status}.`);
 }
 
+function systemToolCommands(dependency, platform = process.platform) {
+  const installer = dependency.install[platform];
+  if (!installer) throw new Error(`No ${dependency.label} installer is declared for ${platform}.`);
+  if (installer.manager === "brew") {
+    return [["brew", ["install", installer.package]]];
+  }
+  const commands = [["scoop", ["install", installer.package]]];
+  if (installer.bucket) {
+    commands.unshift(["scoop", ["bucket", "add", installer.bucket.name, installer.bucket.source]]);
+  }
+  return commands;
+}
+
+function commandHasVersion(command) {
+  const result = spawnSync(command, ["--version"], { encoding: "utf8" });
+  if (result.error?.code === "ENOENT") return false;
+  if (result.error) throw result.error;
+  return result.status === 0;
+}
+
+function scoopBucketExists(name) {
+  const result = spawnSync("scoop", ["bucket", "list"], { encoding: "utf8" });
+  if (result.error?.code === "ENOENT") throw new Error("Required command is unavailable: scoop.");
+  if (result.error) throw result.error;
+  if (result.status !== 0) throw new Error("scoop bucket list failed.");
+  return result.stdout
+    .split(/\r?\n/)
+    .some((line) => line.trim().split(/\s+/)[0] === name);
+}
+
 function externalDependencyCommands(dependency) {
+  if (dependency.type === "system-tool") return systemToolCommands(dependency);
   if (dependency.type === "agent-skill") {
     const source = dependency.ref ? `${dependency.source}#${dependency.ref}` : dependency.source;
     return [["npx", ["--yes", "skills@latest", "add", source, "-g", "--skill", dependency.skill, "-y"]]];
@@ -270,6 +336,23 @@ function externalDependencyCommands(dependency) {
 }
 
 function installExternalDependency(dependency) {
+  if (dependency.type === "system-tool") {
+    const missingExecutables = dependency.executables.filter((executable) => !commandHasVersion(executable));
+    if (missingExecutables.length === 0) {
+      console.log(`External dependency already installed: ${dependency.label} (${dependency.id})`);
+      return;
+    }
+    for (const [command, args] of systemToolCommands(dependency)) {
+      if (command === "scoop" && args[0] === "bucket" && scoopBucketExists(args[2])) continue;
+      runCommand(command, args);
+    }
+    const unavailable = dependency.executables.filter((executable) => !commandHasVersion(executable));
+    if (unavailable.length > 0) {
+      throw new Error(`External dependency verification failed for ${dependency.id}: ${unavailable.join(", ")}.`);
+    }
+    console.log(`External dependency verified: ${dependency.label} (${dependency.id})`);
+    return;
+  }
   if (dependency.type === "agent-skill") {
     runCommand(...externalDependencyCommands(dependency)[0]);
     return;
