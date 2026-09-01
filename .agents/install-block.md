@@ -35,10 +35,22 @@ The standard picker installs exactly what you select. To resolve declared extern
 <canonical-block name="dependency-aware-install">
 
 ```bash
-npx --yes github:shay-wong/skills --with-deps --yes review
+npx --yes --package=github:shay-wong/skills -- install --with-deps --yes review
 ```
 
-Replace `review` with one or more Skill names. The external dependency checklist includes Ponytail, GitHub PR feedback, game review, and Anthropic frontend design when their owning Skills are selected. Git-backed dependencies are pinned in `.agents/external-dependencies.json`; the preconfigured `openai-curated` marketplace is resolved by Codex. Skills already in this repository are not shown as dependencies. To choose dependencies individually, omit `--with-deps`; use Up/Down and Space in the checkbox list, then press Enter. To install only the selected repository Skills, use `--without-deps`. `--with-deps` installs every listed dependency, so use the checklist when you want individual control. Installing Codex plugins requires the `codex` CLI.
+Replace `review` with one or more Skill names. The external dependency checklist includes Ponytail, GitHub PR feedback, game review, Deslop duplicate analysis, and Anthropic frontend design when their owning Skills are selected. Git-backed dependencies are pinned in `.agents/external-dependencies.json`; the preconfigured `openai-curated` marketplace is resolved by Codex. Deslop uses Homebrew on macOS and Linux or Scoop on Windows, verifies both executables, then registers the global `deslop` STDIO server through `codex mcp add deslop -- deslop-mcp`. A matching registration is kept; a conflicting registration fails without being replaced. Skills already in this repository are not shown as dependencies. To choose dependencies individually, omit `--with-deps`; use Up/Down and Space in the checkbox list, then press Enter. To install only the selected repository Skills, use `--without-deps`. `--with-deps` installs every listed dependency, so use the checklist when you want individual control. Installing Codex plugins or registering Deslop MCP requires the `codex` CLI.
+
+</canonical-block>
+
+Set up optional repository tools from the project root:
+
+<canonical-block name="project-tool-init">
+
+```bash
+npx --yes --package=github:shay-wong/skills -- setup
+```
+
+The checklist can initialize CodeGraph with `codegraph init` and opt the repository into Deslop by preserving or creating `.deslop.toml`, ignoring `.deslop/` output, and running the first scan. Use `--tool codegraph` or `--tool deslop` for an explicit selection, repeat `--tool` to choose both, `--with-tools` or `--yes` for all, and `--without-tools` for neither. Pass another project path as the final argument when you are not running from its root.
 
 </canonical-block>
 

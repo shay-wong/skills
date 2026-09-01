@@ -1,6 +1,6 @@
 ## What it does
 
-`review` is one entrypoint over the review Skills available on the current machine and the closeout used by `implement`. It freezes one candidate, selects one primary workflow, adds only complementary scopes, assigns their priority, and synthesizes one evidence-backed verdict.
+`review` is one entrypoint over the review Skills available on the current machine and the closeout used by `implement`. It freezes one code candidate or agent workflow trace, selects one primary workflow, adds only complementary scopes, assigns their priority, and synthesizes one evidence-backed verdict.
 
 Availability is resolved again on every invocation. The current agent's Skill catalog is used directly when it is authoritative; filesystem scanning is only a fallback for [harnesses](https://www.aihero.dev/ai-coding-dictionary/harness) that omit local or plugin Skills. If Ponytail is enabled and `ponytail-review` is available, general reviews add it as the final advisory pass. The review never installs or changes plugins.
 
@@ -12,6 +12,7 @@ Type `/review`, or the agent reaches for it automatically when you ask for a gen
 | --- | --- |
 | An `implement` run is ready for closeout | `review`, which keeps `code-review` primary and carries the originating Spec or Ticket as the contract |
 | You want one general entrypoint that can combine installed review specialties | `review` |
+| You want to inspect whether an agent conversation selected and followed the right Skills and tools | `review`, using its direct workflow-trace mode |
 | You only want repository standards and spec compliance | [code-review](https://aihero.dev/skills-code-review) |
 | Simplification is the main question | `review`, with Ponytail selected as primary when available |
 | Duplicate code, DRY, clones, or copy-paste are the main question | `review`, with [code-dedup](https://aihero.dev/skills-code-dedup) selected as primary when available |
@@ -31,6 +32,14 @@ Review scopes are ordered by functional correctness, security and data integrity
 For a multi-scope or repair-enabled review, `review` maintains one contract and finding ledger across every reviewer. It records explicit requirements and exclusions, rejects unsupported preferences, merges duplicate findings, and requires independent evidence before a finding can block approval.
 
 The default ceiling is three broad review waves, two material repair rounds, and 90 minutes. Large candidates are partitioned by feature, ownership, commit, or trust boundary while retaining one combined verdict.
+
+## Workflow-trace review
+
+An agent conversation is a first-class review candidate. `review` freezes the exact turn range with its material tool calls and outputs, then reads the complete Skills and repository instructions that governed the disputed behavior. It checks routing, actual Skill loading, authorization, mutation order, evidence, and stop or recovery decisions.
+
+Findings are assigned to the component that owns the behavior. Panel owns issue eligibility, blockers, parent or leaf selection, binding, claim, and dispatch. Skills own their routing, handoffs, trust-boundary checks, and reports. Repository or global instructions own local conventions, while the harness owns capability discovery and invocation mechanics. The review recommends the root fix at that owner instead of copying Panel scheduling policy into `implement`, `to-tickets`, or another adjacent Skill.
+
+Ponytail, Deslop, and language reviewers are not added to a workflow trace merely because the referenced task changed code. They apply only when the review request also includes the code candidate.
 
 ## Implementation closeout
 
@@ -60,6 +69,10 @@ No. A reviewer listed in the current available-Skills catalog is available. `rev
 
 No. [code-review](https://aihero.dev/skills-code-review) remains the normal primary for Standards and Spec. `review` owns selection, optional complementary passes, deduplication, and the combined verdict.
 
+**Can it review a Codex task instead of a code diff?**
+
+Yes. Pass the task or conversation reference and the behavior you want checked. `review` treats the trace as the candidate, stays read-only, and reports each accepted finding with the responsible owner and repair target.
+
 **What do the review statuses mean?**
 
 `COMPLETE` means every required scope finished with sufficient evidence. `BUDGET_REACHED`, `REVIEW_INCOMPLETE`, `CONFLICT`, and `CIRCUIT_OPEN` describe why orchestration stopped. They do not imply `REQUEST_CHANGES` without an independently verified blocking finding.
@@ -67,6 +80,8 @@ No. [code-review](https://aihero.dev/skills-code-review) remains the normal prim
 ## It's working if
 
 - Every pass reviews the same frozen candidate.
+- A workflow review freezes the exact turns and material tool outputs, then reads every Skill whose behavior matters.
+- Workflow findings name the correct Panel, Skill, instruction, or harness owner instead of duplicating policy in an adjacent layer.
 - The report names one primary and explains every complementary selection.
 - Explicit task decisions and exclusions are not repeatedly reported as new findings.
 - An implementation closeout checks the exact originating Spec or Ticket instead of reconstructing requirements from the diff.

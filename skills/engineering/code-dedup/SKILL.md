@@ -36,7 +36,7 @@ Parse only `.deslop/deslop-report.json`. Exit code `3` means a configured duplic
 
 The CLI cannot query an unwritten snippet. For a pre-authoring check, scan the current report for clusters covering the target file and neighboring implementations, then state that the caller must rerun the scan immediately after writing the candidate. For an existing diff, compare the affected occurrences before and after the change and confirm that the relevant cluster is gone, smaller, or deliberately retained.
 
-If neither the Deslop MCP tools nor the `deslop` CLI is available, report the missing capability and stop the duplicate analysis. This Skill does not install Deslop, edit MCP configuration, or guess from memory.
+If neither the Deslop MCP tools nor the `deslop` CLI is available, report the missing capability and stop the duplicate analysis. This Skill does not install Deslop, edit MCP configuration, or guess from memory. The repository's dependency-aware installer owns optional installation and Codex MCP registration.
 
 ## Return
 

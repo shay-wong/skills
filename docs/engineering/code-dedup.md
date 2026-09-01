@@ -19,7 +19,7 @@ Type `/code-dedup`, or the agent reaches for it automatically when a task explic
 
 ## Prerequisites
 
-Use either Deslop MCP tools or the `deslop` CLI. The dependency-aware repository installer can install `deslop` and `deslop-mcp` through Homebrew on macOS and Linux or Scoop on Windows. It does not edit Codex, Claude Code, Cursor, or another client's MCP configuration.
+Use either Deslop MCP tools or the `deslop` CLI. The dependency-aware repository installer can install `deslop` and `deslop-mcp` through Homebrew on macOS and Linux or Scoop on Windows. When Deslop is selected, it also registers the global `deslop` STDIO server through the official Codex CLI. It keeps a matching registration and refuses to replace a conflicting one. It does not configure Claude Code, Cursor, or another MCP client.
 
 The `.deslop.toml` marker is required only for automatic use inside `implement` and ordinary review closeout. Direct duplicate analysis can use Deslop's defaults without it.
 
@@ -49,7 +49,7 @@ They use different evidence. Deslop asks whether similar code exists. Ponytail a
 - The report names the query mode, cluster IDs, match buckets, canonical occurrences, and affected locations.
 - Each cluster ends with one bounded recommendation: reuse, extract, keep separate with a stated boundary, or investigate further.
 - CLI fallback reads the JSON report and states when a post-write rerun is still required.
-- No installation, MCP configuration, threshold change, or code edit occurs inside the Skill.
+- No installation, MCP configuration, threshold change, or code edit occurs inside the Skill itself.
 
 ## Where it fits
 

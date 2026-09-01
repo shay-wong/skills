@@ -8,12 +8,13 @@
     "url": "https://github.com/shay-wong/skills"
   },
   "bin": {
-    "install-shay-skills": "scripts/install-skills.mjs"
+    "install": "scripts/install.mjs",
+    "setup": "scripts/setup.mjs"
   },
   "license": "MIT",
   "scripts": {
     "changeset": "changeset",
-    "install:skills": "node scripts/install-skills.mjs",
+    "install:skills": "node scripts/install.mjs",
     "test:install-skills": "node --test scripts/install-skills.test.mjs",
     "version": "changeset version && node scripts/sync-plugin-version.mjs",
     "check-plugin-version": "node scripts/sync-plugin-version.mjs --check"

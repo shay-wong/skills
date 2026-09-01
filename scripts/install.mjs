@@ -3,14 +3,15 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, realpathSync } from "node:fs";
 import { join } from "node:path";
-import { clearScreenDown, cursorTo, emitKeypressEvents, moveCursor } from "node:readline";
 import { fileURLToPath } from "node:url";
+
+import { selectItems } from "./select-items.mjs";
 
 const REPO_ROOT = fileURLToPath(new URL("../", import.meta.url));
 const DEPENDENCY_FILE = join(REPO_ROOT, ".agents", "external-dependencies.json");
 const SKILL_SOURCE = "shay-wong/skills";
 
-export const USAGE = `Usage: install-shay-skills [options] <skill...>
+export const USAGE = `Usage: install [options] <skill...>
 
 Options:
   --with-deps      Install all declared external dependencies
@@ -157,26 +158,25 @@ export function validateDependencyManifest(manifest, knownSkills) {
         if (!validExecutables || !validInstallers) {
           throw new Error(`Invalid system tool dependency for ${skill}.`);
         }
+        if (
+          dependency.codexMcp !== undefined
+          && (
+            typeof dependency.codexMcp?.name !== "string"
+            || dependency.codexMcp.name.length === 0
+            || typeof dependency.codexMcp.command !== "string"
+            || dependency.codexMcp.command.length === 0
+            || !Array.isArray(dependency.codexMcp.args)
+            || !dependency.codexMcp.args.every((arg) => typeof arg === "string")
+          )
+        ) {
+          throw new Error(`Invalid Codex MCP configuration for ${skill}.`);
+        }
       } else {
         throw new Error(`Unsupported external dependency type for ${dependency.id}.`);
       }
     }
   }
   return manifest.dependencies;
-}
-
-export function applyChecklistKey(dependencies, selectedDependencies, cursor, key) {
-  const selected = new Set(selectedDependencies);
-  if (key === "up") cursor = (cursor - 1 + dependencies.length) % dependencies.length;
-  if (key === "down") cursor = (cursor + 1) % dependencies.length;
-  if (key === "space") {
-    const dependency = dependencies[cursor];
-    if (selected.has(dependency)) selected.delete(dependency);
-    else selected.add(dependency);
-  }
-  if (key === "a") return { cursor, done: false, selected: new Set(dependencies) };
-  if (key === "n") return { cursor, done: false, selected: new Set() };
-  return { cursor, done: key === "return", selected };
 }
 
 function discoverSkillNames() {
@@ -200,69 +200,6 @@ function formatCommand(command, args) {
   return [command, ...args].map(quote).join(" ");
 }
 
-async function selectDependencies(dependencies) {
-  if (!process.stdin.isTTY || !process.stdout.isTTY) {
-    throw new Error("Dependencies require a choice. Pass --with-deps or --without-deps in non-interactive use.");
-  }
-
-  const input = process.stdin;
-  const output = process.stdout;
-  const wasRaw = input.isRaw;
-  const dependencyIds = dependencies.map((dependency) => dependency.id);
-  let selected = new Set(dependencyIds);
-  let cursor = 0;
-  let renderedLines = 0;
-
-  function render() {
-    if (renderedLines > 0) {
-      moveCursor(output, 0, -renderedLines);
-      cursorTo(output, 0);
-      clearScreenDown(output);
-    }
-    const lines = [
-      "Select external dependencies:",
-      ...dependencies.map((dependency, index) => (
-        `${index === cursor ? ">" : " "} [${selected.has(dependency.id) ? "x" : " "}] ${dependency.label} (${dependency.id})`
-      )),
-      "Up/Down: move  Space: toggle  a: all  n: none  Enter: install",
-    ];
-    output.write(`${lines.join("\n")}\n`);
-    renderedLines = lines.length;
-  }
-
-  emitKeypressEvents(input);
-  input.setRawMode(true);
-  input.resume();
-  output.write("\x1b[?25l");
-  render();
-
-  return new Promise((resolve, reject) => {
-    function finish(error) {
-      input.off("keypress", onKeypress);
-      input.setRawMode(wasRaw);
-      input.pause();
-      output.write("\x1b[?25h");
-      if (error) reject(error);
-      else resolve(dependencies.filter((dependency) => selected.has(dependency.id)));
-    }
-
-    function onKeypress(character, key = {}) {
-      if (key.ctrl && key.name === "c") {
-        finish(new Error("Dependency selection cancelled."));
-        return;
-      }
-      const pressed = key.name === "space" || character === " " ? "space" : key.name ?? character;
-      const result = applyChecklistKey(dependencyIds, selected, cursor, pressed);
-      selected = result.selected;
-      cursor = result.cursor;
-      if (result.done) finish();
-      else render();
-    }
-
-    input.on("keypress", onKeypress);
-  });
-}
-
 function normalizeGitSource(source) {
   return source.replace(/\.git$/, "").replace(/\/$/, "").toLowerCase();
 }
@@ -277,6 +214,22 @@ function readCommandJson(command, args) {
     return JSON.parse(result.stdout);
   } catch {
     throw new Error(`${formatCommand(command, args)} returned invalid JSON.`);
+  }
+}
+
+function readOptionalCodexMcp(name) {
+  const args = ["mcp", "get", name, "--json"];
+  const result = spawnSync("codex", args, { encoding: "utf8" });
+  if (result.error?.code === "ENOENT") throw new Error("Required command is unavailable: codex.");
+  if (result.error) throw result.error;
+  if (result.status !== 0) {
+    if (/No MCP server named .+ found\./.test(result.stderr)) return null;
+    throw new Error(`${formatCommand("codex", args)} failed: ${result.stderr.trim()}`);
+  }
+  try {
+    return JSON.parse(result.stdout);
+  } catch {
+    throw new Error(`${formatCommand("codex", args)} returned invalid JSON.`);
   }
 }
 
@@ -319,7 +272,16 @@ function scoopBucketExists(name) {
 }
 
 function externalDependencyCommands(dependency) {
-  if (dependency.type === "system-tool") return systemToolCommands(dependency);
+  if (dependency.type === "system-tool") {
+    const commands = systemToolCommands(dependency);
+    if (dependency.codexMcp) {
+      commands.push(
+        ["codex", ["mcp", "get", dependency.codexMcp.name, "--json"]],
+        ["codex", ["mcp", "add", dependency.codexMcp.name, "--", dependency.codexMcp.command, ...dependency.codexMcp.args]],
+      );
+    }
+    return commands;
+  }
   if (dependency.type === "agent-skill") {
     const source = dependency.ref ? `${dependency.source}#${dependency.ref}` : dependency.source;
     return [["npx", ["--yes", "skills@latest", "add", source, "-g", "--skill", dependency.skill, "-y"]]];
@@ -335,22 +297,45 @@ function externalDependencyCommands(dependency) {
   return commands;
 }
 
+function configureCodexMcp(expected) {
+  const current = readOptionalCodexMcp(expected.name);
+  const matches = current?.transport?.type === "stdio"
+    && current.transport.command === expected.command
+    && JSON.stringify(current.transport.args ?? []) === JSON.stringify(expected.args);
+  if (matches) {
+    console.log(`Codex MCP already configured: ${expected.name}`);
+    return;
+  }
+  if (current) {
+    throw new Error(`MCP server ${expected.name} is already configured differently; refusing to replace it.`);
+  }
+
+  runCommand("codex", ["mcp", "add", expected.name, "--", expected.command, ...expected.args]);
+  const configured = readOptionalCodexMcp(expected.name);
+  const verified = configured?.transport?.type === "stdio"
+    && configured.transport.command === expected.command
+    && JSON.stringify(configured.transport.args ?? []) === JSON.stringify(expected.args);
+  if (!verified) throw new Error(`Codex MCP verification failed for ${expected.name}.`);
+  console.log(`Codex MCP registered: ${expected.name}`);
+}
+
 function installExternalDependency(dependency) {
   if (dependency.type === "system-tool") {
     const missingExecutables = dependency.executables.filter((executable) => !commandHasVersion(executable));
     if (missingExecutables.length === 0) {
       console.log(`External dependency already installed: ${dependency.label} (${dependency.id})`);
-      return;
+    } else {
+      for (const [command, args] of systemToolCommands(dependency)) {
+        if (command === "scoop" && args[0] === "bucket" && scoopBucketExists(args[2])) continue;
+        runCommand(command, args);
+      }
+      const unavailable = dependency.executables.filter((executable) => !commandHasVersion(executable));
+      if (unavailable.length > 0) {
+        throw new Error(`External dependency verification failed for ${dependency.id}: ${unavailable.join(", ")}.`);
+      }
+      console.log(`External dependency verified: ${dependency.label} (${dependency.id})`);
     }
-    for (const [command, args] of systemToolCommands(dependency)) {
-      if (command === "scoop" && args[0] === "bucket" && scoopBucketExists(args[2])) continue;
-      runCommand(command, args);
-    }
-    const unavailable = dependency.executables.filter((executable) => !commandHasVersion(executable));
-    if (unavailable.length > 0) {
-      throw new Error(`External dependency verification failed for ${dependency.id}: ${unavailable.join(", ")}.`);
-    }
-    console.log(`External dependency verified: ${dependency.label} (${dependency.id})`);
+    if (dependency.codexMcp) configureCodexMcp(dependency.codexMcp);
     return;
   }
   if (dependency.type === "agent-skill") {
@@ -413,7 +398,11 @@ export async function main(argv) {
   let selectedDependencies = [];
   if (options.dependencyMode === "include") selectedDependencies = dependencies;
   if (dependencies.length > 0 && options.dependencyMode === "ask") {
-    selectedDependencies = await selectDependencies(dependencies);
+    selectedDependencies = await selectItems(
+      dependencies,
+      "external dependencies",
+      "Pass --with-deps or --without-deps in non-interactive use.",
+    );
   }
 
   const selectedDependencyIds = new Set(selectedDependencies.map((dependency) => dependency.id));
@@ -432,7 +421,7 @@ export async function main(argv) {
   if (options.dryRun) {
     for (const dependency of selectedDependencies) {
       for (const [command, args] of externalDependencyCommands(dependency)) {
-        console.log(`External dependency command (when missing): ${formatCommand(command, args)}`);
+        console.log(`External dependency command (when needed): ${formatCommand(command, args)}`);
       }
     }
     return 0;

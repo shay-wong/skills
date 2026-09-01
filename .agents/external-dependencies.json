@@ -33,6 +33,11 @@
         "label": "Deslop duplicate analysis",
         "type": "system-tool",
         "executables": ["deslop", "deslop-mcp"],
+        "codexMcp": {
+          "name": "deslop",
+          "command": "deslop-mcp",
+          "args": []
+        },
         "install": {
           "darwin": {
             "manager": "brew",
@@ -59,6 +64,11 @@
         "label": "Deslop duplicate analysis",
         "type": "system-tool",
         "executables": ["deslop", "deslop-mcp"],
+        "codexMcp": {
+          "name": "deslop",
+          "command": "deslop-mcp",
+          "args": []
+        },
         "install": {
           "darwin": {
             "manager": "brew",

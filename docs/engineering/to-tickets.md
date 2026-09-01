@@ -20,7 +20,7 @@ Tickets that `to-tickets` produced are agent-ready by construction. Don't run [t
 
 ## Prerequisites
 
-If the conversation has an active Panel or Jira planning context, `to-tickets` uses the installed `manage-panel` workflow and creates its `.scratch` mirrors automatically, with no duplicate remote tracker setup. Otherwise [configure-skills](https://aihero.dev/skills-configure-skills) must have configured a tracker and triage-label vocabulary. That fallback can be a real tracker like GitHub or Linear, or local markdown files under `.scratch/`.
+If the conversation has an active Panel or Jira planning context, `to-tickets` uses the installed `manage-panel` workflow and creates its `.scratch` mirrors automatically, with no duplicate remote tracker setup. Otherwise [configure-skills](https://aihero.dev/skills-configure-skills) must have configured a tracker and triage-label vocabulary. That fallback can be a real tracker like GitHub or Linear, or local markdown files under `.scratch/`. Publishing the same tickets to both Panel and GitHub or GitLab happens only when you explicitly request both; the local ticket then records both identities and the Panel child description carries the code-host URL.
 
 ## Tracer bullets, not layers
 
@@ -36,12 +36,12 @@ The edges are the point of the artifact. They are published differently dependin
 
 | Tracker | Where the edges live | How you work them |
 | --- | --- | --- |
-| Panel | Complete local files with the returned Panel identifier and status, plus native blocking and parent/sub-issue relations created after duplicate search | Write `.scratch` first, then work any remote issue whose blockers are done |
+| Panel | Complete local files with the returned Panel identifier and status, plus native blocking and parent/sub-issue relations created after duplicate search | Panel selects, binds, and dispatches one unblocked leaf Issue at a time |
 | Jira planning | Complete local files with the published Panel identifiers and statuses, plus one approved planning manifest; dependency keys become Panel blocking relations on publication | Review the whole manifest once, then publish it once |
 | Local markdown | Text in one file per ticket under `.scratch/<feature>/issues/<NN>-<slug>.md`, numbered blockers-first | Top to bottom, by hand |
 | A real tracker (GitHub, Linear) | Native blocking links, or sub-issues where the tracker has them | Any ticket whose blockers are done is on the **frontier** and can be grabbed |
 
-The edges live in the ticket either way. The medium only decides whether anything can act on them in parallel. `to-tickets` produces the artifact; running it (one session at a time, or a fleet) is your job, not the skill's.
+The edges live in the ticket either way. The medium only decides how execution is dispatched. `to-tickets` stops after publishing the artifact. Panel owns dispatch in Panel mode; with local files or another tracker, you select from the reported frontier.
 
 ## The wide-refactor exception
 
@@ -79,7 +79,7 @@ A very large spec can outgrow what a tracker issue serves back cleanly, and ther
 The template asks for criteria and says nothing about whether they can fail, so this happens. Three shapes recur: a criterion already true at the base commit, a criterion that can only be satisfied by work another ticket owns, and one that restates the request rather than deriving from the artifact. Vertical slicing prevents most of it (a slice that delivers behaviour which didn't exist before is red at the base commit by construction), but the check is worth doing by hand. For each criterion, name the observation that would show it false, and confirm it fails at the commit the implementer starts from.
 
 **The tickets are published. How do I actually run them?**
-The skill stops at the artifact, and there is no auto-dispatch mode. Dispatch is manual: look at the board, count the tickets with no open blockers, and open that many agent sessions. One ticket per fresh context, cleared between them. Be aware that [implement](https://aihero.dev/skills-implement) does not reliably close or check off the ticket when it finishes, on GitHub or in local markdown, so the ticket's state is yours to update.
+The skill stops at the artifact. In Panel mode, Panel selects an unblocked leaf, binds it to one execution session, and dispatches it. With local files or another tracker, choose one ticket from the reported frontier and open a fresh session yourself. [implement](https://aihero.dev/skills-implement) updates active Panel state through `manage-panel`; GitHub, GitLab, Linear, and local markdown continue to follow their configured workflow.
 
 ## It's working if
 
@@ -90,6 +90,8 @@ The skill stops at the artifact, and there is no auto-dispatch mode. Dispatch is
 - Each ticket reads like something a fresh session could finish without you in the room.
 - Prefactoring, where it found any, is at the front of the order rather than mixed into feature tickets.
 - Active Panel publication leaves every complete ticket under `.scratch/<feature>/issues/`, records each path remotely, and writes the returned Panel identifier and status back to the local file.
+- Panel publication stops before implementation and leaves leaf selection, binding, and dispatch to Panel.
+- Explicit Panel plus GitHub or GitLab publication records the provider URL in both the local ticket and Panel child without treating the Panel identifier as a code-host Issue.
 - A Jira planning conversation publishes one approved manifest instead of creating tickets one at a time.
 
 ## Where it fits

@@ -22,7 +22,8 @@ Select every material profile in a mixed-language candidate. A pattern profile s
 
 Before the first required reviewer, freeze a contract containing:
 
-- the exact candidate, comparison base, frozen diff, and separate code and non-code fingerprints;
+- for code, the exact candidate, comparison base, frozen diff, and separate code and non-code fingerprints;
+- for a workflow trace, the task or conversation identity, exact turn range, material tool outputs, and one trace fingerprint;
 - the requested verdict, whether fixes are authorized, the originating specification, repository rules, supported existing behavior, and validation plan;
 - operational assumptions that could change the verdict, including deployment topology, migration phase, supported versions, platforms, providers, and trust boundaries;
 - each selected scope's priority and `required` or `advisory` status;
@@ -48,6 +49,7 @@ Before accepting a blocking finding, independently establish at least one of:
 - a targeted test or runtime reproduction;
 - a direct contradiction of an explicit requirement, repository invariant, or active context decision;
 - a complete reachable code-path explanation with the concrete trigger and impact.
+- for a workflow trace, an exact turn or tool event that contradicts the loaded Skill, governing instruction, authorization boundary, or product contract.
 
 A reviewer severity or verdict alone is not proof. Merge duplicate findings under one ID and keep the strictest supported severity. Reject findings about unchanged code, resolved issues, preferences presented as requirements, and unsupported scope expansion.
 
@@ -81,7 +83,7 @@ Unless the user supplies another explicit budget, allow at most three broad revi
 
 Persist the start time, wave and repair counts, candidate fingerprints, selected-scope mapping, context decisions, and finding ledger across compaction, interruption, error recovery, and user continuation. Resuming never resets the budget or authorizes duplicate reviewers.
 
-For a candidate larger than 50 changed paths or a 200 KiB diff, partition the discovery wave by feature, ownership, commit, or trust boundary. Give each scope its relevant shard plus a cross-cutting manifest, then synthesize one verdict.
+For a code candidate larger than 50 changed paths or a 200 KiB diff, partition the discovery wave by feature, ownership, commit, or trust boundary. For a large workflow trace, partition by phase, invoked Skill, or side-effect boundary. Give each scope its relevant shard plus the shared contract, then synthesize one verdict.
 
 Run required scopes before advisory simplification. If fixes are authorized, batch accepted blockers, run targeted checks during repair, and run the shared full gate at most once per repair round. A material candidate change invalidates prior verdicts. Reuse an existing reviewer lane when the active orchestration surface supports follow-up work, and give it the exact delta, ledger, and new evidence.
 

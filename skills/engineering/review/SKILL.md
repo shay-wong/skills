@@ -1,11 +1,11 @@
 ---
 name: review
-description: Orchestrate a general review across installed, non-overlapping specialists and synthesize one bounded verdict. Use for general review or implement closeout when the user has not selected a narrower workflow.
+description: Review a code candidate or agent workflow trace through the appropriate installed, non-overlapping specialists and synthesize one bounded verdict. Use for general review or implement closeout when the user has not selected a narrower workflow.
 ---
 
 # Review
 
-Act as the personal review entrypoint. Select one primary review workflow, add installed complementary review Skills only for distinct material questions, and synthesize one verdict against one frozen candidate.
+Act as the personal review entrypoint. Select one primary review workflow, add installed complementary review Skills only for distinct material questions, and synthesize one verdict against one frozen code candidate or workflow trace.
 
 ## Discover available reviewers
 
@@ -25,6 +25,7 @@ Otherwise apply the first matching row:
 
 | Main intent | Primary |
 | --- | --- |
+| Agent conversation, Skill routing, tool use, or workflow handling | Perform a direct workflow-trace review |
 | Address unresolved GitHub comments, requested changes, or review threads | Use the installed GitHub feedback workflow |
 | Whole-repository bloat, deletion, or over-engineering audit | Use `ponytail:ponytail-audit` when available |
 | Diff-focused simplification, deletion, YAGNI, or over-engineering review | Use `ponytail:ponytail-review` when available |
@@ -44,7 +45,8 @@ Add a complementary review only when its scope is distinct from the primary:
 - Add `code-dedup` when the repository contains `.deslop.toml` and the candidate adds or materially changes repeated helpers, fixtures, parsers, route handlers, implementations, or another plausible clone surface. It supplies duplicate evidence only. Ponytail remains a separate YAGNI and simplification pass.
 - Use changed paths, the nearest manifest, and framework imports to add every matching installed domain review whose expertise is absent from the primary. Mixed-language candidates may select several profiles.
 - Use a GitHub feedback workflow only when the user explicitly asks to inspect or fix that feedback. Use `ponytail:ponytail-audit` only for an explicitly repository-wide audit.
-- If `ponytail:ponytail-review` is available and is not primary, always add it as an advisory pass and run it last against the final candidate.
+- For a workflow trace, do not add code-only reviewers merely because the reviewed task mentioned or changed code. Add them only when the request also includes the code candidate.
+- If the candidate includes code and `ponytail:ponytail-review` is available and is not primary, always add it as an advisory pass and run it last against the final code candidate.
 - Do not automatically combine Matt `code-review` with another general-purpose review workflow merely because both are installed.
 
 Announce the primary and complementary selections with one evidence-backed reason each. Assign each selected scope a priority:
@@ -57,14 +59,29 @@ Announce the primary and complementary selections with one evidence-backed reaso
 
 Selected tiers 1 to 3 are required. Tier 4 is required only when the requested verdict includes it. Tier 5 is advisory unless simplification is the primary intent.
 
+## Review agent workflow traces
+
+When the user asks whether a task, conversation, Skill choice, tool sequence, or agent workflow was handled correctly, review the execution trace directly. Freeze the exact task or conversation turn range, including material tool calls and outputs. Read the complete instructions for every Skill whose selection or behavior matters, plus the repository and global instructions active for that trace.
+
+Check whether the chosen Skills matched the request, were actually loaded before their rules were relied on, preserved authorization boundaries, ordered external and repository mutations correctly, grounded claims in available evidence, and stopped or recovered at the right boundary.
+
+Assign every accepted finding to its actual owner and recommend the root fix there:
+
+- Panel or another product runtime owns issue eligibility, blocker evaluation, parent or leaf selection, binding, claim, and dispatch.
+- A workflow Skill owns routing, composition, evidence handoff, fail-closed checks at its trust boundary, and its report contract.
+- Repository or global instructions own local conventions such as branch names, verification gates, and mutation policy.
+- The harness owns capability discovery, unavailable tools, and invocation mechanics.
+
+Do not duplicate product scheduling rules inside adjacent Skills. A Skill may require a successful Panel result before mutation, but it must not become a second issue scheduler. A review-only request is read-only unless the user separately authorizes fixes.
+
 ## Freeze and execute
 
 For a multi-scope, merge-readiness, repair-enabled, conflicting, or large-candidate review, read [references/review-policy.md](references/review-policy.md) in full before launching reviewers. A simple read-only single-scope review can execute directly from this entrypoint.
 
-1. Freeze the exact comparison base and candidate SHA, or one immutable dirty-worktree patch that includes relevant untracked files. Record the spec, repository rules, whether fixes are authorized, and the validation needed for approval.
-2. Run every required review against that same candidate. Keep independent scopes separate, deduplicate overlaps, and independently verify each proposed blocker against code, tests, an explicit requirement, or a reachable failure path.
+1. Freeze the exact comparison base and candidate SHA, one immutable dirty-worktree patch that includes relevant untracked files, or the exact workflow turn range with material tool outputs. Record the governing request, spec, instructions, whether fixes are authorized, and the validation needed for approval.
+2. Run every required review against that same candidate. Keep independent scopes separate, deduplicate overlaps, and independently verify each proposed blocker against code, tests, the frozen trace, loaded Skill instructions, an explicit requirement, or a reachable failure path.
 3. If fixes are authorized, batch only accepted blockers, validate the changed behavior, freeze the new candidate, and rerun required reviews whose evidence was invalidated.
-4. Run the advisory Ponytail pass last. It cannot weaken correctness or security findings and cannot alone produce `REQUEST_CHANGES` unless simplification is primary.
+4. For a code candidate, run the advisory Ponytail pass last. It cannot weaken correctness or security findings and cannot alone produce `REQUEST_CHANGES` unless simplification is primary.
 
 ## Report
 
@@ -78,4 +95,4 @@ Stop reason: <one concise sentence>
 
 For a policy-governed review, use the status definitions and precedence in the reference. Status and verdict are independent: operational incompleteness does not imply `REQUEST_CHANGES`, and `APPROVE` requires `COMPLETE`, an unchanged candidate, every required review complete, validation passing, and no accepted blocker.
 
-Present the final synthesis in Chinese unless the user requests another language. Put accepted findings first, ordered by severity and grouped by scope. Put advisory Ponytail findings last under `复杂度精简建议`. Preserve workflow status tokens, but explain them in Chinese.
+Present the final synthesis in Chinese unless the user requests another language. Put accepted findings first, ordered by severity and grouped by scope. For workflow-trace findings, name the responsible owner and repair target. Put advisory Ponytail findings last under `复杂度精简建议`. Preserve workflow status tokens, but explain them in Chinese.

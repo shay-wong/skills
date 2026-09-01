@@ -1,10 +1,12 @@
 ## What it does
 
-`configure-skills` answers three questions about one repo: where issues live, what the triage labels are called, and where the domain docs sit. It records the answers as markdown files under `docs/agents/`.
+`configure-skills` initializes any selected repository tools, then answers three questions about one repo: where issues live, what the triage labels are called, and where the domain docs sit. It records the answers as markdown files under `docs/agents/`.
 
 Those files are the only thing that varies between repos. The skills themselves are identical everywhere; they read `docs/agents/issue-tracker.md` at run time and do what it says. That is why the set is not tied to GitHub, and why no skill file ever needs editing to point it somewhere else. Invoking it with "link the skills to a custom issue tracker" works with anything you can connect to programmatically, with zero changes to the skills.
 
 It is a prompt-driven skill, not a deterministic script. It reads your `git remote`, your existing `CLAUDE.md`, your existing `CONTEXT.md`, proposes what it found, and waits for you to confirm before writing anything.
+
+Before those prompts, it runs the repository's project-tool initializer. That separate checklist can initialize CodeGraph, Deslop, both, or neither. CodeGraph builds `.codegraph/`; Deslop preserves or creates `.deslop.toml`, ignores `.deslop/` output, and performs the first scan.
 
 ## When to reach for it
 

@@ -1,6 +1,6 @@
 ---
 name: configure-skills
-description: "Configure a repository for this collection's engineering workflows: choose its issue tracker, triage label vocabulary, and domain-document layout. Run once before first use."
+description: "Initialize optional project tools and configure a repository for this collection's engineering workflows: choose its issue tracker, triage label vocabulary, and domain-document layout. Run once before first use."
 disable-model-invocation: true
 ---
 
@@ -8,6 +8,7 @@ disable-model-invocation: true
 
 Scaffold the per-repo configuration that the engineering skills assume:
 
+- **Project tools**: optionally initialize CodeGraph and Deslop through the repository CLI
 - **Issue tracker**: where issues live (GitHub by default; local markdown is also supported out of the box)
 - **Triage labels**: the strings used for the five canonical triage roles
 - **Domain docs**: where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
@@ -15,6 +16,16 @@ Scaffold the per-repo configuration that the engineering skills assume:
 This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.
 
 ## Process
+
+### 0. Initialize optional project tools
+
+Run the dedicated project setup command from the target repository root:
+
+```bash
+npx --yes --package=github:shay-wong/skills -- setup
+```
+
+Let the user select CodeGraph, Deslop, both, or neither in its checklist. Do not duplicate those questions in this Skill. If the command is unavailable, report that project-tool initialization was skipped and continue with the repository configuration below.
 
 ### 1. Explore
 
