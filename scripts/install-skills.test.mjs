@@ -27,6 +27,8 @@ import { applyChecklistKey } from "./select-items.mjs";
 const script = fileURLToPath(new URL("./install.mjs", import.meta.url));
 const setupScript = fileURLToPath(new URL("./setup.mjs", import.meta.url));
 const linkScript = fileURLToPath(new URL("./link-skills.sh", import.meta.url));
+const gitlabHookInstaller = fileURLToPath(new URL("../skills/engineering/gitlab-mr/scripts/install-pre-push-hook.sh", import.meta.url));
+const gitlabHookRunner = fileURLToPath(new URL("../skills/engineering/gitlab-mr/scripts/pre-push-hook.sh", import.meta.url));
 const repo = fileURLToPath(new URL("..", import.meta.url));
 
 test("publishes routed grill entrypoints with a catalog fallback", () => {
@@ -856,6 +858,40 @@ test("fails clearly when the Deslop package manager is unavailable", () => {
     assert.match(result.stderr, /Required command is unavailable: (brew|scoop)/);
   } finally {
     rmSync(directory, { force: true, recursive: true });
+  }
+});
+
+test("migrates only the broken legacy GitLab MR pre-push Hook", () => {
+  const home = mkdtempSync(join(tmpdir(), "gitlab-mr-hook-migration-"));
+  const project = join(home, "project");
+  const hook = join(project, ".git", "hooks", "pre-push");
+  const legacyRunner = join(home, ".codex", "skills", "gitlab-mr", "scripts", "pre-push-hook.sh");
+  const foreignRunner = join(home, "missing", "pre-push-hook.sh");
+
+  try {
+    const init = spawnSync("git", ["init", project], { encoding: "utf8" });
+    assert.equal(init.status, 0, init.stderr);
+    symlinkSync(legacyRunner, hook);
+
+    const migrated = spawnSync("sh", [gitlabHookInstaller, project], {
+      encoding: "utf8",
+      env: { ...process.env, HOME: home },
+    });
+    assert.equal(migrated.status, 0, migrated.stderr);
+    assert.equal(readlinkSync(hook), gitlabHookRunner);
+    assert.match(migrated.stdout, /Migrated legacy GitLab MR pre-push Hook/);
+
+    rmSync(hook);
+    symlinkSync(foreignRunner, hook);
+    const refused = spawnSync("sh", [gitlabHookInstaller, project], {
+      encoding: "utf8",
+      env: { ...process.env, HOME: home },
+    });
+    assert.equal(refused.status, 1);
+    assert.equal(readlinkSync(hook), foreignRunner);
+    assert.match(refused.stderr, /Refusing to overwrite existing pre-push Hook/);
+  } finally {
+    rmSync(home, { force: true, recursive: true });
   }
 });
 

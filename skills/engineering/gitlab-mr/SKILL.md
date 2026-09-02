@@ -146,7 +146,7 @@ Close [<任务 ID>](<任务链接>)
 ## Push 自动同步
 
 - 仅在用户明确要求配置本地 Hook 时，执行 `scripts/install-pre-push-hook.sh <仓库路径>`；普通 MR 操作不得自动安装。
-- 安装器把仓库的 `pre-push` 链接到 Skill 内的统一脚本，并拒绝覆盖已有的非托管 Hook。
+- 安装器把仓库的 `pre-push` 链接到 Skill 内的统一脚本，可迁移指向已删除 `~/.codex/skills/gitlab-mr` runner 的旧受管断链，并拒绝覆盖其他 Hook。
 - Hook 适用于该 clone 的所有 worktree。它在 push 时后台等待 GitLab MR 的 SHA 更新，确认 MR 仍为 `opened` 后才用 `codex exec --ephemeral` 调用本 Skill。
 - Hook 从 `GIT_BIN`、`GLAB_BIN` 和 `CODEX_BIN` 读取显式路径，否则通过 `PATH` 解析对应命令。
 - Hook 只允许更新已存在的 opened MR，绝不创建 MR。

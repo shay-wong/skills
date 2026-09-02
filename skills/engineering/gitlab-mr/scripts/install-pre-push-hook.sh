@@ -21,6 +21,7 @@ hooks_dir=$("$git_bin" -C "$repo_dir" rev-parse --path-format=absolute --git-pat
 script_dir=$(cd "$(dirname "$0")" && pwd)
 runner="$script_dir/pre-push-hook.sh"
 hook_file="$hooks_dir/pre-push"
+legacy_runner="$HOME/.codex/skills/gitlab-mr/scripts/pre-push-hook.sh"
 
 [ -x "$runner" ] || {
     printf 'Hook runner is not executable: %s\n' "$runner" >&2
@@ -31,6 +32,13 @@ mkdir -p "$hooks_dir"
 
 if [ -L "$hook_file" ] && [ "$(readlink "$hook_file")" = "$runner" ]; then
     printf 'GitLab MR pre-push Hook is already installed: %s\n' "$hook_file"
+    exit 0
+fi
+
+if [ -L "$hook_file" ] && [ ! -e "$hook_file" ] && [ "$(readlink "$hook_file")" = "$legacy_runner" ]; then
+    rm "$hook_file"
+    ln -s "$runner" "$hook_file"
+    printf 'Migrated legacy GitLab MR pre-push Hook: %s -> %s\n' "$hook_file" "$runner"
     exit 0
 fi
 
