@@ -191,6 +191,16 @@ test("uses the personal release identity and generic configuration entrypoint", 
   assert.ok(!pluginManifest.skills.includes("./skills/engineering/setup-matt-pocock-skills"));
 });
 
+test("adds GitLab milestones only with verified work-item release evidence", () => {
+  const gitlabMr = readFileSync(new URL("../skills/engineering/gitlab-mr/SKILL.md", import.meta.url), "utf8");
+
+  assert.match(gitlabMr, /Jira `fixVersions`、GitLab 或 GitHub Issue milestone/);
+  assert.match(gitlabMr, /Fork 配置中的 milestone control 只提供候选值，不构成版本归属证据/);
+  assert.match(gitlabMr, /目标分支、分支名、Tag、最新 active milestone/);
+  assert.match(gitlabMr, /先向用户确认/);
+  assert.match(gitlabMr, /仍无法确认版本归属时省略 `--milestone`/);
+});
+
 const ponytail = {
   id: "ponytail@ponytail",
   label: "Ponytail",

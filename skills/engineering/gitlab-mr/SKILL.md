@@ -35,7 +35,7 @@ description: "创建、查看、增量修改和验证 GitLab Merge Request，并
 - 用户提供的标题、描述、源分支、目标分支或元数据覆盖对应默认值。
 - 动态分支默认值只按其明确语义用只读 Git 命令重新求值，例如当前分支或最高版本号的 `release/*` 分支；不得对 JSON 中的字符串执行通用 `eval`。
 - 若 action 调用共享 helper，可读取 helper 确认参数映射和边界行为，但 Codex 应直接组装 `glab mr create`，不得伪造 Fork UI 的 15/16 个位置参数调用 helper。
-- 配置没有某个 control 时视为仓库不提供该默认能力。例如没有 milestone control 时，不得擅自添加 milestone。
+- 配置没有某个 control 时视为仓库不提供该默认能力。例如没有 milestone control 时，不得擅自添加 milestone。Fork 配置中的 milestone control 只提供候选值，不构成版本归属证据。
 
 ### 2. 避免重复创建
 
@@ -55,10 +55,14 @@ description: "创建、查看、增量修改和验证 GitLab Merge Request，并
 
 ### 4. 解析 milestone
 
-- 只有用户明确指定或 Fork 配置提供 milestone control 时才处理。
-- 普通标题或 ID 原样传给 `--milestone`。
-- 值为 `latest` 或“最新”时，用从 `origin` 解析的 project 显式查询 active milestones。优先在语义版本标题中按数字分段排序取最高版本；没有语义版本标题时，按 due date 和标题选择最新项。
+- Milestone 表示关联任务或工作项已经归属某个发布版本，不是普通的 MR 装饰字段。任务来源不限于 Jira，也可以是 GitLab、GitHub、Panel 或其它可验证的跟踪系统。
+- 只有用户明确说明该工作项属于某个版本或要求设置确切 milestone，或者权威 tracker 回读显示明确版本字段时，才添加 milestone。可接受的 tracker 证据包括 Jira `fixVersions`、GitLab 或 GitHub Issue milestone，以及其它系统中语义等价的已分配版本字段。
+- 目标分支、分支名、Tag、最新 active milestone、仓库通常发布的版本，以及 Fork 配置中的 milestone 默认值都不能单独证明工作项的版本归属。
+- 已知关联工作项但版本归属不明确时，在创建或修改 MR 前先向用户确认。当前流程无法取得确认，或确认后仍无法确认版本归属时省略 `--milestone`，不得自行选择候选值。
+- 权威证据给出确切版本时，查询从 `origin` 解析的 project，只使用标题或 ID 与该版本明确匹配的 active milestone。没有匹配项时省略 `--milestone` 并报告，不得回退到其它版本或自动创建 milestone。
+- `latest` 或“最新”只有在用户明确将它作为版本选择时才可解析。此时显式查询 active milestones，优先在语义版本标题中按数字分段排序取最高版本；没有语义版本标题时，按 due date 和标题选择最新项。Fork 配置单独提供 `latest` 时不得解析或添加。
 - 没有 active milestone 时省略 `--milestone`，不得阻断 MR 创建。
+- 修改已有 MR 的其它字段时保留其现有 milestone。除非用户明确要求，或者权威 tracker 证据证明其版本归属错误，否则不得顺手添加、替换或移除。
 - 使用 `--web` 时保留浏览器确认语义；若还需 milestone，在 MR 真正创建并可回读后再用 `glab mr update` 设置。不得因为浏览器中尚未提交而无限轮询或宣称创建完成。
 
 ### 5. 创建并验证
