@@ -6,12 +6,12 @@ We ship a native **Claude Code plugin** and, for now, **defer** a native **Codex
 
 ## The constraint: bucketed skills vs. single-path selection
 
-Skills live in bucket folders under `skills/`: `engineering/` and `productivity/` contain the **promoted** subset; `misc/`, `in-progress/`, and `deprecated/` are **not promoted**. A plugin must expose only the promoted set, which spans two bucket folders.
+Skills live in bucket folders under `skills/`: `engineering/` and `productivity/` contain the **promoted** subset; `specialized/`, `misc/`, `in-progress/`, and `deprecated/` are **not promoted**. A plugin must expose only the promoted set, which spans two bucket folders.
 
 - **Claude Code**: `.claude-plugin/plugin.json` accepts `skills` as an **array of explicit skill-directory paths**. We list the promoted skills one by one, exclude everything else with zero ambiguity, and add `.claude-plugin/marketplace.json` so the repo is its own single-plugin marketplace. Verified end to end: `claude plugin validate . --strict` passes, and `marketplace add` → `install` resolves all promoted skills.
 
 - **Codex**: `.codex-plugin/plugin.json` accepts `skills` only as a **single path string** (arrays are rejected with `missing or invalid plugin.json`), and Codex discovers `SKILL.md` files recursively under it. There is no way to name two bucket folders, or to curate a subset, from one path. Two escape hatches were tested and rejected:
-  - Pointing at `./skills/` would also ship `deprecated/`, `in-progress/`, and `misc/`: retired, draft, and low-promotion entries we deliberately do not include in the plugin.
+  - Pointing at `./skills/` would also ship `deprecated/`, `in-progress/`, `specialized/`, and `misc/`: retired, draft, vertical-library, and low-promotion entries we deliberately do not include in the plugin.
   - A curated flat directory of **symlinks** into the buckets does not survive install: Codex copies the plugin tree into its cache and **drops symlinks**, so the skills arrive empty.
 
 The only robust ways to give Codex a single promoted-only path are (a) **restructure** so `skills/` contains only promoted skills, moving the non-promoted buckets out, or (b) **commit duplicate copies** of promoted skills into a flat directory. Both create more maintenance than the current universal skills.sh path justifies.

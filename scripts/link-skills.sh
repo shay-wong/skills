@@ -15,6 +15,8 @@ set -euo pipefail
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 DESTS=("$HOME/.claude/skills" "$HOME/.agents/skills")
 
+# Link active and beta Skills. Low-use `misc/`, retired `deprecated/`, and
+# vendored catalogs stay out of the local daily-driver directories.
 names=()
 srcs=()
 while IFS= read -r skill_file; do
@@ -25,7 +27,7 @@ done < <(
   find \
     "$REPO/skills/engineering" \
     "$REPO/skills/productivity" \
-    "$REPO/skills/misc" \
+    "$REPO/skills/specialized" \
     "$REPO/skills/in-progress" \
     -mindepth 2 -maxdepth 2 -name SKILL.md -print | sort
 )
@@ -53,10 +55,18 @@ for DEST in "${DESTS[@]}"; do
     linked_path="$(readlink "$target")"
     case "$linked_path" in
       "$REPO"/*)
-        if [ ! -e "$target" ]; then
-          rm "$target"
-          echo "removed stale link $target"
-        fi
+        case "$linked_path" in
+          "$REPO/skills/misc/"*|"$REPO/skills/deprecated/"*)
+            rm "$target"
+            echo "removed excluded link $target"
+            ;;
+          *)
+            if [ ! -e "$target" ]; then
+              rm "$target"
+              echo "removed stale link $target"
+            fi
+            ;;
+        esac
         ;;
     esac
   done

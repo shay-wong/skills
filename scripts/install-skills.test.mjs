@@ -905,16 +905,18 @@ test("migrates only the broken legacy GitLab MR pre-push Hook", () => {
   }
 });
 
-test("links the complete repository catalog without replacing foreign skills", () => {
+test("links active and specialized skills without misc or replacing foreign skills", () => {
   const home = mkdtempSync(join(tmpdir(), "link-shay-skills-"));
   const agents = join(home, ".agents", "skills");
   const claude = join(home, ".claude", "skills");
   const foreignCommit = join(agents, "commit");
   const stale = join(agents, "removed-shay-skill");
+  const excludedMisc = join(agents, "setup-pre-commit");
 
   mkdirSync(foreignCommit, { recursive: true });
   writeFileSync(join(foreignCommit, "owner"), "foreign\n");
   symlinkSync(join(repo, "skills", "engineering", "removed-shay-skill"), stale);
+  symlinkSync(join(repo, "skills", "misc", "setup-pre-commit"), excludedMisc);
 
   try {
     const result = spawnSync("bash", [linkScript], {
@@ -924,16 +926,30 @@ test("links the complete repository catalog without replacing foreign skills", (
     assert.equal(result.status, 0, result.stderr);
     assert.equal(readFileSync(join(foreignCommit, "owner"), "utf8"), "foreign\n");
     assert.equal(lstatSync(stale, { throwIfNoEntry: false }), undefined);
+    assert.equal(lstatSync(excludedMisc, { throwIfNoEntry: false }), undefined);
 
     for (const destination of [agents, claude]) {
       const continuousLearning = join(destination, "continuous-learning");
+      const agentPayment = join(destination, "agent-payment-x402");
+      const implementSpec = join(destination, "implement-spec");
       const writingShape = join(destination, "writing-shape");
       assert.equal(lstatSync(continuousLearning).isSymbolicLink(), true);
+      assert.equal(lstatSync(agentPayment).isSymbolicLink(), true);
+      assert.equal(lstatSync(implementSpec).isSymbolicLink(), true);
       assert.equal(lstatSync(writingShape).isSymbolicLink(), true);
       assert.equal(
         readlinkSync(continuousLearning),
         join(repo, "skills", "engineering", "continuous-learning"),
       );
+      assert.equal(
+        readlinkSync(agentPayment),
+        join(repo, "skills", "specialized", "agent-payment-x402"),
+      );
+      assert.equal(
+        readlinkSync(implementSpec),
+        join(repo, "skills", "in-progress", "implement-spec"),
+      );
+      assert.equal(lstatSync(join(destination, "setup-pre-commit"), { throwIfNoEntry: false }), undefined);
     }
   } finally {
     rmSync(home, { force: true, recursive: true });

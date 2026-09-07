@@ -149,7 +149,7 @@ Software engineering fundamentals matter more than ever. This collection condens
 
 This repository maintains a Chinese [source and local changes ledger](./SOURCES.md). It records the exact upstream baseline for adopted skills and any changes made for this personal collection.
 
-Third-party Skills are absorbed directly into [`skills/engineering`](./skills/engineering), [`skills/productivity`](./skills/productivity), and [`skills/misc`](./skills/misc). Overlapping external and local workflows are folded into one canonical entry point instead of remaining parallel; provenance remains in [SOURCES.md](./SOURCES.md).
+Third-party Skills are absorbed directly into [`skills/engineering`](./skills/engineering), [`skills/productivity`](./skills/productivity), [`skills/specialized`](./skills/specialized), and [`skills/misc`](./skills/misc). Vertical technical libraries live in `specialized/` so they remain locally discoverable without turning `misc/` into a daily install surface. Overlapping external and local workflows are folded into one canonical entry point instead of remaining parallel; provenance remains in [SOURCES.md](./SOURCES.md).
 
 ## Reference
 

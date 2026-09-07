@@ -19,13 +19,13 @@
 | --- | --- |
 | 状态 | 基础来源，持续跟踪 |
 | 来源仓库 | <https://github.com/mattpocock/skills> |
-| 来源基线 | `5b15a47f2d7150f545fbcacbfe381787fc0230dc` |
+| 来源基线 | `3cca18b368ae95cdbdebbff572ccafa662551015` |
 | 来源版本 | `1.2.3` |
 | 上游分支 | `upstream/main` |
 | 本地范围 | 仓库基础结构，包括 Matt canonical `skills/`、`docs/`、清单和维护脚本；不包括 ECC 来源档案和本地吸收改动 |
 | 许可证 | MIT，见 [`LICENSE`](./LICENSE) |
 | 本地改动 | 发行包、Claude plugin 和 fallback marketplace 统一为 `shay-skills` / `shay` 与 `shay-wong/skills`；`setup-matt-pocock-skills` 无兼容别名地重命名为中立入口 `configure-skills`；`ask-matt` 无兼容别名地重命名为个人入口 `ask-me`，并按是否需要写入 `CONTEXT.md` 或 ADR 来选择 `grill-me` 与 `grill-with-docs`；两个显式 grill 入口通过 Skill tool 或可用 Skills 目录复用 `grilling` 与 `domain-modeling`，不复制共享协议；`to-spec` 与 `to-tickets` 在活动 Panel 或 Jira planning 上下文中先写完整 `.scratch` 本地副本，再通过已安装的 `manage-panel` 发布同一内容并记录本地相对路径，`to-tickets` 还把返回的 Panel 标识和状态写回本地 ticket，只有用户明确要求时才同时记录 GitHub 或 GitLab Issue 并把映射写入 Panel 子议题，发布后停止并把无 blocker 叶子 Issue 的选择、绑定和派发交给 Panel，没有有效上下文时才回退到 `configure-skills` 的 tracker；`implement` 通过个人 `review` 统筹入口收尾，由 `review` 固定 `code-review` 主审并携带原 Spec 或 Ticket 契约，同时通过 `manage-panel` 拒绝父容器、只接受一个可执行叶子 Issue、在任何 Git 修改前完成绑定和认领、保留代码托管 Issue 与 Panel 身份边界、解析关联 Jira `externalKey` 并传给 `commit`，在验证、审查和已授权提交完成后写结果评论并移到 `in_review`，每次成功转换后把 `in_progress` 或 `in_review` 镜像到 `.scratch` ticket，不自行标记 `done`；`tdd`、`research`、`implement`、`code-review`、`resolving-merge-conflicts` 吸收 ECC 与本地规则；`code-review`、`wizard`、`codebase-design` 与 `to-tickets` 的入口描述压缩为触发条件和核心职责；新增个人 `review` 统筹入口、`commit`、`worktree-clean`；其余 Matt canonical 内容保持上游基线 |
-| 比较方式 | `git diff 5b15a47f2d7150f545fbcacbfe381787fc0230dc..main` |
+| 比较方式 | `git diff 3cca18b368ae95cdbdebbff572ccafa662551015..main` |
 | 同步策略 | 保留 `upstream` 远端；同步前按本台账逐项检查个人改动，合并后更新固定基线 |
 
 组合调用兼容：`implement`、`wayfinder`、`triage`、`improve-codebase-architecture`、`tdd` 以及保留的 beta 路由统一采用 Skill tool 优先、authoritative available-Skills catalog 回退。目录中存在的 model-invoked Skill 在没有 Skill tool 时仍直接按完整 `SKILL.md` 执行，不复制被调用工作流。
@@ -39,12 +39,12 @@
 | 来源基线 | `d8409a4b0813771235555e32e3d8046a73988bfa` |
 | 来源版本 | `2.2.0` |
 | 来源路径 | `skills/`、`rules/react/`、`docs/capability-surface-selection.md`、`LICENSE` |
-| 本地路径 | [`skills/engineering`](./skills/engineering)、[`skills/productivity`](./skills/productivity)、[`skills/misc`](./skills/misc)、[`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
+| 本地路径 | [`skills/engineering`](./skills/engineering)、[`skills/productivity`](./skills/productivity)、[`skills/specialized`](./skills/specialized)、[`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
 | 导入范围 | 原始 286 个 Skill 中，168 个技术栈入口按领域保留；10 个重叠入口吸收进当前 canonical Skill；`continuous-learning-v2` 的实现归并到原名 `continuous-learning`；107 个非技术栈、外部产品入口或旧兼容入口移除 |
 | 许可证 | MIT，见 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
 | 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口并融合进 canonical Skill；只保留语言、框架、数据库、基础设施、网络、安全、测试、性能、移动端、Web3、医疗软件、视频工程与 AI 系统技术能力；删除内容、运营、研究、业务职能、ECC 管理、配置维护、外部产品和通用流程入口；删除旧兼容入口 `autonomous-loops`，统一使用 `continuous-agent-loop`；将 `continuous-learning-v2` 的完整项目级 instinct 实现迁回 `continuous-learning`，不保留版本化别名；`tdd` 保留风险门禁、计划输入安全、真实 RED/GREEN、测试层级和证据交接；`research` 保留聚焦、比较、深度与监控候选模式、多来源交叉验证和分题并行；其余重叠入口吸收进 Matt `implement` 和本地 `decision-notes` |
-| 验证结果 | `skills.sh` 发现 213 个 Skill，仓库清单检查确认名称全部唯一且四个 bucket README 与目录一致；Codex `quick_validate.py` 为 178 通过、35 失败，其中 23 个是 Matt、beta 或其他既有 Claude 字段，12 个是保留的 ECC 上游 frontmatter 问题；`continuous-learning` 的解析测试、Python 与 Shell 语法、安装器 13 项测试、插件清单严格校验、版本同步和 `git diff --check` 均通过 |
-| 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装；ECC 子目录不加入继承的 Matt plugin、`ask-me` 或 maintainer linking script |
+| 验证结果 | `skills.sh` 发现 213 个 Skill，仓库清单检查确认名称全部唯一且五个非 deprecated bucket README 与目录一致；Codex `quick_validate.py` 为 178 通过、35 失败，其中 23 个是 Matt、beta 或其他既有 Claude 字段，12 个是保留的 ECC 上游 frontmatter 问题；`continuous-learning` 的解析测试、Python 与 Shell 语法、安装器 13 项测试、插件清单严格校验、版本同步和 `git diff --check` 均通过 |
+| 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装；ECC 垂直技术栈位于 `specialized/`，由 maintainer linking script 链接，但不加入继承的 Matt plugin 或 `ask-me` |
 | 本机替换状态 | 本机保留入口使用指向本仓库对应目录的符号链接；本轮删除入口中仅清理解析到本仓库的失效链接，不影响其他来源 Skill |
 | 比较方式 | 从固定来源基线重建原始目录清单，再审查分类移动、10 个吸收入口、路径修复和 canonical 差异 |
 | 同步策略 | 从 ECC 的固定新提交先比较上游删除、重命名、依赖和兼容性变化，只同步技术栈范围内的 168 个入口，并重新审查 10 个已吸收能力；不恢复非技术栈、外部产品、版本化重复或旧兼容入口 |
