@@ -102,6 +102,12 @@ test("routes planning and implementation closeout through installed orchestrator
   assert.match(review, /exact task or conversation turn range/);
   assert.match(review, /Panel or another product runtime owns issue eligibility/);
   assert.match(review, /Do not duplicate product scheduling rules inside adjacent Skills/);
+  assert.match(review, /# 评审结论：通过/);
+  assert.match(review, /# 评审结论：阻断/);
+  assert.match(review, /# 评审结论：暂无法判断/);
+  assert.match(review, /评审状态：<中文说明>/);
+  assert.match(review, /Translate `Lean already\. Ship\.` to `无需精简。`/);
+  assert.match(review, /Treat `net: -0 lines possible\.` as no simplification finding/);
   assert.match(reviewPolicy, /task or conversation identity, exact turn range, material tool outputs/);
   assert.match(reviewPolicy, /exact turn or tool event that contradicts the loaded Skill/);
   assert.equal(externalDependencies.dependencies["to-spec"], undefined);

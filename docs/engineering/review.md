@@ -77,6 +77,10 @@ Yes. Pass the task or conversation reference and the behavior you want checked. 
 
 `COMPLETE` means every required scope finished with sufficient evidence. `BUDGET_REACHED`, `REVIEW_INCOMPLETE`, `CONFLICT`, and `CIRCUIT_OPEN` describe why orchestration stopped. They do not imply `REQUEST_CHANGES` without an independently verified blocking finding.
 
+**How is the overall conclusion shown?**
+
+The report starts with one prominent Chinese conclusion: `评审结论：通过`, `评审结论：阻断`, or `评审结论：暂无法判断`. Execution details follow on a separate line with both a Chinese explanation and the stable status token. Specialist shorthand is normalized too: Ponytail's `Lean already. Ship.` becomes `无需精简。`, not proof that the whole candidate passed.
+
 ## It's working if
 
 - Every pass reviews the same frozen candidate.
@@ -90,6 +94,8 @@ Yes. Pass the task or conversation reference and the behavior you want checked. 
 - A Deslop-configured candidate with material clone risk receives a separate `code-dedup` evidence pass rather than folding that question into Ponytail.
 - Missing optional Skills are skipped without turning the review into a failure.
 - Only independently verified blocking findings can produce `REQUEST_CHANGES`.
+- The first heading makes the overall candidate result obvious, while status tokens remain available as secondary diagnostic detail.
+- Specialist shorthand is translated into natural language without losing paths, evidence, or estimated impact.
 
 ## Where it fits
 

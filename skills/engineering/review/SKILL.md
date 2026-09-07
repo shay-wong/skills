@@ -85,14 +85,27 @@ For a multi-scope, merge-readiness, repair-enabled, conflicting, or large-candid
 
 ## Report
 
-Start with:
+Start with the candidate conclusion as a prominent Chinese heading. Map the internal verdict exactly:
+
+- `APPROVE` -> `# 评审结论：通过`
+- `REQUEST_CHANGES` -> `# 评审结论：阻断`
+- `NO_VERDICT` -> `# 评审结论：暂无法判断`
+
+Then report the execution status and stop reason in human-readable Chinese, retaining the stable token in parentheses for diagnostics:
 
 ```text
-Review status: COMPLETE | BUDGET_REACHED | REVIEW_INCOMPLETE | CONFLICT | CIRCUIT_OPEN
-Candidate verdict: APPROVE | REQUEST_CHANGES | NO_VERDICT
-Stop reason: <one concise sentence>
+评审状态：<中文说明>（COMPLETE | BUDGET_REACHED | REVIEW_INCOMPLETE | CONFLICT | CIRCUIT_OPEN）
+停止原因：<一句自然语言说明>
 ```
 
 For a policy-governed review, use the status definitions and precedence in the reference. Status and verdict are independent: operational incompleteness does not imply `REQUEST_CHANGES`, and `APPROVE` requires `COMPLETE`, an unchanged candidate, every required review complete, validation passing, and no accepted blocker.
 
-Present the final synthesis in Chinese unless the user requests another language. Put accepted findings first, ordered by severity and grouped by scope. For workflow-trace findings, name the responsible owner and repair target. Put advisory Ponytail findings last under `复杂度精简建议`. Preserve workflow status tokens, but explain them in Chinese.
+Present the final synthesis in Chinese unless the user requests another language. Put accepted findings first, ordered by severity and grouped by scope. For workflow-trace findings, name the responsible owner and repair target. Put advisory Ponytail findings last under `复杂度精简建议`.
+
+Treat specialist output as evidence, not final copy. Rewrite terse tags, metrics, and English shorthand into natural language while preserving file paths, line references, concrete evidence, and estimated impact. In particular:
+
+- Translate `Lean already. Ship.` to `无需精简。`
+- Translate a positive `net: -<N> lines possible.` estimate to `预计这些建议合计可减少约 <N> 行代码。`
+- Treat `net: -0 lines possible.` as no simplification finding and omit the zero-line metric.
+
+The Ponytail section is advisory unless simplification is primary. Never use its `Ship` wording as the overall candidate conclusion, and never imply that a clean complexity pass proves correctness, security, or merge readiness.

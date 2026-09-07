@@ -77,6 +77,14 @@ Derive the candidate verdict independently:
 
 Operational failure, budget exhaustion, or circuit opening never becomes `REQUEST_CHANGES` without an accepted candidate finding.
 
+Lead the final report with the human-facing candidate conclusion, before execution details:
+
+- `APPROVE`: `评审结论：通过`;
+- `REQUEST_CHANGES`: `评审结论：阻断`;
+- `NO_VERDICT`: `评审结论：暂无法判断`.
+
+Render the execution status on the next line as `评审状态：<中文说明>（<TOKEN>）`. Use `已完成`, `达到评审预算`, `评审未完成`, `结论存在冲突`, and `编排已中止` for `COMPLETE`, `BUDGET_REACHED`, `REVIEW_INCOMPLETE`, `CONFLICT`, and `CIRCUIT_OPEN` respectively. Keep the token for diagnostics, but do not make it visually compete with the candidate conclusion.
+
 ## Bounded Execution
 
 Unless the user supplies another explicit budget, allow at most three broad review waves, two material repair rounds, and 90 minutes of review orchestration. A broad wave means all required selected scopes review one frozen candidate. Run a deferred advisory Ponytail pass once after the final functional repair batch.
@@ -97,4 +105,4 @@ After independent verification, a required complementary `CRITICAL`, `HIGH`, `RE
 
 Put only accepted findings in the final problem list. Deduplicate overlaps without weakening evidence. Show rejected, resolved, duplicate, contextual, or explicit no-change items only when they materially explain the verdict or the user requests audit detail.
 
-Present advisory Ponytail findings last under `复杂度精简建议` and preserve the selected Ponytail workflow's output contract. They do not block approval or authorize automatic edits unless simplification is the explicit primary intent.
+Present advisory Ponytail findings last under `复杂度精简建议`. Preserve its evidence and estimated reduction, but rewrite its terse tags and English shorthand as natural-language Chinese. A positive `net` estimate becomes `预计这些建议合计可减少约 N 行代码。`; a zero estimate is omitted. `Lean already. Ship.` becomes `无需精简。` This section does not block approval or authorize automatic edits unless simplification is the explicit primary intent, and it never substitutes for the overall candidate conclusion.
