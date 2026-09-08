@@ -28,7 +28,17 @@ A **horizontal** slice ships one layer of the change. Nothing works until every 
 
 This is the rule people break most often, and the consequences are well documented. One team ran a 26-ticket stack sliced by layer (corpus, producer, aggregator, selector) and got roughly twenty agent runs per closed ticket, about three quarters of them rework. Their own post-mortem traced every failure class back to the horizontal slicing rather than to the implementations.
 
-Two things happen before anything is published. `to-tickets` looks for prefactoring (the principle "make the change easy, then make the easy change") and orders that work first. Then it presents the breakdown as a numbered list and quizzes you on it: is the granularity right, are the blocking edges real, should anything merge or split. Nothing reaches the tracker until you approve, and that quiz is the place to push back.
+Shared logic does not automatically become a horizontal ticket. Its extraction order depends on what the code and spec already prove:
+
+| Evidence | Sequence | Blocking shape |
+| --- | --- | --- |
+| The shared contract is established and every consumer needs the same rule | Extract the tested shared capability first | Every consuming slice is blocked by the enabling ticket |
+| The commonality is inferred or the consumers may differ | Complete the vertical slices first, then consolidate proven duplication | The consolidation ticket is blocked by every source slice |
+| Only one slice needs the helper | Keep it inside that slice | No extra ticket |
+
+When the evidence is incomplete, `to-tickets` defaults to vertical slices first. This permits temporary duplication so the later abstraction follows real behaviour instead of guessed similarity. Before publication it presents the numbered breakdown and asks whether the granularity, blocking edges, and shared-logic sequence are right. Nothing reaches the tracker until you approve.
+
+An enabling or consolidation ticket is a narrow refactoring exception rather than a tracer bullet. It must be independently verifiable and land green. It remains a sibling of the consuming slices under the same parent requirement; the parent itself does not own implementation work.
 
 ## Blocking edges
 
@@ -63,6 +73,9 @@ Over-decomposition is the most reported friction on this skill, and it is consis
 **The tickets came out one per layer: all the schema in one, all the API in another.**
 This is the failure the vertical-slice rule is written against, and the skill still produces it sometimes. Catch it at the quiz step by asking one question per ticket: what can I demo when this is done? A ticket with no answer is a horizontal slice. Some people add a "demo path" line to each ticket for this reason, and report it nudges the model toward vertical decomposition.
 
+**Several tickets need similar logic. Should that logic be extracted first?**
+Only when its contract is already established and the consuming slices genuinely require the same rule. Otherwise complete the slices independently and add a consolidation ticket after both behaviours are proven. Similar names or nearby code are not enough evidence for an abstraction.
+
 **On GitHub the tickets weren't created as sub-issues of the spec issue.**
 Known and unfixed. It has been reported across a dozen runs and several models, [most fully in issue #554](https://github.com/mattpocock/skills/issues/554), and it is worse on Codex than on Claude. `gh` has supported this natively since v2.94: `gh issue create --parent <n>`, and `gh issue edit <parent> --add-sub-issue <n>` after the fact. Until the tracker template prefers those, wiring the parent links yourself after a run is the reliable move.
 
@@ -88,7 +101,7 @@ The skill stops at the artifact. In Panel mode, Panel selects an unblocked leaf,
 - The ticket at the top has no blockers and can be started immediately.
 - Nothing in a ticket body is a file path or a line number, except a snippet a prototype produced.
 - Each ticket reads like something a fresh session could finish without you in the room.
-- Prefactoring, where it found any, is at the front of the order rather than mixed into feature tickets.
+- The breakdown states whether shared logic is extracted first or after the vertical slices, and the blocker graph matches that choice.
 - Active Panel publication leaves every complete ticket under `.scratch/<feature>/issues/`, records each path remotely, and writes the returned Panel identifier and status back to the local file.
 - Panel publication stops before implementation and leaves leaf selection, binding, and dispatch to Panel.
 - Explicit Panel plus GitHub or GitLab publication records the provider URL in both the local ticket and Panel child without treating the Panel identifier as a code-host Issue.

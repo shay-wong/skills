@@ -115,6 +115,17 @@ test("routes planning and implementation closeout through installed orchestrator
   assert.equal(externalDependencies.dependencies.implement, undefined);
 });
 
+test("to-tickets chooses shared-logic extraction timing from evidence", () => {
+  const toTickets = readFileSync(new URL("../skills/engineering/to-tickets/SKILL.md", import.meta.url), "utf8");
+
+  assert.match(toTickets, /Extract first/);
+  assert.match(toTickets, /Slice first, extract later/);
+  assert.match(toTickets, /independently verifiable refactoring exception/);
+  assert.match(toTickets, /children of the same parent requirement/);
+  assert.match(toTickets, /Default to slice first when the shared contract is not yet proven/);
+  assert.doesNotMatch(toTickets, /Any prefactoring should be done first/);
+});
+
 test("routes duplicate prevention and review through code-dedup", () => {
   const pluginManifest = JSON.parse(readFileSync(new URL("../.claude-plugin/plugin.json", import.meta.url), "utf8"));
   const externalDependencies = JSON.parse(readFileSync(new URL("../.agents/external-dependencies.json", import.meta.url), "utf8"));

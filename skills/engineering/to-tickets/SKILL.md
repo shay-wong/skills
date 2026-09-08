@@ -30,7 +30,7 @@ Work from whatever is already in the conversation context. If the user passes a 
 
 If you have not already explored the codebase, do so to understand the current state of the code. Ticket titles and descriptions should use the project's domain glossary vocabulary, and respect ADRs in the area you're touching.
 
-Look for opportunities to prefactor the code to make the implementation easier. "Make the change easy, then make the easy change."
+Identify shared logic that multiple slices may need. Do not automatically turn it into a horizontal ticket; choose when to extract it from evidence about the consumers and contract.
 
 ### 3. Draft vertical slices
 
@@ -41,9 +41,17 @@ Break the work into **tracer bullet** tickets.
 - Each slice cuts a narrow but COMPLETE path through every layer (schema, API, UI, tests): vertical, NOT a horizontal slice of one layer
 - A completed slice is demoable or verifiable on its own
 - Each slice is sized to fit in a single fresh context window
-- Any prefactoring should be done first
 
 </vertical-slice-rules>
+
+Shared logic has two valid sequences:
+
+- **Extract first:** use this when the shared contract is already established, multiple slices require exactly the same rule, or consistency is itself a prerequisite. Create one narrow enabling ticket that defines the contract, locks it with tests, and can land green independently. Block every consuming slice on that ticket.
+- **Slice first, extract later:** use this when the commonality is inferred, the consumers may differ, or the right abstraction is not yet known. Let each vertical slice own its complete behaviour and tests, then create a consolidation ticket blocked by those slices. That ticket removes proven duplication without changing their behaviour.
+
+The enabling or consolidation ticket is a narrow, independently verifiable refactoring exception, not a tracer bullet. Keep it and the consuming slices as children of the same parent requirement; never put implementation work in the parent itself.
+
+Default to slice first when the shared contract is not yet proven. A helper used by only one slice stays inside that slice. During the quiz, state which sequence the draft uses and the evidence for that choice.
 
 Give each ticket its **blocking edges**: the other tickets that must complete before it can start. A ticket with no blockers can start immediately.
 
@@ -61,6 +69,7 @@ Ask the user:
 
 - Does the granularity feel right? (too coarse / too fine)
 - Are the blocking edges correct: does each ticket only depend on tickets that genuinely gate it?
+- Is the shared-logic sequence correct: extract first, or slice first and extract after the behaviour is proven?
 - Should any tickets be merged or split further?
 
 Iterate until the user approves the breakdown.
