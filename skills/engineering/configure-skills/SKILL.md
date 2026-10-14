@@ -1,6 +1,6 @@
 ---
 name: configure-skills
-description: "Initialize optional project tools and configure a repository for this collection's engineering workflows: choose its issue tracker, triage label vocabulary, and domain-document layout. Run once before first use."
+description: "Initialize optional project tools, migrate legacy CONTEXT domain docs, and configure a repository for this collection's engineering workflows. Run once before first use."
 disable-model-invocation: true
 ---
 
@@ -12,6 +12,7 @@ Scaffold the per-repo configuration that the engineering skills assume:
 - **Issue tracker**: where issues live (GitHub by default; local markdown is also supported out of the box)
 - **Triage labels**: the strings used for the five canonical triage roles
 - **Domain docs**: where `GLOSSARY.md` and ADRs live, and the consumer rules for reading them
+- **Legacy domain docs**: safely rename `CONTEXT.md` and `CONTEXT-MAP.md` before current Skills can ignore them
 
 This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.
 
@@ -34,13 +35,34 @@ Look at the current repo to understand its starting state. Read whatever exists;
 - `git remote -v` and `.git/config`: is this a GitHub repo? Which one?
 - `AGENTS.md` and `CLAUDE.md` at the repo root: does either exist? Is there already an `## Agent skills` section in either?
 - `GLOSSARY.md` and `GLOSSARY-MAP.md` at the repo root
+- Legacy domain docs anywhere in the repo, found with `rg --files --hidden -g '!.git' -g 'CONTEXT.md' -g 'CONTEXT-MAP.md'`
 - `docs/adr/` and any `src/*/docs/adr/` directories
 - `docs/agents/`: does this skill's prior output already exist?
 - `.scratch/`: a sign that a local-markdown issue tracker convention is already in use
 - Is the `triage` skill installed? (a `triage` skill folder alongside this one, or `triage` in your available skills.) This decides whether Section B runs at all.
 - Monorepo signals: a `pnpm-workspace.yaml`, a `workspaces` field in `package.json`, or a populated `packages/*` with its own `src/`. These are present only in a genuinely large multi-package repo; their absence means single-context, which is almost every repo.
 
-### 2. Present findings and ask
+### 2. Migrate legacy domain-doc names
+
+Do this before choosing or writing the current domain-doc layout. If exploration found no `CONTEXT.md` or `CONTEXT-MAP.md`, continue to step 3.
+
+Build the complete migration plan without changing files:
+
+- Each `CONTEXT.md` becomes `GLOSSARY.md` in the same directory.
+- Each `CONTEXT-MAP.md` becomes `GLOSSARY-MAP.md` in the same directory.
+- If any target already exists, stop this run before moving any file or writing configuration. Report every conflict. Never overwrite or auto-merge the target.
+
+Show every source-to-target move and ask for one confirmation. If the user does not confirm, stop before later setup can establish a second domain-doc layout.
+
+After confirmation, preserve Git history where it exists. For each source, use `git ls-files --error-unmatch -- "$source"` to decide between `git mv -- "$source" "$target"` for a tracked file and `mv -- "$source" "$target"` for an untracked file.
+
+Search the repository for exact live references to `CONTEXT.md` and `CONTEXT-MAP.md`. Update instructions, configuration, templates, and links inside the migrated map so they point at the new names. Inspect matches individually: do not rewrite changelogs, release notes, changesets, logs, archives, or other historical records that intentionally describe the old convention.
+
+If any move or live-reference update fails, stop and report what changed and what remains. Do not continue into repository configuration from a partial migration.
+
+Verify that every planned target exists and that the old source paths no longer exist. Then continue with the normal configuration flow. Do not add compatibility copies or aliases.
+
+### 3. Present findings and ask
 
 Summarise what's present and what's missing. Then take the sections in order. One section, one answer, then the next.
 
@@ -71,16 +93,16 @@ The defaults are the five canonical roles, each label string equal to its name: 
 
 Offer **multi-context** (a root `GLOSSARY-MAP.md` pointing to per-context `GLOSSARY.md` files) only when exploration found monorepo signals. Then confirm which layout they want.
 
-### 3. Confirm and edit
+### 4. Confirm and edit
 
 Show the user a draft of:
 
-- The `## Agent skills` block to add to whichever of `CLAUDE.md` / `AGENTS.md` is being edited (see step 4 for selection rules)
+- The `## Agent skills` block to add to whichever of `CLAUDE.md` / `AGENTS.md` is being edited (see step 5 for selection rules)
 - The contents of `docs/agents/issue-tracker.md`, `docs/agents/domain.md`, and `docs/agents/triage-labels.md` (the last only when `triage` is installed)
 
 Let them edit before writing.
 
-### 4. Write
+### 5. Write
 
 **Pick the file to edit:**
 
@@ -124,6 +146,6 @@ Then write the docs files using the seed templates in this skill folder as a sta
 
 For "other" issue trackers, write `docs/agents/issue-tracker.md` from scratch using the user's description.
 
-### 5. Done
+### 6. Done
 
 Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit `docs/agents/*.md` directly later; re-running this skill is only necessary if they want to switch issue trackers or restart from scratch.

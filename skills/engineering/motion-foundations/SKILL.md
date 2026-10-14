@@ -47,7 +47,7 @@ input delay is worse than no animation.
 
 These are non-negotiable. They apply to every component in the system.
 
-1. **Use `motion/react` only.** Never import from `framer-motion`. Never mix the two in the same tree.
+1. **Use `motion/react` for current work.** Never mix it with `framer-motion` in the same tree. In a legacy project that still uses `framer-motion`, keep imports consistent until an atomic migration can replace the package and all imports together.
 2. **`initial` must match server output.** If the server renders `opacity: 1`, the `initial` prop must also be `opacity: 1`. No exceptions.
 3. **Reduced motion overrides everything.** When `useReducedMotion()` returns `true` or `prefersReduced` is `true`, all transforms are disabled. Opacity-only fades at ≤ 0.2s are the only permitted fallback.
 4. **Never animate layout properties.** `width`, `height`, `top`, `left`, `margin`, `padding` are banned from `animate`. Use `transform` and `opacity` only.
@@ -138,7 +138,8 @@ export const motionConfig = {
   isLowEnd() {
     return (
       typeof navigator !== "undefined" &&
-      navigator.hardwareConcurrency <= 4
+      ((navigator.deviceMemory !== undefined && navigator.deviceMemory <= 2) ||
+        (navigator.deviceMemory === undefined && navigator.hardwareConcurrency <= 4))
     )
   },
 
@@ -285,7 +286,7 @@ This skill does **not** cover:
 
 | Anti-pattern | Rule violated | Fix |
 | --------------------------------------- | ------- | ------------------------------- |
-| `import { motion } from "framer-motion"` | Rule 1 | Use `motion/react` |
+| Mixing `motion/react` and `framer-motion` | Rule 1 | Keep one package throughout the mounted tree and migrate atomically |
 | `initial={{ opacity: 0 }}` on SSR component | Rule 2 | Add mount guard |
 | Skipping `useReducedMotion` check | Rule 3 | Use `useSafeMotion` hook |
 | `animate={{ width: "100%" }}` | Rule 4 | Use `scaleX` transform instead |

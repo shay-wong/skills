@@ -2,20 +2,24 @@
  * Shared structural source of truth for the Agent Note tree.
  * Portable: resolves .agents/notes from cwd (or AGENT_NOTE_ROOT env).
  */
-import { globSync, readdirSync, existsSync } from 'node:fs'
-import { resolve, sep } from 'node:path'
+import { readdirSync, existsSync } from 'node:fs'
+import { resolve } from 'node:path'
+
+/** Recurse `dir` and return posix-relative `.md` paths prefixed with `prefix`. Node 18 compatible (no fs.globSync). */
+function listMd(dir: string, prefix: string): string[] {
+  if (!existsSync(dir)) return []
+  const out: string[] = []
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith('.')) continue
+    const rel = prefix ? `${prefix}/${entry.name}` : entry.name
+    if (entry.isDirectory()) out.push(...listMd(resolve(dir, entry.name), rel))
+    else if (entry.isFile() && entry.name.endsWith('.md')) out.push(rel)
+  }
+  return out
+}
 
 function resolveAgentNoteRoot(): string {
   if (process.env.AGENT_NOTE_ROOT) return resolve(process.env.AGENT_NOTE_ROOT)
-  // walk up from cwd to find .agents/notes, fallback to cwd/.agents/notes
-  let cur = process.cwd()
-  for (let i = 0; i < 6; i++) {
-    const cand = resolve(cur, '.agents/notes')
-    if (existsSync(cand)) return cand
-    const parent = resolve(cur, '..')
-    if (parent === cur) break
-    cur = parent
-  }
   return resolve(process.cwd(), '.agents/notes')
 }
 
@@ -46,7 +50,7 @@ export function walkAgentNoteTree(): { notes: AgentNote[]; errors: string[] } {
     }
   }
   for (const lifecycle of AGENT_NOTE_LIFECYCLES) {
-    for (const match of globSync(`${lifecycle}/**/*.md`, { cwd: agentNoteRoot }).map(p => p.split(sep).join('/')).sort()) {
+    for (const match of listMd(resolve(agentNoteRoot, lifecycle), lifecycle).sort()) {
       const segs = match.split('/')
       if (segs.length === 2 && ROOT_ALLOWLIST.has(segs[1] ?? '')) continue
       if (match.endsWith('.zh.md')) continue

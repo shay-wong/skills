@@ -1,10 +1,10 @@
 ---
 name: benchmark-methodology
 description: >-
-  Score a scoped competitor set across nine weighted dimensions (positioning, voice,
-  visual craft, offer packaging, evidence, enterprise-readiness, thought
-  leadership, pricing, client's strategic tension) with explicit 1–5 rubrics
-  and a tension plot.
+  Score a scoped competitor set into comparable profile cards across nine
+  weighted dimensions, using evidence-anchored 1–5 rubrics and a tension plot.
+  Use when benchmarking competitors, building a comparison matrix, or grading
+  rival positioning before assembling a report.
 license: MIT
 ---
 

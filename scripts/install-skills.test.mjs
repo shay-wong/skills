@@ -148,10 +148,11 @@ test("routes duplicate prevention and review through code-dedup", () => {
   assert.match(review, /\.deslop\.toml/);
   assert.match(review, /`code-dedup`/);
   assert.match(codeDedup, /`find-similar`/);
-  assert.match(codeDedup, /`report-for-file`/);
-  assert.match(codeDedup, /`report-for-range`/);
-  assert.match(codeDedup, /`top-offenders`/);
+  assert.match(codeDedup, /`duplicates`/);
   assert.match(codeDedup, /`cluster-by-id`/);
+  assert.match(codeDedup, /`compare-pair`/);
+  assert.match(codeDedup, /`merge-plan`/);
+  assert.match(codeDedup, /`existing`/);
   assert.match(codeDedup, /deslop \. --notext --nohtml --no-color/);
   assert.match(codeDedup, /does not install/i);
   assert.equal(
@@ -202,6 +203,7 @@ test("uses the personal release identity and generic configuration entrypoint", 
   const packageManifest = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
   const pluginManifest = JSON.parse(readFileSync(new URL("../.claude-plugin/plugin.json", import.meta.url), "utf8"));
   const marketplace = JSON.parse(readFileSync(new URL("../.claude-plugin/marketplace.json", import.meta.url), "utf8"));
+  const configureSkills = readFileSync(new URL("../skills/engineering/configure-skills/SKILL.md", import.meta.url), "utf8");
 
   assert.equal(packageManifest.name, "shay-skills");
   assert.equal(packageManifest.repository.url, "https://github.com/shay-wong/skills");
@@ -215,6 +217,12 @@ test("uses the personal release identity and generic configuration entrypoint", 
   assert.equal(marketplace.plugins[0].name, "shay-skills");
   assert.ok(pluginManifest.skills.includes("./skills/engineering/configure-skills"));
   assert.ok(!pluginManifest.skills.includes("./skills/engineering/setup-matt-pocock-skills"));
+  assert.match(configureSkills, /rg --files --hidden[^\n]+CONTEXT\.md[^\n]+CONTEXT-MAP\.md/);
+  assert.match(configureSkills, /If any target already exists[\s\S]+Never overwrite or auto-merge/);
+  assert.match(configureSkills, /git mv -- \"\$source\" \"\$target\"[\s\S]+mv -- \"\$source\" \"\$target\"/);
+  assert.match(configureSkills, /do not rewrite changelogs, release notes, changesets, logs, archives/);
+  assert.match(configureSkills, /Do not continue into repository configuration from a partial migration/);
+  assert.ok(configureSkills.indexOf("### 2. Migrate legacy domain-doc names") < configureSkills.indexOf("Section C: Domain docs"));
 });
 
 test("adds GitLab milestones only with verified work-item release evidence", () => {
@@ -286,7 +294,7 @@ const deslop = {
   codexMcp: {
     name: "deslop",
     command: "deslop-mcp",
-    args: [],
+    args: ["--root", "."],
   },
   install: {
     darwin: { manager: "brew", package: "nimblesite/tap/deslop" },
@@ -426,7 +434,7 @@ test("dry-run includes or skips declared external dependencies", () => {
     assert.match(withDependencies.stdout, /brew install nimblesite\/tap\/deslop/);
   }
   assert.match(withDependencies.stdout, /codex mcp get deslop --json/);
-  assert.match(withDependencies.stdout, /codex mcp add deslop -- deslop-mcp/);
+  assert.match(withDependencies.stdout, /codex mcp add deslop -- deslop-mcp --root \./);
 
   const withoutDependencies = spawnSync(
     process.execPath,
@@ -476,7 +484,7 @@ test("project setup dry-run exposes selectable CodeGraph and Deslop actions", ()
     );
     assert.equal(allTools.status, 0, allTools.stderr);
     assert.match(allTools.stdout, /Project tools selected: codegraph, deslop/);
-    assert.match(allTools.stdout, new RegExp(`codegraph init ${directory}`));
+    assert.match(allTools.stdout, new RegExp(`codegraph init ${directory} --yes`));
     assert.match(allTools.stdout, new RegExp(`deslop ${directory} --notext --nohtml --no-color`));
     assert.match(allTools.stdout, new RegExp(`Create when missing: ${directory}/\\.deslop\\.toml`));
 
@@ -601,9 +609,9 @@ test("initializes selected project tools without overwriting project configurati
     assert.equal(readFileSync(join(project, ".deslop.toml"), "utf8"), "[threshold]\nmax_duplication_percent = 5\n");
     assert.equal(readFileSync(join(project, ".gitignore"), "utf8"), "node_modules\n.deslop/\n");
     assert.deepEqual(readFileSync(log, "utf8").trim().split("\n"), [
-      `codegraph init ${project}`,
+      `codegraph init ${project} --yes`,
       `deslop ${project} --notext --nohtml --no-color`,
-      `codegraph init ${project}`,
+      `codegraph init ${project} --yes`,
       `deslop ${project} --notext --nohtml --no-color`,
     ]);
   } finally {
@@ -632,7 +640,7 @@ test("installs selected external dependencies after the repository Skill", () =>
     if (args.join(" ") === "mcp get deslop --json") console.log(JSON.stringify({
       name: "deslop",
       enabled: true,
-      transport: { type: "stdio", command: "deslop-mcp", args: [] },
+      transport: { type: "stdio", command: "deslop-mcp", args: ["--root", "."] },
     }));
   `);
   stub("deslop", "process.exit(0);");
@@ -708,10 +716,10 @@ test("installs and verifies the Deslop system tool after the repository Skill", 
       console.log(JSON.stringify({
         name: "deslop",
         enabled: true,
-        transport: { type: "stdio", command: "deslop-mcp", args: [] },
+        transport: { type: "stdio", command: "deslop-mcp", args: ["--root", "."] },
       }));
     }
-    if (args.join(" ") === "mcp add deslop -- deslop-mcp") {
+    if (args.join(" ") === "mcp add deslop -- deslop-mcp --root .") {
       fs.writeFileSync(process.env.MCP_MARKER, "registered\\n");
     }
   `);
@@ -739,7 +747,7 @@ test("installs and verifies the Deslop system tool after the repository Skill", 
     assert.ok(commands.some((command) => command === `${manager} install ${process.platform === "win32" ? "deslop" : "nimblesite/tap/deslop"}`));
     assert.deepEqual(commands.filter((command) => command.startsWith("codex mcp ")), [
       "codex mcp get deslop --json",
-      "codex mcp add deslop -- deslop-mcp",
+      "codex mcp add deslop -- deslop-mcp --root .",
       "codex mcp get deslop --json",
     ]);
     assert.match(result.stdout, /External dependency verified: Deslop duplicate analysis \(deslop@system\)/);
@@ -774,10 +782,10 @@ test("registers Deslop MCP when executables are already available", () => {
       console.log(JSON.stringify({
         name: "deslop",
         enabled: true,
-        transport: { type: "stdio", command: "deslop-mcp", args: [] },
+        transport: { type: "stdio", command: "deslop-mcp", args: ["--root", "."] },
       }));
     }
-    if (args.join(" ") === "mcp add deslop -- deslop-mcp") {
+    if (args.join(" ") === "mcp add deslop -- deslop-mcp --root .") {
       fs.writeFileSync(process.env.MCP_MARKER, "registered\\n");
     }
   `);
@@ -800,7 +808,7 @@ test("registers Deslop MCP when executables are already available", () => {
     assert.match(result.stdout, /External dependency already installed: Deslop duplicate analysis \(deslop@system\)/);
     assert.deepEqual(readFileSync(log, "utf8").trim().split("\n"), [
       "codex mcp get deslop --json",
-      "codex mcp add deslop -- deslop-mcp",
+      "codex mcp add deslop -- deslop-mcp --root .",
       "codex mcp get deslop --json",
     ]);
   } finally {
@@ -826,7 +834,7 @@ test("keeps a matching Deslop MCP registration", () => {
     console.log(JSON.stringify({
       name: "deslop",
       enabled: true,
-      transport: { type: "stdio", command: "deslop-mcp", args: [] },
+      transport: { type: "stdio", command: "deslop-mcp", args: ["--root", "."] },
     }));
   `);
 

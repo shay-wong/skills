@@ -1,5 +1,5 @@
 interface:
   display_name: "Configure Skills"
-  short_description: "Initialize and configure a repo"
+  short_description: "Migrate and configure a repo"
 policy:
   allow_implicit_invocation: false

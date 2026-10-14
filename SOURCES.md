@@ -25,7 +25,7 @@
 | 增量吸收 | 完整合入 `49dd158d1076134a641b33efb035946536778336`，包括 `GLOSSARY.md` 命名、正式 `implement-spec`、`pr`、`retro`、beta `chief-of-staff`，以及诊断、评审、TDD、路由、tracker 模板和 wizard 修复 |
 | 本地范围 | 仓库基础结构，包括 Matt canonical `skills/`、`docs/`、清单和维护脚本；不包括 ECC 来源档案和本地吸收改动 |
 | 许可证 | MIT，见 [`LICENSE`](./LICENSE) |
-| 本地改动 | 发行包、兼容 Claude/Codex 的 plugin manifest 和 fallback marketplace 统一为 `shay-skills` / `shay` 与 `shay-wong/skills`；`configure-skills` 和 `ask-me` 继续作为无旧别名的个人入口；`GLOSSARY.md` 与 ADR 是领域记录；`to-spec`、`to-tickets`、`implement`、`review`、`commit` 保留 Panel、本地 `.scratch`、Jira `externalKey` 和双写状态约束；`implement-spec` 使用个人 `review` 收尾，并仅为配置的非 Panel tracker 编排完整任务图，活动 Panel 或 Jira planning 上下文继续由 Panel 派发叶子 Issue 给 `implement`，避免重复实现 eligibility、frontier、binding、claim 与状态镜像；正式 `pr` 只写 GitHub PR body 并遵循仓库模板和授权边界，GitLab 操作继续由独立 `gitlab-mr` 承担；`retro` 保留 Skill catalog 回退和确定性门禁优先；`code-review`、`tdd`、`research`、`resolving-merge-conflicts` 保留个人与 ECC 融合规则；上游删除的 `resolving-merge-conflicts` 继续作为个人正式 Skill；`chief-of-staff` 保持 beta；上游公共仓库的 Issue 模板、自动 triage workflow、`SCOPE.md` 和新增 `.out-of-scope` 治理文件不进入个人发行版 |
+| 本地改动 | 发行包、兼容 Claude/Codex 的 plugin manifest 和 fallback marketplace 统一为 `shay-skills` / `shay` 与 `shay-wong/skills`；`configure-skills` 和 `ask-me` 继续作为无旧别名的个人入口，并在配置前提供冲突即停的 `CONTEXT*` 到 `GLOSSARY*` 迁移；`GLOSSARY.md` 与 ADR 是领域记录；`to-spec`、`to-tickets`、`implement`、`review`、`commit` 保留 Panel、本地 `.scratch`、Jira `externalKey` 和双写状态约束；`implement-spec` 使用个人 `review` 收尾，并仅为配置的非 Panel tracker 编排完整任务图，活动 Panel 或 Jira planning 上下文继续由 Panel 派发叶子 Issue 给 `implement`，避免重复实现 eligibility、frontier、binding、claim 与状态镜像；正式 `pr` 只写 GitHub PR body 并遵循仓库模板和授权边界，GitLab 操作继续由独立 `gitlab-mr` 承担；`retro` 保留 Skill catalog 回退和确定性门禁优先；`code-review`、`tdd`、`research`、`resolving-merge-conflicts` 保留个人与 ECC 融合规则；上游删除的 `resolving-merge-conflicts` 继续作为个人正式 Skill；`chief-of-staff` 保持 beta；上游公共仓库的 Issue 模板、自动 triage workflow、`SCOPE.md` 和新增 `.out-of-scope` 治理文件不进入个人发行版 |
 | 比较方式 | `git diff 49dd158d1076134a641b33efb035946536778336..main` |
 | 同步策略 | 保留 `upstream` 远端；同步前按本台账逐项检查个人改动，合并后更新固定基线 |
 
@@ -37,18 +37,18 @@
 | --- | --- |
 | 状态 | 已按领域吸收，并通过 `skills.sh` 分发 |
 | 来源仓库 | <https://github.com/affaan-m/ECC> |
-| 来源基线 | `d8409a4b0813771235555e32e3d8046a73988bfa` |
-| 来源版本 | `2.2.0` |
+| 来源基线 | `b92f181b3b748d1abbc2afd94af6aa7d8c8fca29` |
+| 来源版本 | `2.2.3` |
 | 来源路径 | `skills/`、`rules/react/`、`docs/capability-surface-selection.md`、`LICENSE` |
 | 本地路径 | [`skills/engineering`](./skills/engineering)、[`skills/productivity`](./skills/productivity)、[`skills/specialized`](./skills/specialized)、[`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
-| 导入范围 | 原始 286 个 Skill 中，168 个技术栈入口按领域保留；10 个重叠入口吸收进当前 canonical Skill；`continuous-learning-v2` 的实现归并到原名 `continuous-learning`；107 个非技术栈、外部产品入口或旧兼容入口移除 |
-| 许可证 | MIT，见 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE) |
-| 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口并融合进 canonical Skill；只保留语言、框架、数据库、基础设施、网络、安全、测试、性能、移动端、Web3、医疗软件、视频工程与 AI 系统技术能力；删除内容、运营、研究、业务职能、ECC 管理、配置维护、外部产品和通用流程入口；删除旧兼容入口 `autonomous-loops`，统一使用 `continuous-agent-loop`；将 `continuous-learning-v2` 的完整项目级 instinct 实现迁回 `continuous-learning`，不保留版本化别名；`tdd` 保留风险门禁、计划输入安全、真实 RED/GREEN、测试层级和证据交接；`research` 保留聚焦、比较、深度与监控候选模式、多来源交叉验证和分题并行；其余重叠入口吸收进 Matt `implement` 和本地 `decision-notes` |
-| 验证结果 | `skills.sh` 发现 213 个 Skill，仓库清单检查确认名称全部唯一且五个非 deprecated bucket README 与目录一致；Codex `quick_validate.py` 为 178 通过、35 失败，其中 23 个是 Matt、beta 或其他既有 Claude 字段，12 个是保留的 ECC 上游 frontmatter 问题；`continuous-learning` 的解析测试、Python 与 Shell 语法、安装器 13 项测试、插件清单严格校验、版本同步和 `git diff --check` 均通过 |
+| 导入范围 | 当前 311 个 Skill 中，178 个技术栈入口按领域保留；10 个重叠入口吸收进当前 canonical Skill；`continuous-learning-v2` 的实现归并到原名 `continuous-learning`；122 个非技术栈、外部产品入口、仓库维护入口或旧兼容入口不进入发行版 |
+| 许可证 | ECC 主体为 MIT，见 [`sources/ecc/LICENSE`](./sources/ecc/LICENSE)；`osint-investigation` 保留其独立 CC-BY-SA-4.0 许可证文件 |
+| 本地改动 | 修复分类后的相对链接，将共享引用收进对应 Skill；删除 10 个重叠入口并融合进 canonical Skill；只保留语言、框架、数据库、基础设施、网络、安全、测试、性能、移动端、Web3、医疗软件、视频工程与 AI 系统技术能力；删除内容、运营、研究、业务职能、ECC 管理、配置维护、外部产品和通用流程入口；新增吸收 agent runtime gateway、安全加固、Bengali NLP、i18n、MCP 依赖审查、模块回归、MyBatis、OSINT、prompt cache、Rails 和测试协作；将新增 Rails Skill 的 `origin` 归入合法 `metadata`，不新增 Codex frontmatter 失败；上游删除的 `motion-ui` 在旧版独有的 legacy import 边界、设备能力判断、`layoutId` 唯一性与 QA 要求并入 `motion-foundations` 和 `motion-patterns` 后移除；删除旧兼容入口 `autonomous-loops`，统一使用 `continuous-agent-loop`；将 `continuous-learning-v2` 的完整项目级 instinct 实现迁回 `continuous-learning`，不保留版本化别名；`tdd` 保留风险门禁、计划输入安全、真实 RED/GREEN、测试层级和证据交接；`research` 保留聚焦、比较、深度与监控候选模式、多来源交叉验证和分题并行；其余重叠入口吸收进 Matt `implement` 和本地 `decision-notes`；不写入依赖 ECC runtime、未随 Skill 分发或指向已删除入口的说明 |
+| 验证结果 | 226 个 active Skill 中 190 个通过 Codex `quick_validate.py`；其余 36 个均为既有兼容项，包括下列 12 个 ECC 顶层 frontmatter 字段、Matt invocation 字段和一个本地 description 规则，不由本轮同步新增；31 项安装与项目初始化测试、Claude plugin 严格校验、版本同步、五个 bucket 的 README 对齐及 `git diff --check` 通过 |
 | 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装；ECC 垂直技术栈位于 `specialized/`，由 maintainer linking script 链接，但不加入继承的 Matt plugin 或 `ask-me` |
 | 本机替换状态 | 本机保留入口使用指向本仓库对应目录的符号链接；本轮删除入口中仅清理解析到本仓库的失效链接，不影响其他来源 Skill |
 | 比较方式 | 从固定来源基线重建原始目录清单，再审查分类移动、10 个吸收入口、路径修复和 canonical 差异 |
-| 同步策略 | 从 ECC 的固定新提交先比较上游删除、重命名、依赖和兼容性变化，只同步技术栈范围内的 168 个入口，并重新审查 10 个已吸收能力；不恢复非技术栈、外部产品、版本化重复或旧兼容入口 |
+| 同步策略 | 从 ECC 的固定新提交先比较上游删除、重命名、依赖和兼容性变化，只同步技术栈范围内的 178 个直接入口，并重新审查 10 个已吸收能力与 `continuous-learning-v2`；不恢复非技术栈、外部产品、版本化重复或旧兼容入口 |
 
 `continuous-agent-loop` 不再引用已删除或不存在的 `continuous-pr`、`rfc-dag`、`quality-gate` 与 `harness-audit`。CI 或 PR 管理及 RFC 拆解统一路由到 `ralphinho-rfc-pipeline`，写时检查、最终验证、eval 与 harness 诊断分别使用 `plankton-code-quality`、`verification-loop`、`eval-harness` 与 `agent-architecture-audit`。
 
@@ -61,9 +61,9 @@
 
 合并后的 `tdd` 不保留 ECC 的自动 checkpoint commit、固定 80% 全仓覆盖或强制独立证据文件；`research` 不绑定 Firecrawl、Exa 或固定来源数量。这些行为与当前授权边界、按风险验证和可替换工具原则冲突，不属于需要保留的优势。
 
-删除的 107 个 ECC 入口：
+当前不进入发行版的 122 个 ECC 入口：
 
-`agent-self-evaluation`、`agent-sort`、`agentic-engineering`、`ai-first-engineering`、`article-writing`、`automation-audit-ops`、`autonomous-loops`、`brand-discovery`、`brand-voice`、`carrier-relationship-management`、`ck`、`claude-devfleet`、`code-tour`、`codebase-onboarding`、`codehealth-mcp`、`competitive-platform-analysis`、`competitive-report-structure`、`config-gc`、`configure-ecc`、`connections-optimizer`、`content-engine`、`context-budget`、`council`、`council-multi-model`、`crosspost`、`customer-billing-ops`、`customs-trade-compliance`、`delivery-gate`、`dmux-workflows`、`documentation-lookup`、`ecc-guide`、`ecc-recipes`、`ecc-tools-cost-audit`、`email-ops`、`energy-procurement`、`exa-search`、`fal-ai-media`、`finance-billing-ops`、`flox-environments`、`frontend-slides`、`gan-style-harness`、`github-ops`、`google-workspace-ops`、`growth-log`、`hermes-imports`、`hookify-rules`、`inventory-demand-planning`、`investor-materials`、`investor-outreach`、`ito-baskets`、`ito-compute`、`ito-inference`、`ito-training`、`jira-integration`、`knowledge-ops`、`laravel-plugin-discovery`、`lead-intelligence`、`living-docs-governance`、`logistics-exception-management`、`mailtrap-email-integration`、`market-research`、`marketing-campaign`、`messages-ops`、`ml-adoption-playbook`、`nanoclaw-repl`、`nasiko-control-plane`、`nutrient-document-processing`、`openclaw-persona-forge`、`opensource-pipeline`、`parallel-execution-optimizer`、`plan-canvas`、`plan-orchestrate`、`prediction-market-oracle-research`、`prediction-market-risk-review`、`product-capability`、`product-lens`、`production-scheduling`、`project-flow-ops`、`prompt-optimizer`、`quality-nonconformance`、`recursive-decision-ledger`、`returns-reverse-logistics`、`rules-distill`、`scientific-db-pubmed-database`、`scientific-db-uspto-database`、`scientific-pkg-gget`、`scientific-thinking-literature-review`、`scientific-thinking-scholar-evaluation`、`search-first`、`security-scan`、`seo`、`setup-repo-scan`、`skill-comply`、`skill-stocktake`、`social-graph-ranker`、`social-publisher`、`strategic-compact`、`taste`、`tasteforge-video`、`terminal-ops`、`uncloud`、`unified-memory`、`unified-notifications-ops`、`videodb`、`visa-doc-translate`、`workspace-surface-audit`、`x-api`。
+`agent-self-evaluation`、`agent-sort`、`agentic-engineering`、`ai-first-engineering`、`article-writing`、`automation-audit-ops`、`autonomous-loops`、`brand-discovery`、`brand-voice`、`brownfield-retrospective`、`carrier-relationship-management`、`change-impact`、`ck`、`claude-devfleet`、`code-tour`、`codebase-onboarding`、`codehealth-mcp`、`competitive-platform-analysis`、`competitive-report-structure`、`config-gc`、`configure-ecc`、`connections-optimizer`、`content-engine`、`context-and-decisions`、`context-budget`、`conventional-commit-review`、`counterparty-channel-discipline`、`council`、`council-multi-model`、`crosspost`、`customer-billing-ops`、`customs-trade-compliance`、`deepseek-harness-setup`、`delivery-gate`、`dmux-workflows`、`docs-governance`、`documentation-lookup`、`ecc-guide`、`ecc-recipes`、`ecc-tools-cost-audit`、`email-ops`、`energy-procurement`、`esign-field-placement`、`exa-search`、`fal-ai-media`、`finance-billing-ops`、`flox-environments`、`frontend-slides`、`gan-style-harness`、`github-ops`、`google-workspace-ops`、`growth-log`、`hermes-imports`、`hookify-rules`、`inventory-demand-planning`、`investor-materials`、`investor-outreach`、`ito-baskets`、`ito-compute`、`ito-inference`、`ito-training`、`jira-integration`、`knowledge-ops`、`laravel-plugin-discovery`、`lead-intelligence`、`living-docs-governance`、`logistics-exception-management`、`mailtrap-email-integration`、`market-research`、`marketing-campaign`、`master-agreement-generator`、`messages-ops`、`ml-adoption-playbook`、`nanoclaw-repl`、`nasiko-control-plane`、`nutrient-document-processing`、`openclaw-persona-forge`、`opensource-pipeline`、`operator-approval-loop`、`parallel-execution-optimizer`、`plan-canvas`、`plan-orchestrate`、`prediction-market-oracle-research`、`prediction-market-risk-review`、`product-capability`、`product-lens`、`production-scheduling`、`project-flow-ops`、`prompt-optimizer`、`quality-nonconformance`、`recursive-decision-ledger`、`returns-reverse-logistics`、`rules-distill`、`scientific-db-pubmed-database`、`scientific-db-uspto-database`、`scientific-pkg-gget`、`scientific-thinking-literature-review`、`scientific-thinking-scholar-evaluation`、`search-first`、`security-scan`、`seo`、`setup-repo-scan`、`skill-comply`、`skill-host-compat`、`skill-stocktake`、`social-graph-ranker`、`social-publisher`、`story-lifecycle`、`strategic-compact`、`taste`、`taste-application`、`taste-distillation`、`tasteforge-video`、`terminal-ops`、`token-card`、`uncloud`、`unified-memory`、`unified-notifications-ops`、`videodb`、`visa-doc-translate`、`workspace-surface-audit`、`x-api`。
 
 当前保留的 12 个上游兼容性问题均为 `SKILL.md` frontmatter 使用了 Codex 校验器不接受的顶层字段：
 
@@ -111,16 +111,16 @@
 | --- | --- |
 | 状态 | 已与 ECC `architecture-decision-records` 合并为本地 `decision-notes` canonical Skill |
 | 来源仓库 | <https://github.com/czm15053/write-notes-like-deepseek> |
-| 来源基线 | `9420c100bcf708502f6bbb5792abf1f43b9506d1` |
+| 来源基线 | `0e8200c0f80d37a1c75e585a65b35401ae198462` |
 | 来源版本 | `0.1.0` |
-| 来源路径 | `SKILL.md`、`references/`、`scripts/`、`templates/` |
+| 来源路径 | `skills/write-notes-like-deepseek/SKILL.md`、`references/`、`scripts/`、`templates/`、`assets/agent-notes-board.html` |
 | 本地路径 | [`skills/engineering/decision-notes`](./skills/engineering/decision-notes) |
-| 采用原因 | 统一 ADR 与 Agent Note 的入口，同时保留既有目录兼容、决策分类、生命周期、模板与机械校验 |
+| 采用原因 | 统一 ADR 与 Agent Note 的入口，同时保留既有目录兼容、决策分类、生命周期、模板、归档封印、机械校验与按需本地看板 |
 | 许可证 | 上游 README 声明 MIT；固定来源提交没有独立 `LICENSE` 文件，GitHub API 也未识别许可证 |
-| 本地改动 | 省略来源仓库的 README、package.json 和安装包装；与 ECC ADR 工作流重写为中性的 `decision-notes`；同一决定只保留一份记录；既有 `docs/adr/` 保留编号、索引、查询与 ADR 生命周期，其他重要决定使用分类 Agent Notes；按本仓库标点规则改写 em dash；将 rejected 状态分隔符改为冒号 |
-| 验证方式 | 对合并 Skill 运行 Codex `quick_validate.py`；用 ADR 样例检查编号、索引、状态、备选与后果；在临时 Note 树上分别验证合法样例通过、非法样例被 tree 与 format 门禁拒绝 |
+| 本地改动 | 省略来源仓库的 README、package.json 和安装包装；与 ECC ADR 工作流重写为中性的 `decision-notes`；同一决定只保留一份记录；既有 `docs/adr/` 保留编号、索引、查询与 ADR 生命周期，其他重要决定使用分类 Agent Notes；吸收中文标题兼容、相对链接检查、归档 CLI 与 manifest 封印、锚点软报告、语义自检和本地看板；按本仓库标点规则改写 em dash；将 rejected 状态分隔符保持为冒号；归档前先验证既有 manifest，避免损坏 manifest 留下未封印移动；修复 CI 模板安装路径，并转义看板项目名；看板只按需生成，不在安装或 CI 中自动创建 |
+| 验证方式 | 对合并 Skill 运行 Codex `quick_validate.py`；用 ADR 样例检查编号、索引、状态、备选与后果；在临时 Note 树上验证合法与非法格式、相对链接、归档目标冲突、manifest 封印、看板覆盖保护和 metadata-only 输出 |
 | 激活状态 | 由 `npx skills@latest add shay-wong/skills -g` 发现和安装，不加入继承的 Matt plugin |
-| 同步策略 | 对比新的固定上游提交，只同步 Agent Note 生命周期、格式和校验行为；同时对照 ECC ADR 契约，保留本地单入口、既有目录兼容、标点与安装边界 |
+| 同步策略 | 对比新的固定上游提交，审查 Agent Note 生命周期、格式、校验、归档和看板行为；同时对照 ECC ADR 契约，保留本地单入口、既有目录兼容、冒号状态格式、标点与按需生成边界 |
 
 ### Nimblesite/Deslop
 
@@ -128,15 +128,15 @@
 | --- | --- |
 | 状态 | 已接入为 promoted `code-dedup` 薄路由和可选系统工具依赖，不复制上游实现 |
 | 来源仓库 | <https://github.com/Nimblesite/Deslop> |
-| 来源基线 | `d9f06d0cd2b038abec5ff623d6f0535c8c545b82` |
-| 参考版本 | `v0.32.0`，Tag 提交 `f92300e5e1004ef6c53a94174a0d7e842232ec80` |
+| 来源基线 | `adf93d9606fc26bf301dc7385ed89311bfa8af64` |
+| 参考版本 | `v0.37.0` |
 | 来源路径 | `README.md`、`docs/snippets/agents-md-recipe.md`、Deslop `For AI` 与 `AI integration` 官方文档，以及官方 Homebrew Tap 和 Scoop manifest |
 | 本地路径 | [`skills/engineering/code-dedup`](./skills/engineering/code-dedup)、[`.agents/external-dependencies.json`](./.agents/external-dependencies.json)、[`scripts/install.mjs`](./scripts/install.mjs)、[`scripts/setup.mjs`](./scripts/setup.mjs) |
 | 采用原因 | 在生成新函数、方法、helper、fixture、parser 或 route handler 前查询现有实现，并为差异审查和全仓去重提供可定位的 cluster 证据 |
-| 许可证 | MIT，见上游 [`LICENSE`](https://github.com/Nimblesite/Deslop/blob/f92300e5e1004ef6c53a94174a0d7e842232ec80/LICENSE) |
-| 本地改动 | 不复制 Deslop 的 Rust workspace、构建命令或仓库内部路径；将官方 agent recipe 重写为运行时中立的 evidence-only `code-dedup`，按 authoring、file/range review 和 repository cleanup 选择 `find-similar`、`report-for-file`、`report-for-range`、`top-offenders` 与 `cluster-by-id`；MCP 不可用时回退到 `deslop . --notext --nohtml --no-color` 并只解析 `.deslop/deslop-report.json`；实际编辑、测试和收尾继续由 `implement` 与 `review` 负责 |
+| 许可证 | MIT，见上游 [`LICENSE`](https://github.com/Nimblesite/Deslop/blob/adf93d9606fc26bf301dc7385ed89311bfa8af64/LICENSE) |
+| 本地改动 | 不复制 Deslop 的 Rust workspace、构建命令或仓库内部路径；将官方 agent recipe 重写为运行时中立的 evidence-only `code-dedup`，authoring 使用 `find-similar` 并识别单次已有实现的 `existing`，file/range review 与 repository cleanup 使用统一的 `duplicates`，选定 cluster 后按需调用 `cluster-by-id`、`compare-pair` 与只读 `merge-plan`；按 `kind` 而不是旧 bucket 或 cluster mass 判断证据；MCP 不可用时回退到 `deslop . --notext --nohtml --no-color` 并只解析 `.deslop/deslop-report.json`；实际编辑、测试和收尾继续由 `implement` 与 `review` 负责 |
 | 编排改动 | `implement` 仅在根目录存在 `.deslop.toml` 时于非平凡新代码写入前调用；`review` 在显式 duplicate/DRY 请求时可将其作为主审，在普通 closeout 中仅对已配置且有实质 clone 风险的候选补充调用；Ponytail 继续独立负责 YAGNI 和简化 |
-| 安装行为 | 依赖清单把 Deslop 挂到 `code-dedup` 与 `review`，按依赖 ID 去重；macOS 和 Linux 使用 `brew install nimblesite/tap/deslop`，Windows 先确认 `nimblesite` Scoop bucket 再安装 `deslop`；安装前探测、安装后验证 `deslop --version` 与 `deslop-mcp --version`；随后通过官方 `codex mcp` CLI 查询并注册全局 `deslop` STDIO server，匹配的配置直接保留，同名冲突明确失败且不覆盖；不直接写 `~/.codex/config.toml`，也不配置其他 MCP 客户端 |
+| 安装行为 | 依赖清单把 Deslop 挂到 `code-dedup` 与 `review`，按依赖 ID 去重；macOS 和 Linux 使用 `brew install nimblesite/tap/deslop`，Windows 先确认 `nimblesite` Scoop bucket 再安装 `deslop`；安装前探测、安装后验证 `deslop --version` 与 `deslop-mcp --version`；随后通过官方 `codex mcp` CLI 查询并注册全局 `deslop` STDIO server，命令固定为 `deslop-mcp --root .`，匹配的配置直接保留，同名冲突明确失败且不覆盖；不直接写 `~/.codex/config.toml`，也不配置其他 MCP 客户端 |
 | 验证方式 | 运行安装器测试覆盖 manifest 校验、平台 dry-run、共享依赖去重、已安装跳过、安装后双 executable 验证、MCP 首次注册、匹配配置跳过、同名冲突保护、缺少 Codex CLI 和缺少 package manager 的失败路径；运行 `quick_validate.py`、Claude plugin 严格校验、版本同步检查和 `git diff --check` |
 | 同步策略 | 对比新的固定上游提交和稳定 Release，优先同步 MCP 工具语义、JSON schema、CLI 参数、支持平台与官方安装路径变化；保留本地 evidence-only 边界和 `.deslop.toml` 条件路由 |
 
@@ -146,13 +146,13 @@
 | --- | --- |
 | 状态 | 作为可选项目初始化工具接入，不复制上游实现 |
 | 来源仓库 | <https://github.com/colbymchenry/codegraph> |
-| 来源基线 | `dfccdf62547fcd76d343344d823a0e1998d3a89f` |
-| 参考版本 | `v1.6.0` |
-| 来源路径 | `README.md` 与 `codegraph init` CLI |
+| 来源基线 | `6560052a6f856855d3f71eee838fd66ccfa4285d` |
+| 参考版本 | `v1.6.2` |
+| 来源路径 | `README.md`、`CHANGELOG.md` 与 `codegraph init` CLI |
 | 本地路径 | [`scripts/setup.mjs`](./scripts/setup.mjs)、[`skills/engineering/configure-skills`](./skills/engineering/configure-skills) |
 | 采用原因 | 在项目初始化时可选地构建本地代码知识图，并让已配置的全局 CodeGraph MCP 对该项目可用 |
-| 许可证 | MIT，见固定版本 [`LICENSE`](https://github.com/colbymchenry/codegraph/blob/dfccdf62547fcd76d343344d823a0e1998d3a89f/LICENSE) |
-| 本地改动 | 不复制 CodeGraph CLI、MCP server 或索引格式；项目初始化器只调用上游幂等的 `codegraph init <path>`，并与 Deslop 共用可单选、全选或全不选的项目工具清单 |
+| 许可证 | MIT，见固定版本 [`LICENSE`](https://github.com/colbymchenry/codegraph/blob/6560052a6f856855d3f71eee838fd66ccfa4285d/LICENSE) |
+| 本地改动 | 不复制 CodeGraph CLI、MCP server 或索引格式；项目初始化器只调用上游幂等的 `codegraph init <path> --yes`，避免脚本场景被嵌套提示阻塞，并与 Deslop 共用可单选、全选或全不选的项目工具清单；版本升级后的重建索引仍由 CodeGraph 自身的 `codegraph index` 或升级指引负责 |
 | 验证方式 | 安装器测试覆盖显式选择、dry-run、非交互门禁、工具缺失和重复初始化；在临时 Git 项目运行真实 `codegraph init` 并检查 `codegraph status` |
 | 同步策略 | 对比新的固定上游版本，只同步项目初始化命令、参数与幂等语义变化；MCP 全局安装继续由 CodeGraph 自己管理 |
 

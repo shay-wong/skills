@@ -104,4 +104,4 @@ Off the main flow entirely.
 
 ## Precondition
 
-**`/configure-skills`**: run once to select optional project tools such as CodeGraph and Deslop, and before tracker-dependent engineering flows when no active Panel or Jira planning context supplies the remote publication target. Active Panel flows still keep local `.scratch` mirrors. It also configures the issue tracker, triage labels, and doc layout the other skills assume. Custom issue trackers work.
+**`/configure-skills`**: run once to select optional project tools such as CodeGraph and Deslop, migrate legacy `CONTEXT.md` domain docs to the current `GLOSSARY.md` names, and configure the issue tracker, triage labels, and doc layout the other skills assume. Use it before tracker-dependent engineering flows when no active Panel or Jira planning context supplies the remote publication target. Active Panel flows still keep local `.scratch` mirrors. Custom issue trackers work.

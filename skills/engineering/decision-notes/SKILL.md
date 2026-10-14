@@ -127,8 +127,12 @@ Use the matching file in `templates/`. Read these references only when the branc
 - `references/archiving.md`: supersession, archival, and safe consolidation.
 - `references/prose-checklist.md`: repository-verifiable prose.
 - `references/simplification-checklist.md`: durable simplification decisions.
+- `references/quality-gate.md`: semantic self-review after writing a Note.
+- `references/verification.md`: script behavior and CI integration.
 
 Write or update an implemented Agent Note no later than the code change's commit or PR. A proposed Note becomes implemented by rewriting proposal language as current facts. A rejected Note keeps the proposal and records why it lost. An archived Note remains frozen.
+
+Before creating a Note, search active records by module and mechanism name. Classify every match immediately as unrelated, partially overlapping, fully replaced, or an obsolete proposal. Update the owning Note when only paths, symbols, defaults, or verification facts changed; create a replacement only when the decision or rationale changed.
 
 ## Consolidation Rules
 
@@ -138,6 +142,28 @@ Write or update an implemented Agent Note no later than the code change's commit
 - Delete an old record only when the new record preserves every unique rationale, alternative, consequence, verification requirement, and inbound link.
 - Never rewrite an old record to claim it made the opposite decision.
 
+Archive an implemented Note only when its future guidance value is low. Use the archive command so the file is moved without overwriting an existing target and sealed in `.agents/notes/archived/manifest.json`:
+
+```sh
+npx tsx <skill-directory>/scripts/archive-agent-note.ts \
+  .agents/notes/implemented/<class>/<filename>.md \
+  [--superseded-by .agents/notes/implemented/<class>/<replacement>.md]
+```
+
+Archived Notes are immutable. Keep ownership boundaries, negative guarantees, security constraints, tempting rejected alternatives, and reintroduction conditions active while they still guide future work. Never archive a proposed Note; reject or delete it according to whether it still prevents a likely mistake.
+
+## Optional Local Board
+
+Generate a board only when the user asks for one. `--init` creates a lightweight local page that reads a user-selected notes directory. `--bundle` embeds Note content in a standalone file; use `--metadata-only` before sharing when full rationale must remain private.
+
+```sh
+npx tsx <skill-directory>/scripts/build-board.ts --init board.html "Project decisions"
+npx tsx <skill-directory>/scripts/build-board.ts --bundle .agents/notes demo.html "Project decisions"
+npx tsx <skill-directory>/scripts/build-board.ts --bundle --metadata-only .agents/notes public.html "Project decisions"
+```
+
+Do not generate a board during installation, ordinary Note updates, or CI. Do not overwrite a non-board file unless the user explicitly authorizes `--force`.
+
 ## Verification
 
 For Agent Notes, run:
@@ -145,6 +171,9 @@ For Agent Notes, run:
 ```sh
 npx tsx <skill-directory>/scripts/verify-agent-note-tree.ts
 npx tsx <skill-directory>/scripts/verify-agent-note-format.ts
+npx tsx <skill-directory>/scripts/verify-archived-agent-notes.ts
 ```
+
+When the repository uses source comments such as `// Note: ... .agents/notes/...`, run `check-note-anchors.ts` as an advisory report. It must not become a blocking CI gate.
 
 For ADRs, verify the filename number, index row, status, alternatives, consequences, replacement links, and repository-local references. Use the repository's existing ADR validation when one exists.

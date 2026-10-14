@@ -10,16 +10,19 @@ Use Deslop to find reusable code before another copy is written and to investiga
 ## Choose the query
 
 - **Before authoring new code:** prefer the Deslop MCP `find-similar` tool. Send the proposed snippet and language, or an existing `path`, `start_byte`, and `end_byte` range when the draft is already in a file.
-- **Reviewing a changed file or block:** use `report-for-file` or `report-for-range`.
-- **Cleaning existing duplication across a repository:** start with `top-offenders`, then use `cluster-by-id` only for the cluster being considered.
+- **Reviewing a changed file or block:** use `duplicates` with `path`, plus `start_byte` and `end_byte` for a block.
+- **Cleaning existing duplication across a repository:** start with `duplicates`, then use `cluster-by-id` only for the cluster being considered.
+- **Checking why one exact pair was admitted:** use `compare-pair` with both concrete occurrences. Cluster mass ranks impact; it is not pair confidence.
+- **Preparing a safe extraction:** use the read-only `merge-plan` for the selected cluster, then hand the evidence to `implement` rather than editing from this Skill.
 
 Call `schema-doc` at most once per session when the response shape is unclear. Do not load it for every query.
 
 ## Interpret the evidence
 
-- An `identical` or `nearly_identical` match is a strong reuse signal. Prefer the canonical occurrence or extract one shared implementation.
-- A `loosely_similar` or `same_behavior` match requires reading both occurrences before deciding whether the behavior is genuinely distinct.
-- A `structural_only` match is shape evidence, not proof of duplication. Treat sibling boilerplate as distinct when reuse would make the interface worse.
+- If `find-similar` returns no clusters but its `existing` list names an occurrence, the code already exists once. Prefer calling or extracting that implementation instead of creating a second copy.
+- An `identical` or `nearly_identical` `kind` is a strong reuse signal. Prefer the canonical occurrence or extract one shared implementation.
+- A `loosely_similar` or `same_behavior` `kind` requires reading both occurrences before deciding whether the behavior is genuinely distinct.
+- A `structural_only` `kind` is shape evidence, not proof of duplication, and does not contribute to duplication figures. Treat sibling boilerplate as distinct when reuse would make the interface worse.
 - Never hide a cluster, relax project thresholds, or introduce cosmetic differences merely to silence a finding.
 
 Deslop evidence does not decide architecture by itself. Preserve a deliberate duplicate when the caller can name the boundary that makes coupling more expensive than repetition.
@@ -44,7 +47,7 @@ Report:
 
 1. Query mode and inspected scope.
 2. MCP or CLI path used.
-3. Relevant cluster IDs, match buckets, canonical occurrences, and affected locations.
+3. Relevant cluster IDs, clone kinds, canonical occurrences, and affected locations.
 4. One recommendation per cluster: reuse, extract, keep separate with a stated boundary, or investigate further.
 5. Any limitation, including a required post-write CLI rerun.
 

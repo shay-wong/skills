@@ -1,21 +1,19 @@
-# 按需阅读：校验脚本
+# 按需阅读：校验与本地工具
 
-> SKILL §5 的展开。接入 CI 时对照；本地轻量使用时跳过。
+> 接入 CI、归档或生成本地看板时对照。脚本均从宿主仓库根目录运行，路径相对于 Skill 安装目录。
 
-## 门禁（均为 tsx，零新增依赖）
+## 阻断检查
 
-1. **`verify-agent-note-tree`**（`scripts/agent-note-tree.ts` + `scripts/verify-agent-note-tree.ts`）
-   - 校验 lifecycle 封闭集 `proposed/implemented/rejected` + `archived`、class 封闭集 6 个、路径深度 `{lifecycle}/{class}/file.md`、文件名 `yyyy-mm-dd-topic.md`、禁止 `INDEX.md`。
+1. **`verify-agent-note-tree.ts`**：检查 lifecycle、class、路径深度、日期文件名、禁止 `INDEX.md`，并验证 active Note 内指向 Note tree 的相对 Markdown 链接。
+2. **`verify-agent-note-format.ts`**：检查头部与 lifecycle 一致、Status 唯一、首节、必需节、implemented 禁用提案标题和 Alternatives。兼容 BOM、CRLF、中文标题、全角冒号和受支持的中文小节别名；代码块、引用和 HTML 注释不参与结构识别。
+3. **`verify-archived-agent-notes.ts`**：检查归档头部、`manifest.json` SHA-256 封印和 append-only 历史。有 Git 时通过 `AGENT_NOTE_ARCHIVE_BASE_REF` 指定变更前基线；无 Git 时只校验磁盘哈希。`--write` 只追加缺失封印，不重写已有条目。
 
-2. **`verify-agent-note-format`**（`scripts/verify-agent-note-format.ts`）
-   - 校验头三行 `# Agent Note:` / 空行 / `Status:` 与 lifecycle 一致、Status 唯一、`## Problem` 首节、per-lifecycle 必需节与禁用节、`## Alternatives considered` 必写、grandfather 仅对 2026-07-05 前有效、禁止 legacy 债务标记。
+轻量个人仓库先运行前两个。首次产生归档后启用第三个。团队仓库可复制 `templates/verify-notes.yml` 到宿主的 `.github/workflows/`，并确认项目级 Skill 路径已提交。模板留在 Skill 目录时不会自行执行。
 
-3. **`verify-archived-agent-notes`**（可选，团队需要冻结清单时再加）
-   - Harness 原版校验 `archived/` 单文件 + `Archived: YYYY-MM-DD` + sidecar 哈希 + manifest。本项目默认不带，轻量可先不接。
+## 非阻断工具
 
-## 接入建议
+- `check-note-anchors.ts` 扫描源码中的 `// Note:`、`# Note:` 等锚点，报告悬空路径和没有入站代码锚点的 implemented Note。退出码始终为 0，不放进阻断 CI。
+- `build-board.ts --init board.html "名称"` 生成按需读取本地目录的轻量页面。
+- `build-board.ts --bundle .agents/notes demo.html "名称"` 生成内嵌正文的独立文件。公开分享时加 `--metadata-only`，只保留元数据与关系。默认拒绝覆盖非看板文件，只有用户明确授权时才用 `--force`。
 
-- 轻量：接前两个即可（`archived` 用到再加第三个）。
-- 完整：前两个串进 `doc-sync`，与 `verify-md-links` / `verify-doc-refs` 同链，失败即红。
-
-来源：Harness `scripts/agent-note-tree.ts` / `verify-agent-note-format.ts` / `verify-archived-agent-notes.ts`（本项目为中文单语精简版，不含翻译配对）。
+看板是按需本地产物，不在安装、普通 Note 更新或 CI 中自动生成。

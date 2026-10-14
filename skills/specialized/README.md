@@ -3,6 +3,7 @@
 Absorbed vertical technical Skills. They are linked into local Skill directories for discovery, but are not promoted in the inherited Matt plugin or top-level curated surface.
 
 - **[agent-payment-x402](./agent-payment-x402/SKILL.md)**: Add x402 payment execution to AI agents with per-task budgets, spending controls, and non-custodial wallets.
+- **[bengali-nlp](./bengali-nlp/SKILL.md)**: Bengali text processing patterns for Unicode normalization, script detection, tokenization, conjunct handling, and AI applications.
 - **[cisco-ios-patterns](./cisco-ios-patterns/SKILL.md)**: Cisco IOS and IOS-XE review patterns for show commands, config hierarchy, wildcard masks, ACL placement, interface hygiene, and safe change-window verification.
 - **[defi-amm-security](./defi-amm-security/SKILL.md)**: Security checklist for Solidity AMM contracts, liquidity pools, and swap flows.
 - **[evm-token-decimals](./evm-token-decimals/SKILL.md)**: Prevent silent decimal mismatch bugs across EVM chains.
@@ -22,3 +23,4 @@ Absorbed vertical technical Skills. They are linked into local Skill directories
 - **[network-config-validation](./network-config-validation/SKILL.md)**: Pre-deployment checks for router and switch configuration, including dangerous commands, duplicate addresses, subnet overlaps, stale references, management-plane risk, and IOS-style security hygiene.
 - **[network-interface-health](./network-interface-health/SKILL.md)**: Diagnose interface errors, drops, CRCs, duplex mismatches, flapping, speed negotiation issues, and counter trends on routers, switches, and Linux hosts.
 - **[nodejs-keccak256](./nodejs-keccak256/SKILL.md)**: Prevent Ethereum hashing bugs in JavaScript and TypeScript.
+- **[osint-investigation](./osint-investigation/SKILL.md)**: Investigate sparse public clues through evidence extraction, cross-source verification, competing explanations, and uncertainty reporting.

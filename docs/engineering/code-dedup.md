@@ -1,6 +1,6 @@
 ## What it does
 
-`code-dedup` asks Deslop whether an implementation already exists before another copy is written, and investigates duplicate clusters in existing code. It chooses the narrowest query for the job: `find-similar` while authoring, file or range reports for a focused review, and ranked clusters for repository cleanup.
+`code-dedup` asks Deslop whether an implementation already exists before another copy is written, and investigates duplicate clusters in existing code. It chooses the narrowest query for the job: `find-similar` while authoring, filtered `duplicates` queries for focused review or repository cleanup, and pair or merge-plan evidence only after a candidate is selected.
 
 It reports evidence and a recommended reuse boundary but never edits code. [implement](https://aihero.dev/skills-implement) owns the change, tests, and closeout.
 
@@ -27,7 +27,7 @@ The `.deslop.toml` marker is required only for automatic use inside `implement` 
 
 An identical or nearly identical match strongly favors reuse. Looser behavioral matches require reading both implementations. A structural-only match is not enough by itself because sibling boilerplate can share a shape without sharing a useful abstraction.
 
-For an existing repository cleanup, the skill starts with the worst clusters and opens only the cluster being considered. It does not load the whole report into context when one focused query answers the question.
+When `find-similar` returns no cluster but its `existing` list names one occurrence, the implementation still already exists and should be reused or extracted. For an existing repository cleanup, the skill filters `duplicates`, opens only the cluster being considered, and uses `compare-pair` or the read-only `merge-plan` when that narrower evidence is needed. Cluster mass ranks impact, while `kind` describes the match.
 
 ## Common questions
 
@@ -46,7 +46,7 @@ They use different evidence. Deslop asks whether similar code exists. Ponytail a
 ## It's working if
 
 - A pre-authoring query happens before the new code unit is written.
-- The report names the query mode, cluster IDs, match buckets, canonical occurrences, and affected locations.
+- The report names the query mode, cluster IDs, clone kinds, canonical occurrences, and affected locations.
 - Each cluster ends with one bounded recommendation: reuse, extract, keep separate with a stated boundary, or investigate further.
 - CLI fallback reads the JSON report and states when a post-write rerun is still required.
 - No installation, MCP configuration, threshold change, or code edit occurs inside the Skill itself.

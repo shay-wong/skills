@@ -24,7 +24,7 @@ The standard picker installs exactly what you select. To resolve declared extern
 npx --yes --package=github:shay-wong/skills -- install --with-deps --yes review
 ```
 
-Replace `review` with one or more Skill names. The external dependency checklist includes Ponytail, GitHub PR feedback, game review, Deslop duplicate analysis, and Anthropic frontend design when their owning Skills are selected. Git-backed dependencies are pinned in `.agents/external-dependencies.json`; the preconfigured `openai-curated` marketplace is resolved by Codex. Deslop uses Homebrew on macOS and Linux or Scoop on Windows, verifies both executables, then registers the global `deslop` STDIO server through `codex mcp add deslop -- deslop-mcp`. A matching registration is kept; a conflicting registration fails without being replaced. Skills already in this repository are not shown as dependencies. To choose dependencies individually, omit `--with-deps`; use Up/Down and Space in the checkbox list, then press Enter. To install only the selected repository Skills, use `--without-deps`. `--with-deps` installs every listed dependency, so use the checklist when you want individual control. Installing Codex plugins or registering Deslop MCP requires the `codex` CLI.
+Replace `review` with one or more Skill names. The external dependency checklist includes Ponytail, GitHub PR feedback, game review, Deslop duplicate analysis, and Anthropic frontend design when their owning Skills are selected. Git-backed dependencies are pinned in `.agents/external-dependencies.json`; the preconfigured `openai-curated` marketplace is resolved by Codex. Deslop uses Homebrew on macOS and Linux or Scoop on Windows, verifies both executables, then registers the global `deslop` STDIO server through `codex mcp add deslop -- deslop-mcp --root .`. A matching registration is kept; a conflicting registration fails without being replaced. Skills already in this repository are not shown as dependencies. To choose dependencies individually, omit `--with-deps`; use Up/Down and Space in the checkbox list, then press Enter. To install only the selected repository Skills, use `--without-deps`. `--with-deps` installs every listed dependency, so use the checklist when you want individual control. Installing Codex plugins or registering Deslop MCP requires the `codex` CLI.
 
 Set up optional repository tools from the project root:
 
@@ -39,6 +39,7 @@ The checklist can initialize CodeGraph with `codegraph init` and opt the reposit
 Run `/configure-skills` when the repo needs optional project tools, a configured tracker, triage labels, or domain-doc layout. Active Panel and Jira planning conversations dual-write `to-spec` and `to-tickets` to `.scratch` and through `manage-panel` without duplicating remote tracker setup; published tickets record their Panel identity and status locally, and `implement` keeps later execution-state transitions synchronized. The configuration flow will:
 
 - Let you select CodeGraph, Deslop, both, or neither
+- Offer to migrate legacy `CONTEXT.md` and `CONTEXT-MAP.md` files without overwriting current domain docs
 - Ask you which issue tracker you want to use (GitHub, Linear, or local files)
 - Ask you what labels you apply to tickets when you triage them (`/triage` uses labels)
 - Ask you where you want to save any docs we create
@@ -165,7 +166,7 @@ Skills for daily code work.
 - **[grill-with-docs](./skills/engineering/grill-with-docs/SKILL.md)**: Grilling session that also builds your project's domain model, sharpening terminology and updating `GLOSSARY.md` and ADRs inline.
 - **[triage](./skills/engineering/triage/SKILL.md)**: Move issues through a state machine of triage roles.
 - **[improve-codebase-architecture](./skills/engineering/improve-codebase-architecture/SKILL.md)**: Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
-- **[configure-skills](./skills/engineering/configure-skills/SKILL.md)**: Initialize optional project tools and configure this repo's issue tracker fallback, triage labels, and domain doc layout.
+- **[configure-skills](./skills/engineering/configure-skills/SKILL.md)**: Initialize optional project tools, migrate legacy domain docs, and configure this repo's issue tracker fallback, triage labels, and domain doc layout.
 - **[to-spec](./skills/engineering/to-spec/SKILL.md)**: Turn the current conversation into a spec and dual-write it to `.scratch` plus active Panel context, or publish it to the configured tracker. No interview, just synthesis of what you've already discussed.
 - **[to-tickets](./skills/engineering/to-tickets/SKILL.md)**: Turn a plan, spec, or conversation into tracer-bullet tickets with explicit blocking edges, dual-written to `.scratch` plus active Panel context, or published to the configured tracker.
 - **[implement](./skills/engineering/implement/SKILL.md)**: Build the work described by a spec or tickets, close through `/review`, and dual-write active Panel execution status to its `.scratch` mirror.

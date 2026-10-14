@@ -88,7 +88,7 @@ function runCommand(command, args) {
 }
 
 function projectToolCommands(tool, target) {
-  if (tool.id === "codegraph") return [["codegraph", ["init", target]]];
+  if (tool.id === "codegraph") return [["codegraph", ["init", target, "--yes"]]];
   return [["deslop", [target, "--notext", "--nohtml", "--no-color"]]];
 }
 

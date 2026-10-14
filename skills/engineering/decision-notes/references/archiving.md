@@ -1,25 +1,59 @@
-# 按需阅读：归档与合并删除
+# 按需阅读：归档、生命周期治理与冻结
 
-> 提炼自 `dsh-archive-agent-notes` 与 `.agents/notes/README.md`。收尾或复盘时对照；日常改动跳过。
+> 收尾、复盘或里程碑清理时对照。日常改动只处理当前模块和搜索命中的 Note，不做无关全库清理。
 
-## 何时归档（implemented → archived）
+## 日常治理
 
-按“未来参考价值”语义判定，而非字数/年龄/配额：
+- 修改模块时，就地更新持有该决定的现行 Note 事实。
+- 新建 Note 前按模块名和机制名搜索 active tree，并把每个命中分类为无关、部分重叠、完全取代或过时提案。
+- 部分取代时保留两篇并互链。完全取代时先吸收旧篇的独特理由、备选、后果、验证缺口和重引入条件，再决定删除或归档。
+- 季度复盘、大版本发布或 active tree 已影响检索时，再集中处理日常搜索遗漏的记录。
 
-- **保留 active**：rationale、alternatives、negative guarantee、持久化/wire 语义、ownership 边界、安全规则、重引入条件仍可能指导未来改动。
-- **移入 archived**：已完成且上述价值已低；冻结为 `archived/{class}/yyyy-mm-dd-topic.md`。
+## 何时保留 Active
 
-每新增一条 Note 即触发同域已落地 Note 的 supersession 审计：同改动内归档被完全取代者，保留并互链部分取代者。
+不按字数、年龄或配额判断。下列内容仍指导未来工作时必须留在 active tree：
 
-## 怎么归档
+- 模块职责与所有权边界；
+- `never`、不兼容或不提供某能力等否定性保证；
+- 安全、隐私或合规约束；
+- 仍具诱惑力、容易被再次提出的失败方案；
+- 持久化、wire、schema、迁移和兼容性语义；
+- 明确的重新引入条件。
 
-- 移动单文件 `archived/{class}/yyyy-mm-dd-topic.md`，保留 `Status: implemented`，在状态行下方插入 `Archived: YYYY-MM-DD`，修复或删除入链；除此之外不改内容。
-- 归档后永久冻结：不编辑、不重排、不移动、不作为现行权威；文档门禁跳过 archived 的出链；主动引用历史时可链入。
+只有 implemented Note 已完成且这些指导价值很低时，才移入 `archived/{class}/yyyy-mm-dd-topic.md`。
 
-## 合并删除（完全取代）
+## 删除、拒绝与归档
 
-仅当旧 Note 被新 Note **完全取代**时可删除；部分取代两者都留并互链。
+- **删除**：新 Note 已吸收旧篇所有独特价值，且所有入站链接已修复。
+- **拒绝**：proposed 的前提消失或决定不再推进时，移入 `rejected/` 并写 `Status: rejected: <原因>`。没有防止重犯价值的提案直接删除。
+- **归档**：旧篇已被取代但仍有独立历史杠杆时，保留为冻结快照。proposed Note 不得归档。
 
-删除前必须：保留旧 Note 的所有独特 rationale/alternative/consequence/验证要求/覆盖缺口到新 Note；修复所有入链。禁止把旧文件改写成对立面，也禁止“只留 git 历史”。
+`feature` Note 只有在能力已从生产代码、配置、schema、持久化、wire、迁移和兼容行为中消失，文档不再宣称可用，测试也不再把它当作可用行为时，才能被 removal Note 完全吸收。
 
-- `feature` 的新增 Note 只有在能力已从生产代码/配置/schema/持久化/wire/迁移/兼容行为中完全消失、文档不再宣称可用、测试不再以其为可用行为时，才可被后续 removal Note 合并。
+## 标准归档命令
+
+从宿主仓库根目录执行：
+
+```sh
+npx tsx .agents/skills/decision-notes/scripts/archive-agent-note.ts \
+  .agents/notes/implemented/<class>/<filename>.md \
+  [--superseded-by .agents/notes/implemented/<class>/<replacement>.md]
+```
+
+命令会：
+
+1. 在 `Status: implemented` 下一行插入 `Archived: YYYY-MM-DD`。
+2. 拒绝覆盖同名归档文件，再移动到 `archived/<class>/`。
+3. 把 SHA-256 封印追加到 `archived/manifest.json`。
+4. 报告 active Note 中仍指向旧位置的相对 Markdown 链接。
+5. 使用 `--superseded-by` 时，在新 Note 中增加指向历史快照的链接，不修改归档正文。
+
+已有归档但缺少 manifest 时，可在确认当前内容可信后补封印：
+
+```sh
+npx tsx .agents/skills/decision-notes/scripts/verify-archived-agent-notes.ts --write
+```
+
+## 永久冻结契约
+
+归档后只允许新增其他归档和 manifest 条目。不得编辑、翻译、重排、移动或删除既有归档，也不得修改或移除已有封印。`verify-archived-agent-notes.ts` 校验头部、磁盘哈希以及相对 Git 基线的 append-only 行为。归档只用于历史考据，当前行为以 active `implemented/` Note 为准。

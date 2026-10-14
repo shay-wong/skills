@@ -1,10 +1,10 @@
 ## What it does
 
-`configure-skills` initializes any selected repository tools, then answers three questions about one repo: where issues live, what the triage labels are called, and where the domain docs sit. It records the answers as markdown files under `docs/agents/`.
+`configure-skills` initializes any selected repository tools, migrates legacy domain-doc filenames when needed, then answers three questions about one repo: where issues live, what the triage labels are called, and where the domain docs sit. It records the answers as markdown files under `docs/agents/`.
 
 Those files are the only thing that varies between repos. The skills themselves are identical everywhere; they read `docs/agents/issue-tracker.md` at run time and do what it says. That is why the set is not tied to GitHub, and why no skill file ever needs editing to point it somewhere else. Invoking it with "link the skills to a custom issue tracker" works with anything you can connect to programmatically, with zero changes to the skills.
 
-It is a prompt-driven skill, not a deterministic script. It reads your `git remote`, your existing `CLAUDE.md`, your existing `GLOSSARY.md`, proposes what it found, and waits for you to confirm before writing anything.
+It is a prompt-driven skill, not a deterministic script. It reads your `git remote`, your existing instruction and domain-doc files, proposes what it found, and waits for you to confirm before writing anything. If it finds `CONTEXT.md` or `CONTEXT-MAP.md`, it offers to rename them before configuring the current `GLOSSARY.md` convention.
 
 Before those prompts, it runs the repository's project-tool initializer. That separate checklist can initialize CodeGraph, Deslop, both, or neither. CodeGraph builds `.codegraph/`; Deslop preserves or creates `.deslop.toml`, ignores `.deslop/` output, and performs the first scan.
 
@@ -26,6 +26,21 @@ It writes into the repo you run it in:
 | An `## Agent skills` block | whichever of `CLAUDE.md` / `AGENTS.md` already exists |
 
 All of it is committed markdown. There is no user-level or global mode: the config lives in the repo, so every repo gets its own copy.
+
+## The safe migration
+
+Older releases called domain docs `CONTEXT.md` and `CONTEXT-MAP.md`. Current Skills only read `GLOSSARY.md` and `GLOSSARY-MAP.md`, so leaving the old files in place can make existing domain knowledge disappear from later conversations.
+
+The migration is deliberately conservative:
+
+| Repository state | What happens |
+| --- | --- |
+| Only legacy names exist | It shows every planned rename, asks once, then preserves tracked history with `git mv` |
+| A matching `GLOSSARY.md` or `GLOSSARY-MAP.md` already exists | It stops without moving or merging anything |
+| Old names appear in current instructions or map links | It updates those live references after the rename |
+| Old names appear only in changelogs, release notes, logs, or archives | It leaves that historical text unchanged |
+
+There is no compatibility copy. Once confirmed, the repo has one current set of domain docs rather than two names for the same material.
 
 ## The three decisions
 
@@ -60,6 +75,10 @@ No. GitHub, GitLab and local markdown under `.scratch/` all ship as ready-made t
 
 One upstream answer said yes. The skill's own closing message is softer: it tells you re-running is only needed to switch trackers or start over. Both are defensible and the reason for the gap is real: the seed templates change between versions, so a `docs/agents/issue-tracker.md` written by an older release can go stale against the skills now reading it. If a downstream skill starts doing something the docs describe differently, re-running is the cheap fix.
 
+**What happens to an existing `CONTEXT.md`?**
+
+The skill finds legacy files throughout the repo and proposes the corresponding `GLOSSARY.md` names. It does not overwrite a new-name file or guess how to merge two copies. A conflict stops the migration so you can decide which content is canonical first.
+
 **It wrote to `CLAUDE.md`, but I'm on Codex.**
 
 Known gap, still open. The file-selection rule is "edit `CLAUDE.md` if it exists, else `AGENTS.md`": it checks which file exists, not which [harness](https://www.aihero.dev/ai-coding-dictionary/harness) is running. A repo with a `CLAUDE.md` left over from Claude Code will get its `## Agent skills` block somewhere Codex never reads. Two workarounds are in circulation: move the block to `AGENTS.md` by hand, or keep `AGENTS.md` canonical and make `CLAUDE.md` a one-line pointer at it. If neither file exists, the skill asks you which to create rather than picking, which has confused people who expected it to just decide.
@@ -86,6 +105,7 @@ One long-standing complaint says yes, in these words: *"having a skill to set up
 ## It's working if
 
 - `docs/agents/issue-tracker.md` and `docs/agents/domain.md` exist, plus `triage-labels.md` if `triage` is installed.
+- Legacy `CONTEXT.md` and `CONTEXT-MAP.md` files were either absent or explicitly migrated without overwriting a current domain doc.
 - An `## Agent skills` section appears in the instruction file your harness actually reads, with a one-line summary pointing at each of those files.
 - The tracker it proposed matches the remote you really use, and the label strings match labels that really exist in your tracker.
 - Without active Panel context, `/to-tickets` publishes without asking you where issues live, and `/triage` applies labels rather than inventing them. With active Panel context, `.scratch` mirrors are created automatically.

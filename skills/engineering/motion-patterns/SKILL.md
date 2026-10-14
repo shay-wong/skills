@@ -91,6 +91,8 @@ Miss any one of these and the exit animation silently fails.
 - `layoutId` — links two separate elements, crossfading between them across renders
 
 Use `layout="position"` on text inside an expanding container to prevent text reflow from animating.
+Every simultaneously mounted shared element needs a unique `layoutId`. Append
+the entity or component-instance ID when more than one instance can be present.
 
 ## Code Examples
 
@@ -415,6 +417,14 @@ This skill does **not** cover:
 - SVG path drawing or morphing → see `motion-advanced`
 - Custom animation hooks → see `motion-advanced`
 - CSS-only transitions not using `motion/react`
+
+## Verification
+
+- No cumulative layout shift or hydration warning is introduced.
+- Keyboard navigation, Escape close, focus trapping, scroll locking, and dialog roles work for modal surfaces.
+- Reduced-motion behavior disables transforms and preserves understandable state changes.
+- Conditional children have stable keys, explicit exits, and an intentional `AnimatePresence` mode.
+- Animations stop cleanly on unmount, and shared `layoutId` values are unique among mounted instances.
 
 ## Anti-Patterns
 

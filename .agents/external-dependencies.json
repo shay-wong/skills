@@ -36,7 +36,7 @@
         "codexMcp": {
           "name": "deslop",
           "command": "deslop-mcp",
-          "args": []
+          "args": ["--root", "."]
         },
         "install": {
           "darwin": {
@@ -67,7 +67,7 @@
         "codexMcp": {
           "name": "deslop",
           "command": "deslop-mcp",
-          "args": []
+          "args": ["--root", "."]
         },
         "install": {
           "darwin": {

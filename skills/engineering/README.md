@@ -10,7 +10,7 @@ Reachable only when you type them (Claude Code: `disable-model-invocation: true`
 - **[grill-with-docs](./grill-with-docs/SKILL.md)**: Grilling session that also builds your project's domain model, sharpening terminology and updating `GLOSSARY.md` and ADRs inline.
 - **[triage](./triage/SKILL.md)**: Move issues through a state machine of triage roles.
 - **[improve-codebase-architecture](./improve-codebase-architecture/SKILL.md)**: Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
-- **[configure-skills](./configure-skills/SKILL.md)**: Configure this repo's issue tracker fallback, triage labels, and domain doc layout when active Panel context does not provide the publication target.
+- **[configure-skills](./configure-skills/SKILL.md)**: Migrate legacy domain-doc names and configure this repo's issue tracker fallback, triage labels, and domain doc layout when active Panel context does not provide the publication target.
 - **[to-spec](./to-spec/SKILL.md)**: Turn the current conversation into a spec and dual-write it to `.scratch` plus active Panel context, or publish it to the configured tracker.
 - **[to-tickets](./to-tickets/SKILL.md)**: Turn a plan, spec, or conversation into tracer-bullet tickets with explicit blocking edges, dual-written to `.scratch` plus active Panel context, or published to the configured tracker.
 - **[implement](./implement/SKILL.md)**: Build the work described by a spec or tickets, close through `/review`, and dual-write active Panel execution status to its `.scratch` mirror.
@@ -49,6 +49,8 @@ Absorbed third-party engineering and technical Skills, including ECC. Install th
 - **[agent-eval](./agent-eval/SKILL.md)**: Head-to-head comparison of coding agents (Claude Code, Aider, Codex, etc.) on custom tasks with pass rate, cost, time, and consistency metrics.
 - **[agent-harness-construction](./agent-harness-construction/SKILL.md)**: Design and optimize AI agent action spaces, tool definitions, and observation formatting for higher completion rates.
 - **[agent-introspection-debugging](./agent-introspection-debugging/SKILL.md)**: Structured self-debugging workflow for AI agent failures using capture, diagnosis, contained recovery, and introspection reports.
+- **[agent-runtime-gateway-smoke-test](./agent-runtime-gateway-smoke-test/SKILL.md)**: Verify a local agent API, temporary gateway tunnel, and remote sandbox callback without using private production data.
+- **[agent-security-hardening](./agent-security-hardening/SKILL.md)**: Harden AI agent runtimes that process untrusted content, invoke tools, write files, or handle credentials.
 - **[agentic-os](./agentic-os/SKILL.md)**: Build persistent multi-agent operating systems on Claude Code.
 - **[ai-regression-testing](./ai-regression-testing/SKILL.md)**: Regression testing strategies for AI-assisted development.
 - **[android-clean-architecture](./android-clean-architecture/SKILL.md)**: Clean Architecture patterns for Android and Kotlin Multiplatform projects : module structure, dependency rules, UseCases, Repositories, and data layer patterns.
@@ -112,6 +114,7 @@ Absorbed third-party engineering and technical Skills, including ECC. Install th
 - **[golang-patterns](./golang-patterns/SKILL.md)**: Idiomatic Go patterns, best practices, and conventions for building robust, efficient, and maintainable Go applications.
 - **[golang-testing](./golang-testing/SKILL.md)**: Go testing patterns including table-driven tests, subtests, benchmarks, fuzzing, and test coverage.
 - **[hexagonal-architecture](./hexagonal-architecture/SKILL.md)**: Design, implement, and refactor Ports & Adapters systems with clear domain boundaries, dependency inversion, and testable use-case orchestration across TypeScript, Java, Kotlin, and Go services.
+- **[i18n-sync](./i18n-sync/SKILL.md)**: Translate and synchronize application JSON locale files using source-key usage, project terminology, and focused validation.
 - **[inherit-legacy-style](./inherit-legacy-style/SKILL.md)**: Legacy-project style inheritance skill.
 - **[intent-driven-development](./intent-driven-development/SKILL.md)**: Turn ambiguous or high-impact product and engineering changes into scoped, verifiable acceptance criteria before or alongside implementation.
 - **[ios-icon-gen](./ios-icon-gen/SKILL.md)**: Generate iOS app icons as PNG imagesets for Xcode asset catalogs from SF Symbols (5000+ Apple-native) or Iconify API (275k+ open source icons from 200+ collections).
@@ -133,12 +136,14 @@ Absorbed third-party engineering and technical Skills, including ECC. Install th
 - **[loop-design-check](./loop-design-check/SKILL.md)**: Design a goal-oriented agent loop, and review it for the ways loops go wrong : spinning and burning tokens, Goodhart-gaming the verifier, or running a wrong answer to completion.
 - **[make-interfaces-feel-better](./make-interfaces-feel-better/SKILL.md)**: Apply concrete design-engineering details that make interfaces feel polished.
 - **[manim-video](./manim-video/SKILL.md)**: Build reusable Manim explainers for technical concepts, graphs, system diagrams, and product walkthroughs, then hand off to the wider ECC video stack if needed.
+- **[mcp-dependency-review](./mcp-dependency-review/SKILL.md)**: Statically review repository MCP configuration for mutable package references without executing discovered servers.
 - **[mcp-server-patterns](./mcp-server-patterns/SKILL.md)**: Build MCP servers with Node/TypeScript SDK : tools, resources, prompts, Zod validation, stdio vs Streamable HTTP.
 - **[mle-workflow](./mle-workflow/SKILL.md)**: Production machine-learning engineering workflow for data contracts, reproducible training, model evaluation, deployment, monitoring, and rollback.
+- **[module-regression](./module-regression/SKILL.md)**: Maintain a regression ledger that maps changed modules to downstream consumers and executable acceptance commands.
 - **[motion-advanced](./motion-advanced/SKILL.md)**: Advanced motion patterns for React / Next.js : drag & drop, gestures, text animations, SVG path drawing, custom hooks, imperative sequences (useAnimate), loaders, and the full API decision tree.
 - **[motion-foundations](./motion-foundations/SKILL.md)**: Motion tokens, spring presets, performance rules, device adaptation, accessibility enforcement, and SSR safety for React / Next.js using motion/react.
 - **[motion-patterns](./motion-patterns/SKILL.md)**: Production-ready animation patterns for React / Next.js : button, modal, toast, stagger, page transitions, exit animations, scroll, and layout : built on motion-foundations tokens and springs.
-- **[motion-ui](./motion-ui/SKILL.md)**: Production-ready UI motion system for React/Next.js.
+- **[mybatis-patterns](./mybatis-patterns/SKILL.md)**: MyBatis and MyBatis-Spring patterns for mapper design, safe dynamic SQL, transactions, batching, pagination, and query performance.
 - **[mysql-patterns](./mysql-patterns/SKILL.md)**: MySQL and MariaDB schema, query, indexing, transaction, replication, and connection-pool patterns for production backends.
 - **[nestjs-patterns](./nestjs-patterns/SKILL.md)**: NestJS architecture patterns for modules, controllers, providers, DTO validation, guards, interceptors, config, and production-grade TypeScript backends.
 - **[nextjs-turbopack](./nextjs-turbopack/SKILL.md)**: Next.js 16+ and Turbopack : incremental bundling, FS caching, dev speed, and when to use Turbopack vs webpack.
@@ -149,6 +154,7 @@ Absorbed third-party engineering and technical Skills, including ECC. Install th
 - **[plankton-code-quality](./plankton-code-quality/SKILL.md)**: Write-time code quality enforcement using Plankton : auto-formatting, linting, and Claude-powered fixes on every file edit via hooks.
 - **[postgres-patterns](./postgres-patterns/SKILL.md)**: PostgreSQL database patterns for query optimization, schema design, indexing, and security.
 - **[prisma-patterns](./prisma-patterns/SKILL.md)**: Prisma ORM patterns for TypeScript backends : schema design, query optimization, transactions, pagination, and critical traps like updateMany returning count not records, $transaction timeouts, migrate dev resetting the DB, @updatedAt skipped on bulk writes, and serverless connection exhaustion.
+- **[prompt-caching-strategy](./prompt-caching-strategy/SKILL.md)**: Structure and measure reusable LLM prompt prefixes to improve cache hit rate, cost, and latency.
 - **[production-audit](./production-audit/SKILL.md)**: Local-evidence production readiness audit for shipped apps, pre-launch reviews, post-merge checks, and "what breaks in prod?" questions without sending repo data to an external audit service.
 - **[python-patterns](./python-patterns/SKILL.md)**: Pythonic idioms, PEP 8 standards, type hints, and best practices for building robust, efficient, and maintainable Python applications.
 - **[python-testing](./python-testing/SKILL.md)**: Python testing strategies using pytest, TDD methodology, fixtures, mocking, parametrization, and coverage requirements.
@@ -157,6 +163,7 @@ Absorbed third-party engineering and technical Skills, including ECC. Install th
 - **[quarkus-security](./quarkus-security/SKILL.md)**: Quarkus Security best practices for authentication, authorization, JWT/OIDC, RBAC, input validation, CSRF, secrets management, and dependency security.
 - **[quarkus-tdd](./quarkus-tdd/SKILL.md)**: Test-driven development for Quarkus 3.x LTS using JUnit 5, Mockito, REST Assured, Camel testing, and JaCoCo.
 - **[quarkus-verification](./quarkus-verification/SKILL.md)**: Verification loop for Quarkus projects: build, static analysis, tests with coverage, security scans, native compilation, and diff review before release or PR.
+- **[rails-patterns](./rails-patterns/SKILL.md)**: Ruby on Rails 7.1+ and 8.x patterns for controllers, services, persistence, jobs, ViewComponent, Hotwire, and the Solid stack.
 - **[ralphinho-rfc-pipeline](./ralphinho-rfc-pipeline/SKILL.md)**: RFC-driven multi-agent DAG execution pattern with quality gates, merge queues, and work unit orchestration.
 - **[react-native-patterns](./react-native-patterns/SKILL.md)**: React Native and Expo app patterns : Expo Router navigation, state separation (server/client/route/form), TanStack Query data fetching with Zod, performant lists, NativeWind/StyleSheet styling, native APIs, and secure storage.
 - **[react-patterns](./react-patterns/SKILL.md)**: React 18/19 patterns including hooks discipline, server/client component boundaries, Suspense + error boundaries, form actions, data fetching, state management decision trees, and accessibility-first composition.
@@ -182,6 +189,7 @@ Absorbed third-party engineering and technical Skills, including ECC. Install th
 - **[swift-protocol-di-testing](./swift-protocol-di-testing/SKILL.md)**: Protocol-based dependency injection for testable Swift code : mock file system, network, and external APIs using focused protocols and Swift Testing.
 - **[swiftui-patterns](./swiftui-patterns/SKILL.md)**: SwiftUI architecture patterns, state management with @Observable, view composition, navigation, performance optimization, and modern iOS/macOS UI best practices.
 - **[team-agent-orchestration](./team-agent-orchestration/SKILL.md)**: Run team-based orchestration for agent squads using work items, ownership, agent Kanban, merge gates, and control pane handoffs.
+- **[test-collaboration](./test-collaboration/SKILL.md)**: Connect requirements, risks, defects, and cross-boundary contracts to stable test IDs and executable evidence.
 - **[terminal-opener](./terminal-opener/SKILL.md)**: Open an executable and its argument array in a visible terminal window through a reusable, shell-free launch plan with dry-run, JSON, capability detection, detached fallback, and standalone recovery modes.
 - **[tinystruct-patterns](./tinystruct-patterns/SKILL.md)**: Expert guidance for developing with the tinystruct Java framework.
 - **[ui-demo](./ui-demo/SKILL.md)**: Record polished UI demo videos using Playwright.
