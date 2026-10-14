@@ -18,6 +18,12 @@ Each independent feature, fix, refactor, docs change, config change, tooling cha
 
 An explicit message or task reference from you wins. Otherwise an active Panel Issue contributes its linked Jira `externalKey`, repository commit rules come next, and a commit with no valid reference stays unreferenced. A Panel Issue ID is never substituted for a missing Jira key.
 
+## History, not a session log
+
+A clear subject is enough for most commits. A body is reserved for non-obvious motivation or a durable compatibility, migration, deprecation or rollback boundary. It describes the final behavior instead of listing every changed file, helper, comment or implementation step.
+
+Verification commands and results, user confirmation and conversation history belong in the final report or review description unless the repository explicitly requires them in the commit message.
+
 ## Common questions
 
 **Will it commit everything in the working tree?**
@@ -32,9 +38,14 @@ No. Push and pull request creation require separate authorization.
 
 The commit omits the task reference. It does not expose the Panel Issue ID as though it were a Jira key.
 
+**Will the commit body list everything the agent changed and tested?**
+
+No. It keeps only context that remains useful in Git history. The implementation and verification record stays with the task report or review.
+
 ## It's working if
 
 - Every commit has one clear purpose.
+- Its message describes the resulting behavior without replaying the work session.
 - Jira-linked work uses the Jira key, while unlinked Panel work has no fabricated task reference.
 - Unrelated and sensitive files remain unstaged.
 - The final report names each short hash and every skipped path.

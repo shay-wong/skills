@@ -96,6 +96,9 @@ test("routes planning and implementation closeout through installed orchestrator
   assert.match(commit, /explicit user-supplied message or task reference[\s\S]*verified Jira `externalKey`[\s\S]*repository commit-message rules/i);
   assert.match(commit, /Never use a Panel `id` or `identifier` as a task reference/);
   assert.match(commit, /omit the task reference[\s\S]*do not fall back to the Panel identifier/i);
+  assert.match(commit, /A subject is enough[\s\S]*durable compatibility, migration, deprecation, or rollback boundary/i);
+  assert.match(commit, /do not inventory[\s\S]*test commands or results[\s\S]*user confirmation[\s\S]*session history/i);
+  assert.match(commit, /verification evidence in the final report or review description/i);
   assert.match(review, /When `implement` invokes this Skill for closeout/);
   assert.match(review, /Matt `code-review` as primary/);
   assert.match(review, /Agent conversation, Skill routing, tool use, or workflow handling/);
