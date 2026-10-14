@@ -1,0 +1,3 @@
+interface:
+  display_name: "GitHub PR"
+  short_description: "Write a GitHub PR body that's fast to review"

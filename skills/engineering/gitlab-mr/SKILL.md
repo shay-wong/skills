@@ -5,6 +5,8 @@ description: "创建、查看、增量修改和验证 GitLab Merge Request，并
 
 # GitLab MR
 
+This Skill manages GitLab Merge Requests. For GitHub Pull Request bodies, use `pr`; GitHub and GitLab platform operations, templates, metadata, and CLI behavior remain separate.
+
 ## 操作路由
 
 - **创建**：发现仓库和分支，读取 Fork 默认值，检查重复 MR，创建后回读验证。
@@ -21,6 +23,15 @@ description: "创建、查看、增量修改和验证 GitLab Merge Request，并
 3. 将 `refs/heads/`、`refs/remotes/` 和 `origin/` 前缀规范化为普通分支名。
 4. MR 内容涉及代码改动时，读取目标分支到源分支的完整 commit 和 diff，并读取仓库现有 MR 模板。上线命令只能来自当前发布脚本或用户明确说明。
 5. 区分已提交分支内容和未提交工作区改动；不得声称未提交改动已经进入 MR。
+
+## MR 描述质量
+
+- 优先遵循仓库的 GitLab MR 模板并保留必填章节，不用通用结构覆盖项目模板。
+- 摘要从关联工作项、已批准 Spec 或明确需求中说明改动原因与最终行为，不从 diff 猜测动机。存在 `CONTEXT.md` 时使用项目领域术语。
+- 只有在能明显降低审查成本时才加入最小必要的流程图、调用树、文件树或 diff 草图；纯文字更清楚时省略。
+- 证据优先展示同一输入或操作的 Before / After，并说明它证明的行为。不得把所有验证命令和结果机械罗列进 MR 描述，也不得声称未执行的检查通过。
+- 影响合并判断时，说明改动是难以回退的 one-way door 还是容易回退的 two-way door，并写清影响用户、服务、数据、接口或布局的范围。没有实质风险信息时不强制增加固定章节。
+- 以上是 GitHub PR 与 GitLab MR 的共同描述质量规则；本 Skill 后续的 Draft、milestone、assignee、reviewer、目标分支、squash、Fork 默认值和 `glab` 操作均为 GitLab 专属行为。
 
 ## 创建 MR
 

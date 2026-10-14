@@ -221,6 +221,28 @@ test("adds GitLab milestones only with verified work-item release evidence", () 
   assert.match(gitlabMr, /仍无法确认版本归属时省略 `--milestone`/);
 });
 
+test("keeps GitHub PR and GitLab MR workflows distinct while sharing description quality", () => {
+  const pluginManifest = JSON.parse(readFileSync(new URL("../.claude-plugin/plugin.json", import.meta.url), "utf8"));
+  const githubPr = readFileSync(new URL("../skills/in-progress/pr/SKILL.md", import.meta.url), "utf8");
+  const gitlabMr = readFileSync(new URL("../skills/engineering/gitlab-mr/SKILL.md", import.meta.url), "utf8");
+  const retro = readFileSync(new URL("../skills/in-progress/retro/SKILL.md", import.meta.url), "utf8");
+
+  assert.match(githubPr, /GitHub Pull Request body/);
+  assert.match(githubPr, /For GitLab Merge Requests, use `gitlab-mr`/);
+  assert.match(githubPr, /GitHub PR template under `\.github\/`/);
+  assert.match(gitlabMr, /For GitHub Pull Request bodies, use `pr`/);
+  assert.match(gitlabMr, /GitLab 专属行为/);
+  for (const skill of [githubPr, gitlabMr]) {
+    assert.match(skill, /Before\s*\/\s*After/i);
+    assert.match(skill, /one-way door/);
+    assert.match(skill, /two-way door/);
+    assert.match(skill, /CONTEXT\.md/);
+  }
+  assert.ok(!pluginManifest.skills.includes("./skills/in-progress/pr"));
+  assert.match(retro, /deterministic check/);
+  assert.match(retro, /no pre-commit or CI guardrail/);
+});
+
 const ponytail = {
   id: "ponytail@ponytail",
   label: "Ponytail",
