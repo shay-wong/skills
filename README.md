@@ -83,7 +83,7 @@ Agents are usually dropped into a project and asked to figure out the jargon as 
 Example
 </summary>
 
-Here is an upstream [`CONTEXT.md`](https://github.com/mattpocock/course-video-manager/blob/076a5a7a182db0fe1e62971dd7a68bcadf010f1c/CONTEXT.md) example. Which one is easier to read?
+Here is an upstream [`GLOSSARY.md`](https://github.com/mattpocock/course-video-manager/blob/076a5a7a182db0fe1e62971dd7a68bcadf010f1c/CONTEXT.md) example. Which one is easier to read?
 
 - **BEFORE**: "There's a problem when a lesson inside a section of a course is made 'real' (i.e. given a spot in the file system)"
 - **AFTER**: "There's a problem with the materialization cascade"
@@ -162,13 +162,15 @@ Skills for daily code work.
 **User-invoked**
 
 - **[ask-me](./skills/engineering/ask-me/SKILL.md)**: Navigate the promoted skills and workflows in this personal collection.
-- **[grill-with-docs](./skills/engineering/grill-with-docs/SKILL.md)**: Grilling session that also builds your project's domain model, sharpening terminology and updating `CONTEXT.md` and ADRs inline.
+- **[grill-with-docs](./skills/engineering/grill-with-docs/SKILL.md)**: Grilling session that also builds your project's domain model, sharpening terminology and updating `GLOSSARY.md` and ADRs inline.
 - **[triage](./skills/engineering/triage/SKILL.md)**: Move issues through a state machine of triage roles.
 - **[improve-codebase-architecture](./skills/engineering/improve-codebase-architecture/SKILL.md)**: Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
 - **[configure-skills](./skills/engineering/configure-skills/SKILL.md)**: Initialize optional project tools and configure this repo's issue tracker fallback, triage labels, and domain doc layout.
 - **[to-spec](./skills/engineering/to-spec/SKILL.md)**: Turn the current conversation into a spec and dual-write it to `.scratch` plus active Panel context, or publish it to the configured tracker. No interview, just synthesis of what you've already discussed.
 - **[to-tickets](./skills/engineering/to-tickets/SKILL.md)**: Turn a plan, spec, or conversation into tracer-bullet tickets with explicit blocking edges, dual-written to `.scratch` plus active Panel context, or published to the configured tracker.
 - **[implement](./skills/engineering/implement/SKILL.md)**: Build the work described by a spec or tickets, close through `/review`, and dual-write active Panel execution status to its `.scratch` mirror.
+- **[implement-spec](./skills/engineering/implement-spec/SKILL.md)**: Implement a non-Panel task graph on one integration branch with parallel worktrees, then close through `/review`.
+- **[retro](./skills/engineering/retro/SKILL.md)**: Review a coding session and propose durable improvements to navigation, checks, standards, steering, tooling, and information access.
 - **[wayfinder](./skills/engineering/wayfinder/SKILL.md)**: Plan a huge chunk of work, more than one agent session can hold, as a shared map of decision tickets on the issue tracker, and resolve them one at a time until the way to the destination is clear.
 
 **Model-invoked**
@@ -177,11 +179,12 @@ Skills for daily code work.
 - **[diagnosing-bugs](./skills/engineering/diagnosing-bugs/SKILL.md)**: Disciplined diagnosis loop for hard bugs and performance regressions: build a feedback loop that goes red on this bug → minimise → hypothesise → instrument → fix → regression-test.
 - **[research](./skills/engineering/research/SKILL.md)**: Investigate a question against high-trust primary sources and capture the findings as a cited Markdown file in the repo, run as a background agent.
 - **[tdd](./skills/engineering/tdd/SKILL.md)**: Risk-based test-driven development at pre-agreed public seams, one red-green vertical slice at a time.
-- **[domain-modeling](./skills/engineering/domain-modeling/SKILL.md)**: Actively build and sharpen a project's domain model: challenge terms against the glossary, stress-test with edge-case scenarios, and update `CONTEXT.md` and ADRs inline.
+- **[domain-modeling](./skills/engineering/domain-modeling/SKILL.md)**: Actively build and sharpen a project's domain model: challenge terms against the glossary, stress-test with edge-case scenarios, and update `GLOSSARY.md` and ADRs inline.
 - **[codebase-design](./skills/engineering/codebase-design/SKILL.md)**: Apply deep-module vocabulary to interface, seam, testability, and code-shape decisions.
 - **[code-dedup](./skills/engineering/code-dedup/SKILL.md)**: Prevent and investigate duplicate code with Deslop evidence while leaving edits to the implementation workflow.
 - **[code-review](./skills/engineering/code-review/SKILL.md)**: Review a fixed diff independently against repository standards and its originating spec.
 - **[review](./skills/engineering/review/SKILL.md)**: Orchestrate installed, non-overlapping review specialists for general review or implement closeout, then synthesize one bounded verdict.
+- **[pr](./skills/engineering/pr/SKILL.md)**: Write a reviewer-focused GitHub Pull Request body from the verified requirement, evidence, reversibility, and blast radius.
 - **[resolving-merge-conflicts](./skills/engineering/resolving-merge-conflicts/SKILL.md)**: Work through an in-progress git merge or rebase conflict hunk by hunk, resolving by intent traced to each side's primary source, then finish the operation (never `--abort`).
 - **[wizard](./skills/engineering/wizard/SKILL.md)**: Generate an interactive bash wizard for setup, credentials, migrations, and other steps only a human can perform.
 - **[commit](./skills/engineering/commit/SKILL.md)**: Create safe, scoped local commits with verified linked Jira references while excluding unrelated, ignored, disposable, generated, and sensitive files.
@@ -199,7 +202,7 @@ General workflow tools, not code-specific.
 - **[handoff](./skills/productivity/handoff/SKILL.md)**: Compact the current conversation into a handoff document so another agent can continue the work.
 - **[teach](./skills/productivity/teach/SKILL.md)**: Teach the user a new skill or concept over multiple sessions, using the current directory as a stateful teaching workspace.
 - **[to-questionnaire](./skills/productivity/to-questionnaire/SKILL.md)**: Turn a decision you can't answer alone into a Markdown questionnaire for the one person who can, filled in async, or together over a meeting. It grills you about the send (who it's for, what you need back), not the subject.
-- **[wait-what](./skills/productivity/wait-what/SKILL.md)**: Fire this the moment a message doesn't land. The agent re-pitches it with the context you're missing, in plain English, using your `CONTEXT.md` vocabulary.
+- **[wait-what](./skills/productivity/wait-what/SKILL.md)**: Fire this the moment a message doesn't land. The agent re-pitches it with the context you're missing, in plain English, using your `GLOSSARY.md` vocabulary.
 
 **Model-invoked**
 

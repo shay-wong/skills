@@ -2,7 +2,7 @@
 
 `ask-me` is the router over the promoted skills in this personal collection. You describe the situation you are in (an idea you cannot start, a pile of incoming bug reports, a [session](https://www.aihero.dev/ai-coding-dictionary/session) that has run long), and it names the skill or the sequence of skills that fits, plus where the human decisions in that sequence sit.
 
-It recommends and stops. It does not grill, write a [spec](https://www.aihero.dev/ai-coding-dictionary/spec), open a file or fire the skill it just named; what you get back is the next thing to type, and you type it. It is a hand-written map rather than a scan of what is installed. Local promoted entries such as `review`, `code-dedup`, `commit`, and `worktree-clean` belong in the map, while imported library entries stay out until they are explicitly promoted.
+It recommends and stops. It does not grill, write a [spec](https://www.aihero.dev/ai-coding-dictionary/spec), or fire the skill it just named; what you get back is the next thing to type, and you type it. Before making that recommendation, it reads the selected Skill's full `SKILL.md` instead of trusting this map's summary. The map is hand-maintained rather than a scan of what is installed. Local promoted entries such as `review`, `code-dedup`, `commit`, and `worktree-clean` belong in it, while imported library entries stay out until they are explicitly promoted.
 
 ## When to reach for it
 
@@ -12,9 +12,11 @@ You invoke this by typing `/ask-me`; the agent won't reach for it on its own.
 | --- | --- |
 | An idea, and no idea where to start | The head of the main flow, and whether the build is small enough to skip the spec |
 | Bugs and requests arriving from other people | The [triage](https://aihero.dev/skills-triage) on-ramp, and why [tickets](https://www.aihero.dev/ai-coding-dictionary/ticket) you generated yourself don't belong on it |
-| Two skills that look interchangeable | The line between them, and it is usually one concrete test rather than a matter of taste. [grill-me](https://aihero.dev/skills-grill-me) or [grill-with-docs](https://aihero.dev/skills-grill-with-docs) turns on whether the interview should update `CONTEXT.md` or ADRs; [grill-with-docs](https://aihero.dev/skills-grill-with-docs) or [wayfinder](https://aihero.dev/skills-wayfinder) turns on whether the effort fits one session |
+| Two skills that look interchangeable | The line between them, and it is usually one concrete test rather than a matter of taste. [grill-me](https://aihero.dev/skills-grill-me) or [grill-with-docs](https://aihero.dev/skills-grill-with-docs) turns on whether the interview should update `GLOSSARY.md` or ADRs; [grill-with-docs](https://aihero.dev/skills-grill-with-docs) or [wayfinder](https://aihero.dev/skills-wayfinder) turns on whether the effort fits one session |
 | You want to prevent or investigate duplicate code | [code-dedup](https://aihero.dev/skills-code-dedup), either before authoring or against a file, range, or ranked cluster |
 | You want to audit whether an agent conversation selected and followed the right Skills and tools | [review](https://aihero.dev/skills-review), using its workflow-trace mode |
+| You want one orchestrator to land an entire non-Panel ticket graph | [implement-spec](https://aihero.dev/skills-implement-spec), rather than one [implement](https://aihero.dev/skills-implement) session per ticket |
+| You need a GitHub PR body or a session retrospective | [pr](https://aihero.dev/skills-pr) for the body; [retro](https://aihero.dev/skills-retro) for durable environment improvements |
 | A long session and a decision about the [context](https://www.aihero.dev/ai-coding-dictionary/context) | The ordered tree over the five options at a phase boundary |
 | A skill you have already picked | Nothing useful. Invoke that skill directly. |
 
@@ -28,7 +30,7 @@ The tracker-dependent routes need a remote publication target. With active Panel
 
 The word the skill gives you to think with is **flow**: a path *through* the skills, not a single one. Naming your situation places you on a flow at a step, which is a different answer from "here is the skill that matches your keywords". Four kinds of route exist, and the skill itself carries them in full:
 
-- **The main flow**, idea to ship. Grill, spec, tickets, implement, review, with two branches inside it: a prototype detour when a question needs runnable code to settle, and the spec-and-tickets split, which only earns its cost when the build spans more than one session. `to-tickets` stops after publication, Panel dispatches one executable Issue at a time, and `implement` consumes that context without reproducing Panel's eligibility rules. In a Deslop-configured repository, `implement` checks [code-dedup](https://aihero.dev/skills-code-dedup) before non-trivial new code and `review` adds it only when clone risk remains.
+- **The main flow**, idea to ship. Grill, spec, tickets, implement, review, PR when applicable, and retro, with two branches inside it: a prototype detour when a question needs runnable code to settle, and the spec-and-tickets split, which only earns its cost when the build spans more than one session. `to-tickets` stops after publication. Panel dispatches one executable Issue at a time to `implement`; without active Panel or Jira planning context, `implement-spec` can instead orchestrate the configured tracker's complete task graph on one integration branch. In a Deslop-configured repository, `implement` checks [code-dedup](https://aihero.dev/skills-code-dedup) before non-trivial new code and `review` adds it only when clone risk remains.
 - **On-ramps**, for a situation that generates work and then merges onto the main flow: incoming bug reports, something broken, or an effort too foggy and too large to hold in one session.
 - **Standalones**, off every flow, reached for on their own terms: the prototype, the questionnaire, duplicate evidence, or the merge conflict you are already sitting in.
 - **A vocabulary layer underneath**, the two references the other skills pull in when the words rather than the process are the problem.
@@ -59,7 +61,7 @@ A known bug, unfixed. Many skills the router routes you through set `disable-mod
 
 **It described a skill's behaviour, and the skill doesn't do that.**
 
-Also real, also unfixed. The router answers from its own one-line summary of each skill rather than from the skill. One detailed report tracked three instances in a single session, including a recommendation to skip [to-spec](https://aihero.dev/skills-to-spec) on the strength of the gloss "turn the thread into a spec": `to-spec/SKILL.md` was never opened. In every case it verified only after the user pushed back, and never on its own initiative. Skipping `to-spec` there cost a real seam check, and the tickets that came out undercounted the work. When the router asserts something load-bearing about another skill, ask it to open that `SKILL.md` first. The same applies to questions the map does not cover at all, such as whether to use [plan mode](https://www.aihero.dev/ai-coding-dictionary/agent-mode): that answer is the [model](https://www.aihero.dev/ai-coding-dictionary/model)'s inference, not something written down here.
+The router previously answered from its own one-line summary. It now treats this map only as candidate discovery and reads the selected Skill's complete `SKILL.md` before describing it, recommending it, or suggesting it can be skipped. Questions the map does not cover at all, such as whether to use [plan mode](https://www.aihero.dev/ai-coding-dictionary/agent-mode), remain the [model](https://www.aihero.dev/ai-coding-dictionary/model)'s inference rather than behavior promised by a Skill.
 
 **Why is it prose instead of a numbered checklist?**
 
@@ -75,7 +77,7 @@ That advice is often correct and rarely durable. Someone asked it how to make [i
 
 **It named a skill I don't have, or missed one I do.**
 
-Check the changelog for a rename before assuming it is gone. This collection renames the inherited `ask-matt` to `ask-me` with no alias. `writing-great-skills` became [writing-for-agents](https://aihero.dev/skills-writing-for-agents) with no alias, `to-prd` became [to-spec](https://aihero.dev/skills-to-spec), and `pathfinder` became [wayfinder](https://aihero.dev/skills-wayfinder). Four skills were retired outright into the skills that absorbed them: `ubiquitous-language`, `design-an-interface`, `qa` and `request-refactor-plan`. The reverse case is the router's own lag, above.
+Check the changelog for a rename before assuming it is gone. This collection renames the inherited `ask-matt` to `ask-me` with no alias. `writing-great-skills` became [writing-for-agents](https://aihero.dev/skills-writing-for-agents) with no alias, `to-prd` became [to-spec](https://aihero.dev/skills-to-spec), and `pathfinder` became [wayfinder](https://aihero.dev/skills-wayfinder). Four skills were retired outright into the skills that absorbed them: `ubiquitous-language`, `design-an-interface`, `qa` and `request-refactor-plan`.
 
 ## It's working if
 

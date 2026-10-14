@@ -1,45 +1,46 @@
-# Ship the skill set as a native Claude Code plugin; defer a native Codex plugin
+# Ship one compatible plugin manifest for Claude Code and Codex
 
-This personal collection is installable via [skills.sh](https://skills.sh/shay-wong/skills) (`npx skills add shay-wong/skills`), which copies editable skill files into a user's project across Claude Code, Codex, and other Agent-Skills-standard harnesses. A native plugin provides a read-only, always-current bundle for users who do not want editable copies.
+This personal collection is installable through [skills.sh](https://skills.sh/shay-wong/skills) with `npx skills add shay-wong/skills`. That remains the complete, cross-harness installation route. A plugin provides a curated, read-only subset for users who want managed updates.
 
-We ship a native **Claude Code plugin** and, for now, **defer** a native **Codex plugin**. The split is forced by how each ecosystem's plugin manifest selects skills, against this repo's bucketed layout.
+## Distribution boundary
 
-## The constraint: bucketed skills vs. single-path selection
+Skills live in bucket folders under `skills/`. The plugin promotes selected `engineering/` and `productivity/` entries. It excludes `specialized/`, `misc/`, `in-progress/`, and `deprecated/`.
 
-Skills live in bucket folders under `skills/`: `engineering/` and `productivity/` contain the **promoted** subset; `specialized/`, `misc/`, `in-progress/`, and `deprecated/` are **not promoted**. A plugin must expose only the promoted set, which spans two bucket folders.
+The explicit array in [`.claude-plugin/plugin.json`](../../.claude-plugin/plugin.json) is the promoted allowlist. [`.claude-plugin/marketplace.json`](../../.claude-plugin/marketplace.json) exposes that plugin from this repository under the personal marketplace identity `shay`.
 
-- **Claude Code**: `.claude-plugin/plugin.json` accepts `skills` as an **array of explicit skill-directory paths**. We list the promoted skills one by one, exclude everything else with zero ambiguity, and add `.claude-plugin/marketplace.json` so the repo is its own single-plugin marketplace. Verified end to end: `claude plugin validate . --strict` passes, and `marketplace add` → `install` resolves all promoted skills.
+## Compatibility evidence
 
-- **Codex**: `.codex-plugin/plugin.json` accepts `skills` only as a **single path string** (arrays are rejected with `missing or invalid plugin.json`), and Codex discovers `SKILL.md` files recursively under it. There is no way to name two bucket folders, or to curate a subset, from one path. Two escape hatches were tested and rejected:
-  - Pointing at `./skills/` would also ship `deprecated/`, `in-progress/`, `specialized/`, and `misc/`: retired, draft, vertical-library, and low-promotion entries we deliberately do not include in the plugin.
-  - A curated flat directory of **symlinks** into the buckets does not survive install: Codex copies the plugin tree into its cache and **drops symlinks**, so the skills arrive empty.
+OpenAI's plugin-management documentation lists `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json` as supported Codex import formats, alongside native Codex marketplaces. See [Supported formats](https://learn.chatgpt.com/docs/enterprise/plugin-management#supported-formats).
 
-The only robust ways to give Codex a single promoted-only path are (a) **restructure** so `skills/` contains only promoted skills, moving the non-promoted buckets out, or (b) **commit duplicate copies** of promoted skills into a flat directory. Both create more maintenance than the current universal skills.sh path justifies.
+The exact personal manifests in this repository were also verified with Codex CLI 0.161.0 in an isolated `CODEX_HOME`:
+
+```bash
+codex plugin marketplace add <repo> --json
+codex plugin add shay-skills@shay --json
+codex plugin list --json
+```
+
+Codex installed `shay-skills@shay` at version `1.2.3` and accepted the explicit `skills` array. Claude Code validation continues to use:
+
+```bash
+claude plugin validate . --strict
+```
 
 ## Decision
 
-- Ship the **Claude Code plugin** (`.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json`) as a curated promoted subset.
-- Keep **skills.sh** as the universal installer: it already serves Codex and other harnesses today, so no Codex user is left without an install path.
-- **Defer** the native Codex plugin until we decide between restructuring `skills/` to promoted-only vs. committing a generated flat copy. Revisit when Codex either supports a `skills` array / include-list or preserves symlinks on install.
+- Reuse `.claude-plugin/plugin.json` as the single promoted Skill allowlist for both Claude Code and Codex.
+- Keep `.claude-plugin/marketplace.json` as the repository fallback marketplace with the personal `shay` identity.
+- Do not add a duplicate `.codex-plugin/plugin.json` while the compatible manifest works.
+- Keep skills.sh as the complete installer because the plugin intentionally excludes the imported and beta libraries.
 
-## Invariants this creates
+## Invariants
 
-- Every promoted skill has an entry in `.claude-plugin/plugin.json`'s `skills` array (this already stood as a `CLAUDE.md` rule; it now also gates the plugin's contents).
-- `.claude-plugin/plugin.json`'s `version` tracks `package.json`'s version: bump both together on release. Claude uses the plugin `version` to decide when installed users see an update.
+- Every promoted Skill appears in `.claude-plugin/plugin.json`.
+- No Skill from `specialized/`, `misc/`, `in-progress/`, or `deprecated/` appears in the plugin.
+- The plugin name, marketplace identity, repository URL, and package name remain `shay-skills`, `shay`, `shay-wong/skills`, and `shay-skills`.
+- `.claude-plugin/plugin.json` and `package.json` use the same version.
+- Revalidate both harnesses when either manifest changes or when a future Codex release stops accepting the compatible format.
 
-## Upstream marketplace history, 2026-08-05
+## Upstream marketplace boundary
 
-The upstream `mattpocock-skills` plugin was accepted into Claude Code's official marketplace. That listing points to `mattpocock/skills` and does not install this personal distribution.
-
-The upstream listing reads the upstream `.claude-plugin/plugin.json` directly, so it does not depend on this repository's fallback marketplace.
-
-Verified 2026-08-05, on Claude Code 2.1.222, against the live listing:
-
-- `claude plugins install mattpocock-skills` resolves with no marketplace added first, and reports `mattpocock-skills@claude-plugins-official`.
-- `claude plugin details mattpocock-skills` then reports version 1.2.0 and loads the promoted skills.
-- The listing's `source` is `{"source": "url", "url": "https://github.com/mattpocock/skills.git", "sha": …}`: the **sha is pinned**, so a release reaches installed users when that pin moves, not the moment we tag. At the time of writing the pin sits two commits behind `main`, which is why it lists 22 skills rather than the 24 in `plugin.json`.
-- The in-session `/plugin install mattpocock-skills` was **not** exercised: `/plugin` is unavailable in headless (`claude -p`) sessions. It runs the same resolver as the CLI, and the documented example form is `/plugin install <name>@claude-plugins-official`.
-
-## Personal release identity, 2026-08-28
-
-This repository publishes the package and Claude plugin as `shay-skills`, with fallback marketplace name `shay` and repository `shay-wong/skills`. It is not the upstream official-marketplace entry. The documented cross-harness installation route remains skills.sh; `.claude-plugin/marketplace.json` is only the direct-repository fallback.
+The upstream `mattpocock-skills` plugin is a separate Claude Code marketplace entry that points to `mattpocock/skills`. It does not install this personal distribution and must not replace this repository's identity or curated allowlist.

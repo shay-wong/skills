@@ -7,13 +7,15 @@ Skills I use daily for code work.
 Reachable only when you type them (Claude Code: `disable-model-invocation: true`; Codex: `policy.allow_implicit_invocation: false` in `agents/openai.yaml`).
 
 - **[ask-me](./ask-me/SKILL.md)**: Navigate the promoted skills and workflows in this personal collection.
-- **[grill-with-docs](./grill-with-docs/SKILL.md)**: Grilling session that also builds your project's domain model, sharpening terminology and updating `CONTEXT.md` and ADRs inline.
+- **[grill-with-docs](./grill-with-docs/SKILL.md)**: Grilling session that also builds your project's domain model, sharpening terminology and updating `GLOSSARY.md` and ADRs inline.
 - **[triage](./triage/SKILL.md)**: Move issues through a state machine of triage roles.
 - **[improve-codebase-architecture](./improve-codebase-architecture/SKILL.md)**: Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
 - **[configure-skills](./configure-skills/SKILL.md)**: Configure this repo's issue tracker fallback, triage labels, and domain doc layout when active Panel context does not provide the publication target.
 - **[to-spec](./to-spec/SKILL.md)**: Turn the current conversation into a spec and dual-write it to `.scratch` plus active Panel context, or publish it to the configured tracker.
 - **[to-tickets](./to-tickets/SKILL.md)**: Turn a plan, spec, or conversation into tracer-bullet tickets with explicit blocking edges, dual-written to `.scratch` plus active Panel context, or published to the configured tracker.
 - **[implement](./implement/SKILL.md)**: Build the work described by a spec or tickets, close through `/review`, and dual-write active Panel execution status to its `.scratch` mirror.
+- **[implement-spec](./implement-spec/SKILL.md)**: Implement a non-Panel task graph on one integration branch with parallel worktrees, then close through `/review`.
+- **[retro](./retro/SKILL.md)**: Review a coding session and propose durable improvements to navigation, checks, standards, steering, tooling, and information access.
 - **[wayfinder](./wayfinder/SKILL.md)**: Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on the issue tracker, resolved one at a time until the way to the destination is clear.
 
 ## Model-invoked
@@ -25,11 +27,12 @@ Model- or user-reachable (rich trigger phrasing so the model can reach for them)
 - **[diagnosing-bugs](./diagnosing-bugs/SKILL.md)**: Disciplined diagnosis loop for hard bugs and performance regressions: build a feedback loop that goes red on this bug → minimise → hypothesise → instrument → fix → regression-test.
 - **[research](./research/SKILL.md)**: Investigate focused facts, comparisons, or broad questions against current primary sources, cross-check material claims, and capture one cited result.
 - **[tdd](./tdd/SKILL.md)**: Risk-based test-driven development at pre-agreed public seams, one red-green vertical slice at a time.
-- **[domain-modeling](./domain-modeling/SKILL.md)**: Actively build and sharpen a project's domain model by challenging terms, stress-testing with scenarios, and updating `CONTEXT.md` and ADRs inline.
+- **[domain-modeling](./domain-modeling/SKILL.md)**: Actively build and sharpen a project's domain model by challenging terms, stress-testing with scenarios, and updating `GLOSSARY.md` and ADRs inline.
 - **[codebase-design](./codebase-design/SKILL.md)**: Apply deep-module vocabulary to interface, seam, testability, and code-shape decisions.
 - **[code-dedup](./code-dedup/SKILL.md)**: Prevent and investigate duplicate code with Deslop evidence while leaving edits to the implementation workflow.
 - **[code-review](./code-review/SKILL.md)**: Review a fixed diff independently against repository standards and its originating spec.
 - **[review](./review/SKILL.md)**: Orchestrate installed, non-overlapping review specialists for general review or implement closeout, then synthesize one bounded verdict.
+- **[pr](./pr/SKILL.md)**: Write a reviewer-focused GitHub Pull Request body from the verified requirement, evidence, reversibility, and blast radius.
 - **[resolving-merge-conflicts](./resolving-merge-conflicts/SKILL.md)**: Work through an in-progress git merge or rebase conflict hunk by hunk, resolving by intent traced to each side's primary source, then finish the operation, never `--abort`.
 - **[wizard](./wizard/SKILL.md)**: Generate an interactive bash wizard for setup, credentials, migrations, and other steps only a human can perform.
 - **[commit](./commit/SKILL.md)**: Create safe, scoped local commits with verified linked Jira references while excluding unrelated, ignored, disposable, generated, and sensitive files.

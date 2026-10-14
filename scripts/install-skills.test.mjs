@@ -53,6 +53,7 @@ test("routes planning and implementation closeout through installed orchestrator
   const toSpec = readFileSync(new URL("../skills/engineering/to-spec/SKILL.md", import.meta.url), "utf8");
   const toTickets = readFileSync(new URL("../skills/engineering/to-tickets/SKILL.md", import.meta.url), "utf8");
   const implement = readFileSync(new URL("../skills/engineering/implement/SKILL.md", import.meta.url), "utf8");
+  const implementSpec = readFileSync(new URL("../skills/engineering/implement-spec/SKILL.md", import.meta.url), "utf8");
   const commit = readFileSync(new URL("../skills/engineering/commit/SKILL.md", import.meta.url), "utf8");
   const review = readFileSync(new URL("../skills/engineering/review/SKILL.md", import.meta.url), "utf8");
   const reviewPolicy = readFileSync(new URL("../skills/engineering/review/references/review-policy.md", import.meta.url), "utf8");
@@ -92,6 +93,11 @@ test("routes planning and implementation closeout through installed orchestrator
   assert.match(implement, /including `blocked`, `canceled`, or `done` after explicit user acceptance/);
   assert.match(implement, /linked Jira `externalKey`/);
   assert.match(implement, /pass the verified Jira key to `commit`/i);
+  assert.match(implementSpec, /model-invoked `manage-panel`/);
+  assert.match(implementSpec, /stop this workflow before creating a branch or worktree/);
+  assert.match(implementSpec, /Panel owns selecting, binding, and dispatching one unblocked leaf Issue/);
+  assert.match(implementSpec, /use `implement` for the dispatched Issue/);
+  assert.match(implementSpec, /Do not reproduce Panel's parent, blocker, frontier, claim, or dispatch logic here/);
   assert.match(commit, /read-only linked Jira lookup through the installed model-invoked `manage-panel` Skill/);
   assert.match(commit, /explicit user-supplied message or task reference[\s\S]*verified Jira `externalKey`[\s\S]*repository commit-message rules/i);
   assert.match(commit, /Never use a Panel `id` or `identifier` as a task reference/);
@@ -164,9 +170,9 @@ test("keeps composed workflows executable without a Skill tool", () => {
     "../skills/engineering/triage/SKILL.md",
     "../skills/engineering/improve-codebase-architecture/SKILL.md",
     "../skills/engineering/tdd/SKILL.md",
-    "../skills/in-progress/implement-spec/SKILL.md",
+    "../skills/engineering/implement-spec/SKILL.md",
     "../skills/in-progress/loop-me/SKILL.md",
-    "../skills/in-progress/retro/SKILL.md",
+    "../skills/engineering/retro/SKILL.md",
     "../skills/in-progress/setup-ts-deep-modules/SKILL.md",
   ];
 
@@ -177,7 +183,7 @@ test("keeps composed workflows executable without a Skill tool", () => {
 
   const implement = readFileSync(new URL("../skills/engineering/implement/SKILL.md", import.meta.url), "utf8");
   const review = readFileSync(new URL("../skills/engineering/review/SKILL.md", import.meta.url), "utf8");
-  const implementSpec = readFileSync(new URL("../skills/in-progress/implement-spec/SKILL.md", import.meta.url), "utf8");
+  const implementSpec = readFileSync(new URL("../skills/engineering/implement-spec/SKILL.md", import.meta.url), "utf8");
   const continuousLoop = readFileSync(new URL("../skills/engineering/continuous-agent-loop/SKILL.md", import.meta.url), "utf8");
 
   assert.match(implement, /Skill tool with `tdd`/);
@@ -223,24 +229,42 @@ test("adds GitLab milestones only with verified work-item release evidence", () 
 
 test("keeps GitHub PR and GitLab MR workflows distinct while sharing description quality", () => {
   const pluginManifest = JSON.parse(readFileSync(new URL("../.claude-plugin/plugin.json", import.meta.url), "utf8"));
-  const githubPr = readFileSync(new URL("../skills/in-progress/pr/SKILL.md", import.meta.url), "utf8");
+  const githubPr = readFileSync(new URL("../skills/engineering/pr/SKILL.md", import.meta.url), "utf8");
   const gitlabMr = readFileSync(new URL("../skills/engineering/gitlab-mr/SKILL.md", import.meta.url), "utf8");
-  const retro = readFileSync(new URL("../skills/in-progress/retro/SKILL.md", import.meta.url), "utf8");
+  const retro = readFileSync(new URL("../skills/engineering/retro/SKILL.md", import.meta.url), "utf8");
 
   assert.match(githubPr, /GitHub Pull Request body/);
   assert.match(githubPr, /For GitLab Merge Requests, use `gitlab-mr`/);
   assert.match(githubPr, /GitHub PR template under `\.github\/`/);
+  assert.match(githubPr, /Before:[\s\S]*After:/i);
   assert.match(gitlabMr, /For GitHub Pull Request bodies, use `pr`/);
   assert.match(gitlabMr, /GitLab 专属行为/);
+  assert.match(gitlabMr, /Before\s*\/\s*After/i);
   for (const skill of [githubPr, gitlabMr]) {
-    assert.match(skill, /Before\s*\/\s*After/i);
     assert.match(skill, /one-way door/);
     assert.match(skill, /two-way door/);
-    assert.match(skill, /CONTEXT\.md/);
+    assert.match(skill, /GLOSSARY\.md/);
   }
-  assert.ok(!pluginManifest.skills.includes("./skills/in-progress/pr"));
+  for (const name of ["implement-spec", "pr", "retro"]) {
+    assert.ok(pluginManifest.skills.includes(`./skills/engineering/${name}`));
+    assert.ok(!pluginManifest.skills.includes(`./skills/in-progress/${name}`));
+  }
+  assert.ok(!pluginManifest.skills.includes("./skills/in-progress/chief-of-staff"));
   assert.match(retro, /deterministic check/);
   assert.match(retro, /no pre-commit or CI guardrail/);
+});
+
+test("keeps promoted and beta inventories aligned after upstream promotion", () => {
+  const engineeringReadme = readFileSync(new URL("../skills/engineering/README.md", import.meta.url), "utf8");
+  const inProgressReadme = readFileSync(new URL("../skills/in-progress/README.md", import.meta.url), "utf8");
+
+  for (const name of ["implement-spec", "pr", "retro"]) {
+    assert.match(engineeringReadme, new RegExp(`\\[${name}\\]\\(\\./${name}/SKILL\\.md\\)`));
+    assert.doesNotMatch(inProgressReadme, new RegExp(`\\[${name}\\]\\(\\./${name}/SKILL\\.md\\)`));
+    assert.equal(existsSync(new URL(`../skills/in-progress/${name}/SKILL.md`, import.meta.url)), false);
+  }
+
+  assert.match(inProgressReadme, /\[chief-of-staff\]\(\.\/chief-of-staff\/SKILL\.md\)/);
 });
 
 const ponytail = {
@@ -989,7 +1013,7 @@ test("links active and specialized skills without misc or replacing foreign skil
       );
       assert.equal(
         readlinkSync(implementSpec),
-        join(repo, "skills", "in-progress", "implement-spec"),
+        join(repo, "skills", "engineering", "implement-spec"),
       );
       assert.equal(lstatSync(join(destination, "setup-pre-commit"), { throwIfNoEntry: false }), undefined);
     }

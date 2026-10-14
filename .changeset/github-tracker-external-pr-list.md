@@ -1,5 +1,5 @@
 ---
-"mattpocock-skills": patch
+"shay-skills": patch
 ---
 
-Fixed the GitHub tracker template's external-PR listing, which failed on `authorAssociation` (#468, thanks @lofi-coding). Re-run `/setup-matt-pocock-skills` to refresh `docs/agents/issue-tracker.md`.
+Fixed the GitHub tracker template's external-PR listing, which failed on `authorAssociation` (#468, thanks @lofi-coding). Re-run `/configure-skills` to refresh `docs/agents/issue-tracker.md`.

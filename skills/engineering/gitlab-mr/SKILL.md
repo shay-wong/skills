@@ -27,7 +27,7 @@ This Skill manages GitLab Merge Requests. For GitHub Pull Request bodies, use `p
 ## MR 描述质量
 
 - 优先遵循仓库的 GitLab MR 模板并保留必填章节，不用通用结构覆盖项目模板。
-- 摘要从关联工作项、已批准 Spec 或明确需求中说明改动原因与最终行为，不从 diff 猜测动机。存在 `CONTEXT.md` 时使用项目领域术语。
+- 摘要从关联工作项、已批准 Spec 或明确需求中说明改动原因与最终行为，不从 diff 猜测动机。存在 `GLOSSARY.md` 时使用项目领域术语。
 - 只有在能明显降低审查成本时才加入最小必要的流程图、调用树、文件树或 diff 草图；纯文字更清楚时省略。
 - 证据优先展示同一输入或操作的 Before / After，并说明它证明的行为。不得把所有验证命令和结果机械罗列进 MR 描述，也不得声称未执行的检查通过。
 - 影响合并判断时，说明改动是难以回退的 one-way door 还是容易回退的 two-way door，并写清影响用户、服务、数据、接口或布局的范围。没有实质风险信息时不强制增加固定章节。

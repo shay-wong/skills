@@ -5,7 +5,7 @@ Beta. These skills are public on purpose: try them and tell me what breaks. They
 The plugin won't give you these. Install one directly:
 
 ```bash
-npx skills@latest add mattpocock/skills --skill=<name>
+npx skills@latest add shay-wong/skills --skill=<name>
 ```
 
 - **[loop-me](./loop-me/SKILL.md)**: Grill yourself into implementable workflow specs over multiple sessions, using the current directory as a stateful workspace. User-invoked.
@@ -14,6 +14,4 @@ npx skills@latest add mattpocock/skills --skill=<name>
 - **[writing-shape](./writing-shape/SKILL.md)**: Take a markdown file of raw material and shape it into an article paragraph by paragraph, arguing format choices at each step.
 - **[claude-handoff](./claude-handoff/SKILL.md)**: Hand the current conversation off to a fresh background agent that picks up the work immediately, seeded with a handoff summary via `claude --bg`. User-invoked.
 - **[setup-ts-deep-modules](./setup-ts-deep-modules/SKILL.md)**: Wire dependency-cruiser into a TypeScript repo so each package is a deep module: implementation hidden in subfolders, reachable only through its entry-point files, tests exercising it through those. User-invoked.
-- **[implement-spec](./implement-spec/SKILL.md)**: Implement a whole spec on one branch. Works the tickets as a task graph rather than a list, running implementer subagents across the ready frontier for maximum concurrency, and lands the result as a single PR. User-invoked.
-- **[pr](./pr/SKILL.md)**: Write a reviewer-focused GitHub Pull Request body from the verified requirement, change shape, before/after evidence, reversibility, and blast radius. Model-invoked.
-- **[retro](./retro/SKILL.md)**: Suggest improvements to the coding agent's environment (steering files, coding standards, automated checks, tooling) after a session. STUB: design notes only, not functional yet. User-invoked.
+- **[chief-of-staff](./chief-of-staff/SKILL.md)**: Coordinate priorities, delegation, and follow-through across a working session. User-invoked.

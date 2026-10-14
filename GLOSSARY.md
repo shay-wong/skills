@@ -1,6 +1,6 @@
-# Matt Pocock Skills
+# Shay Skills
 
-A collection of agent skills (slash commands and behaviors) loaded by Claude Code. Skills are organized into buckets and consumed by per-repo configuration emitted by `/setup-matt-pocock-skills`.
+A personal collection of agent skills loaded by Codex, Claude Code, and other compatible harnesses. Skills are organized into buckets and consumed by per-repo configuration emitted by `/configure-skills`.
 
 ## Language
 

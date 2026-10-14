@@ -9,6 +9,14 @@ metadata:
     url: "https://github.com/humanlayer/skills/blob/main/plugins/show-me/skills/show-me/SKILL.md"
 ---
 
+# GitHub PR
+
+This Skill writes a GitHub Pull Request body. For GitLab Merge Requests, use `gitlab-mr`.
+
+Read the repository's GitHub PR template under `.github/` when one exists. Preserve its required sections and map this Skill's content into that structure instead of replacing it.
+
+Writing a body does not authorize creating, updating, marking ready, merging, or otherwise mutating a GitHub PR. Perform those actions only when the active request authorizes them.
+
 Use this template for writing the PR body:
 
 ```markdown

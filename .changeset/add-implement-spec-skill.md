@@ -2,4 +2,4 @@
 "shay-skills": patch
 ---
 
-Add the `implement-spec` skill (in-progress bucket, user-invoked). It takes a spec and its tickets and drives them to a single PR: the tickets are read as a task graph with blocking edges, so implementer subagents run in background worktrees across the ready frontier for concurrency, a merger subagent folds each one back into the PR branch, and the flow closes with `/code-review` before the PR is marked ready.
+Add the promoted, user-invoked `implement-spec` Skill. For configured non-Panel trackers, it reads a spec's tickets as a task graph, runs ready work across background worktrees, merges each result into one integration branch, and closes through the personal `review` workflow. Active Panel or Jira planning context remains owned by Panel, which dispatches leaf Issues to `implement` so remote and `.scratch` status stay synchronized. It opens or readies a PR only when the tracker or active request requires one.

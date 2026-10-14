@@ -19,17 +19,17 @@
 | --- | --- |
 | 状态 | 基础来源，持续跟踪 |
 | 来源仓库 | <https://github.com/mattpocock/skills> |
-| 来源基线 | `3cca18b368ae95cdbdebbff572ccafa662551015` |
-| 来源版本 | `1.2.3` |
+| 来源基线 | `49dd158d1076134a641b33efb035946536778336` |
+| 来源版本 | `1.3.1` |
 | 上游分支 | `upstream/main` |
-| 增量吸收 | 从 `959a8e9f1edc3adbe2f7e3054bb6fbefa6696260` 吸收 `retro` 的机械规则门禁；从 `c55ee46073ed923f86ce59a5eb3b6d895095d1b7` 吸收 beta `pr` 的 PR 描述结构 |
+| 增量吸收 | 完整合入 `49dd158d1076134a641b33efb035946536778336`，包括 `GLOSSARY.md` 命名、正式 `implement-spec`、`pr`、`retro`、beta `chief-of-staff`，以及诊断、评审、TDD、路由、tracker 模板和 wizard 修复 |
 | 本地范围 | 仓库基础结构，包括 Matt canonical `skills/`、`docs/`、清单和维护脚本；不包括 ECC 来源档案和本地吸收改动 |
 | 许可证 | MIT，见 [`LICENSE`](./LICENSE) |
-| 本地改动 | 发行包、Claude plugin 和 fallback marketplace 统一为 `shay-skills` / `shay` 与 `shay-wong/skills`；`setup-matt-pocock-skills` 无兼容别名地重命名为中立入口 `configure-skills`；`ask-matt` 无兼容别名地重命名为个人入口 `ask-me`，并按是否需要写入 `CONTEXT.md` 或 ADR 来选择 `grill-me` 与 `grill-with-docs`；两个显式 grill 入口通过 Skill tool 或可用 Skills 目录复用 `grilling` 与 `domain-modeling`，不复制共享协议；`to-spec` 与 `to-tickets` 在活动 Panel 或 Jira planning 上下文中先写完整 `.scratch` 本地副本，再通过已安装的 `manage-panel` 发布同一内容并记录本地相对路径，`to-tickets` 还把返回的 Panel 标识和状态写回本地 ticket，并根据公共契约是否已被证实选择先抽取公共能力或先完成纵向切片再去重，只有用户明确要求时才同时记录 GitHub 或 GitLab Issue 并把映射写入 Panel 子议题，发布后停止并把无 blocker 叶子 Issue 的选择、绑定和派发交给 Panel，没有有效上下文时才回退到 `configure-skills` 的 tracker；`implement` 通过个人 `review` 统筹入口收尾，由 `review` 固定 `code-review` 主审并携带原 Spec 或 Ticket 契约，同时通过 `manage-panel` 拒绝父容器、只接受一个可执行叶子 Issue、在任何 Git 修改前完成绑定和认领、保留代码托管 Issue 与 Panel 身份边界、解析关联 Jira `externalKey` 并传给 `commit`，在验证、审查和已授权提交完成后写结果评论并移到 `in_review`，每次成功转换后把 `in_progress` 或 `in_review` 镜像到 `.scratch` ticket，不自行标记 `done`；`tdd`、`research`、`implement`、`code-review`、`resolving-merge-conflicts` 吸收 ECC 与本地规则；`code-review`、`wizard`、`codebase-design` 与 `to-tickets` 的入口描述压缩为触发条件和核心职责；新增个人 `review` 统筹入口、`commit`、`worktree-clean`；beta `pr` 明确只负责 GitHub PR 描述，保留上游的改动结构、Before / After 证据、可逆性和影响范围，并优先遵循 GitHub PR 模板；GitLab 的对应描述质量规则融入独立 `gitlab-mr`，其 Draft、milestone、reviewer、目标分支、Fork 默认值和 `glab` 操作不与 GitHub 合并；`retro` 保留本地 Skill 调用回退并吸收机械规则优先转为确定性门禁的上游改进；其余 Matt canonical 内容保持上游基线 |
-| 比较方式 | `git diff 3cca18b368ae95cdbdebbff572ccafa662551015..main` |
+| 本地改动 | 发行包、兼容 Claude/Codex 的 plugin manifest 和 fallback marketplace 统一为 `shay-skills` / `shay` 与 `shay-wong/skills`；`configure-skills` 和 `ask-me` 继续作为无旧别名的个人入口；`GLOSSARY.md` 与 ADR 是领域记录；`to-spec`、`to-tickets`、`implement`、`review`、`commit` 保留 Panel、本地 `.scratch`、Jira `externalKey` 和双写状态约束；`implement-spec` 使用个人 `review` 收尾，并仅为配置的非 Panel tracker 编排完整任务图，活动 Panel 或 Jira planning 上下文继续由 Panel 派发叶子 Issue 给 `implement`，避免重复实现 eligibility、frontier、binding、claim 与状态镜像；正式 `pr` 只写 GitHub PR body 并遵循仓库模板和授权边界，GitLab 操作继续由独立 `gitlab-mr` 承担；`retro` 保留 Skill catalog 回退和确定性门禁优先；`code-review`、`tdd`、`research`、`resolving-merge-conflicts` 保留个人与 ECC 融合规则；上游删除的 `resolving-merge-conflicts` 继续作为个人正式 Skill；`chief-of-staff` 保持 beta；上游公共仓库的 Issue 模板、自动 triage workflow、`SCOPE.md` 和新增 `.out-of-scope` 治理文件不进入个人发行版 |
+| 比较方式 | `git diff 49dd158d1076134a641b33efb035946536778336..main` |
 | 同步策略 | 保留 `upstream` 远端；同步前按本台账逐项检查个人改动，合并后更新固定基线 |
 
-组合调用兼容：`implement`、`wayfinder`、`triage`、`improve-codebase-architecture`、`tdd` 以及保留的 beta 路由统一采用 Skill tool 优先、authoritative available-Skills catalog 回退。目录中存在的 model-invoked Skill 在没有 Skill tool 时仍直接按完整 `SKILL.md` 执行，不复制被调用工作流。
+组合调用兼容：`implement`、`implement-spec`、`wayfinder`、`triage`、`improve-codebase-architecture` 和 `tdd` 统一采用 Skill tool 优先、authoritative available-Skills catalog 回退。目录中存在的 model-invoked Skill 在没有 Skill tool 时仍直接按完整 `SKILL.md` 执行，不复制被调用工作流。
 
 ### affaan-m/ECC
 
