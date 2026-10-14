@@ -80,7 +80,7 @@ Publish only the approved breakdown. The tickets are the same either way; only t
 
 - **Panel or Jira planning through `manage-panel`** → first write the approved ticket set under `.scratch/<feature-slug>/issues/`, including `Panel issue: pending-publication` and `Panel status: pending-publication`, then hand the same breakdown and local-path mapping to that workflow. In an ordinary Panel context, let it search before creating, preserve the existing parent requirement, and create the appropriate parent/sub-issue and blocking relations. In a Jira planning conversation, publish one approved manifest through the Jira planning workflow; do not create tickets one by one. After either publication path succeeds, replace both pending values with the exact identifier and status returned for each Panel Issue. When explicitly publishing the same tickets to GitHub or GitLab, also replace the matching provider-specific pending URL locally and include the final URL in the Panel child description. If any local metadata update fails, report the local mirror as unsynchronized instead of claiming dual-write completion.
 - **Local files** → write one file per ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01` in dependency order (blockers first). Each file's "Blocked by" lists the numbers/titles it depends on. Use the per-ticket file template below: one ticket per file, never a single combined file.
-- **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Apply the `ready-for-agent` triage label unless instructed otherwise; the tickets are agent-grabbable by construction.
+- **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Use the platform's native blocking relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. If the source was an existing issue, make each ticket its sub-issue (tracker doc's operation). Apply the `ready-for-agent` triage label unless instructed otherwise; the tickets are agent-grabbable by construction.
 
 Publish enough relationship data for the tracker to identify the **frontier**: tickets whose blockers are all done. Stop after publication. In an active Panel context, Panel owns selecting, binding, and dispatching one unblocked leaf Issue; do not choose a child or invoke implementation from this Skill. For local files or another tracker, report the frontier without starting implementation.
 
@@ -129,7 +129,7 @@ The end-to-end behaviour this ticket makes work, from the user's perspective, no
 
 ## Blocked by
 
-- A reference to each blocking ticket, or "None (can start immediately)".
+- A reference to each blocking ticket, or "None (can start immediately)". Omit this section when blockers were set as native edges.
 
 </issue-template>
 
